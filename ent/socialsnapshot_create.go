@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
@@ -19,6 +20,7 @@ type SocialSnapshotCreate struct {
 	config
 	mutation *SocialSnapshotMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetSocialEvidence sets the "social_evidence" field.
@@ -160,6 +162,7 @@ func (_c *SocialSnapshotCreate) createSpec() (*SocialSnapshot, *sqlgraph.CreateS
 		_node = &SocialSnapshot{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(socialsnapshot.Table, sqlgraph.NewFieldSpec(socialsnapshot.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.SocialEvidence(); ok {
 		_spec.SetField(socialsnapshot.FieldSocialEvidence, field.TypeJSON, value)
 		_node.SocialEvidence = value
@@ -196,11 +199,230 @@ func (_c *SocialSnapshotCreate) createSpec() (*SocialSnapshot, *sqlgraph.CreateS
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.SocialSnapshot.Create().
+//		SetSocialEvidence(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.SocialSnapshotUpsert) {
+//			SetSocialEvidence(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *SocialSnapshotCreate) OnConflict(opts ...sql.ConflictOption) *SocialSnapshotUpsertOne {
+	_c.conflict = opts
+	return &SocialSnapshotUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.SocialSnapshot.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *SocialSnapshotCreate) OnConflictColumns(columns ...string) *SocialSnapshotUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &SocialSnapshotUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// SocialSnapshotUpsertOne is the builder for "upsert"-ing
+	//  one SocialSnapshot node.
+	SocialSnapshotUpsertOne struct {
+		create *SocialSnapshotCreate
+	}
+
+	// SocialSnapshotUpsert is the "OnConflict" setter.
+	SocialSnapshotUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetSocialEvidence sets the "social_evidence" field.
+func (u *SocialSnapshotUpsert) SetSocialEvidence(v map[string]interface{}) *SocialSnapshotUpsert {
+	u.Set(socialsnapshot.FieldSocialEvidence, v)
+	return u
+}
+
+// UpdateSocialEvidence sets the "social_evidence" field to the value that was provided on create.
+func (u *SocialSnapshotUpsert) UpdateSocialEvidence() *SocialSnapshotUpsert {
+	u.SetExcluded(socialsnapshot.FieldSocialEvidence)
+	return u
+}
+
+// SetScore sets the "score" field.
+func (u *SocialSnapshotUpsert) SetScore(v int) *SocialSnapshotUpsert {
+	u.Set(socialsnapshot.FieldScore, v)
+	return u
+}
+
+// UpdateScore sets the "score" field to the value that was provided on create.
+func (u *SocialSnapshotUpsert) UpdateScore() *SocialSnapshotUpsert {
+	u.SetExcluded(socialsnapshot.FieldScore)
+	return u
+}
+
+// AddScore adds v to the "score" field.
+func (u *SocialSnapshotUpsert) AddScore(v int) *SocialSnapshotUpsert {
+	u.Add(socialsnapshot.FieldScore, v)
+	return u
+}
+
+// SetObservedAt sets the "observed_at" field.
+func (u *SocialSnapshotUpsert) SetObservedAt(v time.Time) *SocialSnapshotUpsert {
+	u.Set(socialsnapshot.FieldObservedAt, v)
+	return u
+}
+
+// UpdateObservedAt sets the "observed_at" field to the value that was provided on create.
+func (u *SocialSnapshotUpsert) UpdateObservedAt() *SocialSnapshotUpsert {
+	u.SetExcluded(socialsnapshot.FieldObservedAt)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.SocialSnapshot.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *SocialSnapshotUpsertOne) UpdateNewValues() *SocialSnapshotUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(socialsnapshot.FieldCreatedAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.SocialSnapshot.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *SocialSnapshotUpsertOne) Ignore() *SocialSnapshotUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *SocialSnapshotUpsertOne) DoNothing() *SocialSnapshotUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the SocialSnapshotCreate.OnConflict
+// documentation for more info.
+func (u *SocialSnapshotUpsertOne) Update(set func(*SocialSnapshotUpsert)) *SocialSnapshotUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&SocialSnapshotUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetSocialEvidence sets the "social_evidence" field.
+func (u *SocialSnapshotUpsertOne) SetSocialEvidence(v map[string]interface{}) *SocialSnapshotUpsertOne {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.SetSocialEvidence(v)
+	})
+}
+
+// UpdateSocialEvidence sets the "social_evidence" field to the value that was provided on create.
+func (u *SocialSnapshotUpsertOne) UpdateSocialEvidence() *SocialSnapshotUpsertOne {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.UpdateSocialEvidence()
+	})
+}
+
+// SetScore sets the "score" field.
+func (u *SocialSnapshotUpsertOne) SetScore(v int) *SocialSnapshotUpsertOne {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.SetScore(v)
+	})
+}
+
+// AddScore adds v to the "score" field.
+func (u *SocialSnapshotUpsertOne) AddScore(v int) *SocialSnapshotUpsertOne {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.AddScore(v)
+	})
+}
+
+// UpdateScore sets the "score" field to the value that was provided on create.
+func (u *SocialSnapshotUpsertOne) UpdateScore() *SocialSnapshotUpsertOne {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.UpdateScore()
+	})
+}
+
+// SetObservedAt sets the "observed_at" field.
+func (u *SocialSnapshotUpsertOne) SetObservedAt(v time.Time) *SocialSnapshotUpsertOne {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.SetObservedAt(v)
+	})
+}
+
+// UpdateObservedAt sets the "observed_at" field to the value that was provided on create.
+func (u *SocialSnapshotUpsertOne) UpdateObservedAt() *SocialSnapshotUpsertOne {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.UpdateObservedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *SocialSnapshotUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for SocialSnapshotCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *SocialSnapshotUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *SocialSnapshotUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *SocialSnapshotUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // SocialSnapshotCreateBulk is the builder for creating many SocialSnapshot entities in bulk.
 type SocialSnapshotCreateBulk struct {
 	config
 	err      error
 	builders []*SocialSnapshotCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the SocialSnapshot entities in the database.
@@ -230,6 +452,7 @@ func (_c *SocialSnapshotCreateBulk) Save(ctx context.Context) ([]*SocialSnapshot
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -280,6 +503,166 @@ func (_c *SocialSnapshotCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *SocialSnapshotCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.SocialSnapshot.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.SocialSnapshotUpsert) {
+//			SetSocialEvidence(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *SocialSnapshotCreateBulk) OnConflict(opts ...sql.ConflictOption) *SocialSnapshotUpsertBulk {
+	_c.conflict = opts
+	return &SocialSnapshotUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.SocialSnapshot.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *SocialSnapshotCreateBulk) OnConflictColumns(columns ...string) *SocialSnapshotUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &SocialSnapshotUpsertBulk{
+		create: _c,
+	}
+}
+
+// SocialSnapshotUpsertBulk is the builder for "upsert"-ing
+// a bulk of SocialSnapshot nodes.
+type SocialSnapshotUpsertBulk struct {
+	create *SocialSnapshotCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.SocialSnapshot.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *SocialSnapshotUpsertBulk) UpdateNewValues() *SocialSnapshotUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(socialsnapshot.FieldCreatedAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.SocialSnapshot.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *SocialSnapshotUpsertBulk) Ignore() *SocialSnapshotUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *SocialSnapshotUpsertBulk) DoNothing() *SocialSnapshotUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the SocialSnapshotCreateBulk.OnConflict
+// documentation for more info.
+func (u *SocialSnapshotUpsertBulk) Update(set func(*SocialSnapshotUpsert)) *SocialSnapshotUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&SocialSnapshotUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetSocialEvidence sets the "social_evidence" field.
+func (u *SocialSnapshotUpsertBulk) SetSocialEvidence(v map[string]interface{}) *SocialSnapshotUpsertBulk {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.SetSocialEvidence(v)
+	})
+}
+
+// UpdateSocialEvidence sets the "social_evidence" field to the value that was provided on create.
+func (u *SocialSnapshotUpsertBulk) UpdateSocialEvidence() *SocialSnapshotUpsertBulk {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.UpdateSocialEvidence()
+	})
+}
+
+// SetScore sets the "score" field.
+func (u *SocialSnapshotUpsertBulk) SetScore(v int) *SocialSnapshotUpsertBulk {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.SetScore(v)
+	})
+}
+
+// AddScore adds v to the "score" field.
+func (u *SocialSnapshotUpsertBulk) AddScore(v int) *SocialSnapshotUpsertBulk {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.AddScore(v)
+	})
+}
+
+// UpdateScore sets the "score" field to the value that was provided on create.
+func (u *SocialSnapshotUpsertBulk) UpdateScore() *SocialSnapshotUpsertBulk {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.UpdateScore()
+	})
+}
+
+// SetObservedAt sets the "observed_at" field.
+func (u *SocialSnapshotUpsertBulk) SetObservedAt(v time.Time) *SocialSnapshotUpsertBulk {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.SetObservedAt(v)
+	})
+}
+
+// UpdateObservedAt sets the "observed_at" field to the value that was provided on create.
+func (u *SocialSnapshotUpsertBulk) UpdateObservedAt() *SocialSnapshotUpsertBulk {
+	return u.Update(func(s *SocialSnapshotUpsert) {
+		s.UpdateObservedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *SocialSnapshotUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the SocialSnapshotCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for SocialSnapshotCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *SocialSnapshotUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

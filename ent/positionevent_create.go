@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/paperposition"
@@ -19,6 +20,7 @@ type PositionEventCreate struct {
 	config
 	mutation *PositionEventMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetEventType sets the "event_type" field.
@@ -144,6 +146,7 @@ func (_c *PositionEventCreate) createSpec() (*PositionEvent, *sqlgraph.CreateSpe
 		_node = &PositionEvent{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(positionevent.Table, sqlgraph.NewFieldSpec(positionevent.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.EventType(); ok {
 		_spec.SetField(positionevent.FieldEventType, field.TypeString, value)
 		_node.EventType = value
@@ -176,11 +179,191 @@ func (_c *PositionEventCreate) createSpec() (*PositionEvent, *sqlgraph.CreateSpe
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.PositionEvent.Create().
+//		SetEventType(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.PositionEventUpsert) {
+//			SetEventType(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *PositionEventCreate) OnConflict(opts ...sql.ConflictOption) *PositionEventUpsertOne {
+	_c.conflict = opts
+	return &PositionEventUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.PositionEvent.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *PositionEventCreate) OnConflictColumns(columns ...string) *PositionEventUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &PositionEventUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// PositionEventUpsertOne is the builder for "upsert"-ing
+	//  one PositionEvent node.
+	PositionEventUpsertOne struct {
+		create *PositionEventCreate
+	}
+
+	// PositionEventUpsert is the "OnConflict" setter.
+	PositionEventUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetEventType sets the "event_type" field.
+func (u *PositionEventUpsert) SetEventType(v string) *PositionEventUpsert {
+	u.Set(positionevent.FieldEventType, v)
+	return u
+}
+
+// UpdateEventType sets the "event_type" field to the value that was provided on create.
+func (u *PositionEventUpsert) UpdateEventType() *PositionEventUpsert {
+	u.SetExcluded(positionevent.FieldEventType)
+	return u
+}
+
+// SetDetails sets the "details" field.
+func (u *PositionEventUpsert) SetDetails(v map[string]interface{}) *PositionEventUpsert {
+	u.Set(positionevent.FieldDetails, v)
+	return u
+}
+
+// UpdateDetails sets the "details" field to the value that was provided on create.
+func (u *PositionEventUpsert) UpdateDetails() *PositionEventUpsert {
+	u.SetExcluded(positionevent.FieldDetails)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.PositionEvent.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *PositionEventUpsertOne) UpdateNewValues() *PositionEventUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(positionevent.FieldCreatedAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.PositionEvent.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *PositionEventUpsertOne) Ignore() *PositionEventUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *PositionEventUpsertOne) DoNothing() *PositionEventUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the PositionEventCreate.OnConflict
+// documentation for more info.
+func (u *PositionEventUpsertOne) Update(set func(*PositionEventUpsert)) *PositionEventUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&PositionEventUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetEventType sets the "event_type" field.
+func (u *PositionEventUpsertOne) SetEventType(v string) *PositionEventUpsertOne {
+	return u.Update(func(s *PositionEventUpsert) {
+		s.SetEventType(v)
+	})
+}
+
+// UpdateEventType sets the "event_type" field to the value that was provided on create.
+func (u *PositionEventUpsertOne) UpdateEventType() *PositionEventUpsertOne {
+	return u.Update(func(s *PositionEventUpsert) {
+		s.UpdateEventType()
+	})
+}
+
+// SetDetails sets the "details" field.
+func (u *PositionEventUpsertOne) SetDetails(v map[string]interface{}) *PositionEventUpsertOne {
+	return u.Update(func(s *PositionEventUpsert) {
+		s.SetDetails(v)
+	})
+}
+
+// UpdateDetails sets the "details" field to the value that was provided on create.
+func (u *PositionEventUpsertOne) UpdateDetails() *PositionEventUpsertOne {
+	return u.Update(func(s *PositionEventUpsert) {
+		s.UpdateDetails()
+	})
+}
+
+// Exec executes the query.
+func (u *PositionEventUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for PositionEventCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *PositionEventUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *PositionEventUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *PositionEventUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // PositionEventCreateBulk is the builder for creating many PositionEvent entities in bulk.
 type PositionEventCreateBulk struct {
 	config
 	err      error
 	builders []*PositionEventCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the PositionEvent entities in the database.
@@ -210,6 +393,7 @@ func (_c *PositionEventCreateBulk) Save(ctx context.Context) ([]*PositionEvent, 
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -260,6 +444,145 @@ func (_c *PositionEventCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *PositionEventCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.PositionEvent.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.PositionEventUpsert) {
+//			SetEventType(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *PositionEventCreateBulk) OnConflict(opts ...sql.ConflictOption) *PositionEventUpsertBulk {
+	_c.conflict = opts
+	return &PositionEventUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.PositionEvent.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *PositionEventCreateBulk) OnConflictColumns(columns ...string) *PositionEventUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &PositionEventUpsertBulk{
+		create: _c,
+	}
+}
+
+// PositionEventUpsertBulk is the builder for "upsert"-ing
+// a bulk of PositionEvent nodes.
+type PositionEventUpsertBulk struct {
+	create *PositionEventCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.PositionEvent.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *PositionEventUpsertBulk) UpdateNewValues() *PositionEventUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(positionevent.FieldCreatedAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.PositionEvent.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *PositionEventUpsertBulk) Ignore() *PositionEventUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *PositionEventUpsertBulk) DoNothing() *PositionEventUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the PositionEventCreateBulk.OnConflict
+// documentation for more info.
+func (u *PositionEventUpsertBulk) Update(set func(*PositionEventUpsert)) *PositionEventUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&PositionEventUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetEventType sets the "event_type" field.
+func (u *PositionEventUpsertBulk) SetEventType(v string) *PositionEventUpsertBulk {
+	return u.Update(func(s *PositionEventUpsert) {
+		s.SetEventType(v)
+	})
+}
+
+// UpdateEventType sets the "event_type" field to the value that was provided on create.
+func (u *PositionEventUpsertBulk) UpdateEventType() *PositionEventUpsertBulk {
+	return u.Update(func(s *PositionEventUpsert) {
+		s.UpdateEventType()
+	})
+}
+
+// SetDetails sets the "details" field.
+func (u *PositionEventUpsertBulk) SetDetails(v map[string]interface{}) *PositionEventUpsertBulk {
+	return u.Update(func(s *PositionEventUpsert) {
+		s.SetDetails(v)
+	})
+}
+
+// UpdateDetails sets the "details" field to the value that was provided on create.
+func (u *PositionEventUpsertBulk) UpdateDetails() *PositionEventUpsertBulk {
+	return u.Update(func(s *PositionEventUpsert) {
+		s.UpdateDetails()
+	})
+}
+
+// Exec executes the query.
+func (u *PositionEventUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the PositionEventCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for PositionEventCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *PositionEventUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

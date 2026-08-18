@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
@@ -21,6 +22,7 @@ type PaperPositionCreate struct {
 	config
 	mutation *PaperPositionMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetState sets the "state" field.
@@ -258,6 +260,7 @@ func (_c *PaperPositionCreate) createSpec() (*PaperPosition, *sqlgraph.CreateSpe
 		_node = &PaperPosition{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(paperposition.Table, sqlgraph.NewFieldSpec(paperposition.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.State(); ok {
 		_spec.SetField(paperposition.FieldState, field.TypeEnum, value)
 		_node.State = value
@@ -342,11 +345,360 @@ func (_c *PaperPositionCreate) createSpec() (*PaperPosition, *sqlgraph.CreateSpe
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.PaperPosition.Create().
+//		SetState(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.PaperPositionUpsert) {
+//			SetState(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *PaperPositionCreate) OnConflict(opts ...sql.ConflictOption) *PaperPositionUpsertOne {
+	_c.conflict = opts
+	return &PaperPositionUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.PaperPosition.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *PaperPositionCreate) OnConflictColumns(columns ...string) *PaperPositionUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &PaperPositionUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// PaperPositionUpsertOne is the builder for "upsert"-ing
+	//  one PaperPosition node.
+	PaperPositionUpsertOne struct {
+		create *PaperPositionCreate
+	}
+
+	// PaperPositionUpsert is the "OnConflict" setter.
+	PaperPositionUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetState sets the "state" field.
+func (u *PaperPositionUpsert) SetState(v paperposition.State) *PaperPositionUpsert {
+	u.Set(paperposition.FieldState, v)
+	return u
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateState() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldState)
+	return u
+}
+
+// SetNotionalMicros sets the "notional_micros" field.
+func (u *PaperPositionUpsert) SetNotionalMicros(v int64) *PaperPositionUpsert {
+	u.Set(paperposition.FieldNotionalMicros, v)
+	return u
+}
+
+// UpdateNotionalMicros sets the "notional_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateNotionalMicros() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldNotionalMicros)
+	return u
+}
+
+// AddNotionalMicros adds v to the "notional_micros" field.
+func (u *PaperPositionUpsert) AddNotionalMicros(v int64) *PaperPositionUpsert {
+	u.Add(paperposition.FieldNotionalMicros, v)
+	return u
+}
+
+// SetEntryPrice sets the "entry_price" field.
+func (u *PaperPositionUpsert) SetEntryPrice(v string) *PaperPositionUpsert {
+	u.Set(paperposition.FieldEntryPrice, v)
+	return u
+}
+
+// UpdateEntryPrice sets the "entry_price" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateEntryPrice() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldEntryPrice)
+	return u
+}
+
+// SetTokenQuantity sets the "token_quantity" field.
+func (u *PaperPositionUpsert) SetTokenQuantity(v string) *PaperPositionUpsert {
+	u.Set(paperposition.FieldTokenQuantity, v)
+	return u
+}
+
+// UpdateTokenQuantity sets the "token_quantity" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateTokenQuantity() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldTokenQuantity)
+	return u
+}
+
+// SetOpenedAt sets the "opened_at" field.
+func (u *PaperPositionUpsert) SetOpenedAt(v time.Time) *PaperPositionUpsert {
+	u.Set(paperposition.FieldOpenedAt, v)
+	return u
+}
+
+// UpdateOpenedAt sets the "opened_at" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateOpenedAt() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldOpenedAt)
+	return u
+}
+
+// ClearOpenedAt clears the value of the "opened_at" field.
+func (u *PaperPositionUpsert) ClearOpenedAt() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldOpenedAt)
+	return u
+}
+
+// SetClosedAt sets the "closed_at" field.
+func (u *PaperPositionUpsert) SetClosedAt(v time.Time) *PaperPositionUpsert {
+	u.Set(paperposition.FieldClosedAt, v)
+	return u
+}
+
+// UpdateClosedAt sets the "closed_at" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateClosedAt() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldClosedAt)
+	return u
+}
+
+// ClearClosedAt clears the value of the "closed_at" field.
+func (u *PaperPositionUpsert) ClearClosedAt() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldClosedAt)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *PaperPositionUpsert) SetUpdatedAt(v time.Time) *PaperPositionUpsert {
+	u.Set(paperposition.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateUpdatedAt() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldUpdatedAt)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.PaperPosition.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *PaperPositionUpsertOne) UpdateNewValues() *PaperPositionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(paperposition.FieldCreatedAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.PaperPosition.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *PaperPositionUpsertOne) Ignore() *PaperPositionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *PaperPositionUpsertOne) DoNothing() *PaperPositionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the PaperPositionCreate.OnConflict
+// documentation for more info.
+func (u *PaperPositionUpsertOne) Update(set func(*PaperPositionUpsert)) *PaperPositionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&PaperPositionUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *PaperPositionUpsertOne) SetState(v paperposition.State) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateState() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateState()
+	})
+}
+
+// SetNotionalMicros sets the "notional_micros" field.
+func (u *PaperPositionUpsertOne) SetNotionalMicros(v int64) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetNotionalMicros(v)
+	})
+}
+
+// AddNotionalMicros adds v to the "notional_micros" field.
+func (u *PaperPositionUpsertOne) AddNotionalMicros(v int64) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.AddNotionalMicros(v)
+	})
+}
+
+// UpdateNotionalMicros sets the "notional_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateNotionalMicros() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateNotionalMicros()
+	})
+}
+
+// SetEntryPrice sets the "entry_price" field.
+func (u *PaperPositionUpsertOne) SetEntryPrice(v string) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetEntryPrice(v)
+	})
+}
+
+// UpdateEntryPrice sets the "entry_price" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateEntryPrice() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateEntryPrice()
+	})
+}
+
+// SetTokenQuantity sets the "token_quantity" field.
+func (u *PaperPositionUpsertOne) SetTokenQuantity(v string) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetTokenQuantity(v)
+	})
+}
+
+// UpdateTokenQuantity sets the "token_quantity" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateTokenQuantity() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateTokenQuantity()
+	})
+}
+
+// SetOpenedAt sets the "opened_at" field.
+func (u *PaperPositionUpsertOne) SetOpenedAt(v time.Time) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetOpenedAt(v)
+	})
+}
+
+// UpdateOpenedAt sets the "opened_at" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateOpenedAt() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateOpenedAt()
+	})
+}
+
+// ClearOpenedAt clears the value of the "opened_at" field.
+func (u *PaperPositionUpsertOne) ClearOpenedAt() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearOpenedAt()
+	})
+}
+
+// SetClosedAt sets the "closed_at" field.
+func (u *PaperPositionUpsertOne) SetClosedAt(v time.Time) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetClosedAt(v)
+	})
+}
+
+// UpdateClosedAt sets the "closed_at" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateClosedAt() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateClosedAt()
+	})
+}
+
+// ClearClosedAt clears the value of the "closed_at" field.
+func (u *PaperPositionUpsertOne) ClearClosedAt() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearClosedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *PaperPositionUpsertOne) SetUpdatedAt(v time.Time) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateUpdatedAt() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *PaperPositionUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for PaperPositionCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *PaperPositionUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *PaperPositionUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *PaperPositionUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // PaperPositionCreateBulk is the builder for creating many PaperPosition entities in bulk.
 type PaperPositionCreateBulk struct {
 	config
 	err      error
 	builders []*PaperPositionCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the PaperPosition entities in the database.
@@ -376,6 +728,7 @@ func (_c *PaperPositionCreateBulk) Save(ctx context.Context) ([]*PaperPosition, 
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -426,6 +779,236 @@ func (_c *PaperPositionCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *PaperPositionCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.PaperPosition.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.PaperPositionUpsert) {
+//			SetState(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *PaperPositionCreateBulk) OnConflict(opts ...sql.ConflictOption) *PaperPositionUpsertBulk {
+	_c.conflict = opts
+	return &PaperPositionUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.PaperPosition.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *PaperPositionCreateBulk) OnConflictColumns(columns ...string) *PaperPositionUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &PaperPositionUpsertBulk{
+		create: _c,
+	}
+}
+
+// PaperPositionUpsertBulk is the builder for "upsert"-ing
+// a bulk of PaperPosition nodes.
+type PaperPositionUpsertBulk struct {
+	create *PaperPositionCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.PaperPosition.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *PaperPositionUpsertBulk) UpdateNewValues() *PaperPositionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(paperposition.FieldCreatedAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.PaperPosition.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *PaperPositionUpsertBulk) Ignore() *PaperPositionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *PaperPositionUpsertBulk) DoNothing() *PaperPositionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the PaperPositionCreateBulk.OnConflict
+// documentation for more info.
+func (u *PaperPositionUpsertBulk) Update(set func(*PaperPositionUpsert)) *PaperPositionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&PaperPositionUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *PaperPositionUpsertBulk) SetState(v paperposition.State) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateState() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateState()
+	})
+}
+
+// SetNotionalMicros sets the "notional_micros" field.
+func (u *PaperPositionUpsertBulk) SetNotionalMicros(v int64) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetNotionalMicros(v)
+	})
+}
+
+// AddNotionalMicros adds v to the "notional_micros" field.
+func (u *PaperPositionUpsertBulk) AddNotionalMicros(v int64) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.AddNotionalMicros(v)
+	})
+}
+
+// UpdateNotionalMicros sets the "notional_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateNotionalMicros() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateNotionalMicros()
+	})
+}
+
+// SetEntryPrice sets the "entry_price" field.
+func (u *PaperPositionUpsertBulk) SetEntryPrice(v string) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetEntryPrice(v)
+	})
+}
+
+// UpdateEntryPrice sets the "entry_price" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateEntryPrice() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateEntryPrice()
+	})
+}
+
+// SetTokenQuantity sets the "token_quantity" field.
+func (u *PaperPositionUpsertBulk) SetTokenQuantity(v string) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetTokenQuantity(v)
+	})
+}
+
+// UpdateTokenQuantity sets the "token_quantity" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateTokenQuantity() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateTokenQuantity()
+	})
+}
+
+// SetOpenedAt sets the "opened_at" field.
+func (u *PaperPositionUpsertBulk) SetOpenedAt(v time.Time) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetOpenedAt(v)
+	})
+}
+
+// UpdateOpenedAt sets the "opened_at" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateOpenedAt() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateOpenedAt()
+	})
+}
+
+// ClearOpenedAt clears the value of the "opened_at" field.
+func (u *PaperPositionUpsertBulk) ClearOpenedAt() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearOpenedAt()
+	})
+}
+
+// SetClosedAt sets the "closed_at" field.
+func (u *PaperPositionUpsertBulk) SetClosedAt(v time.Time) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetClosedAt(v)
+	})
+}
+
+// UpdateClosedAt sets the "closed_at" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateClosedAt() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateClosedAt()
+	})
+}
+
+// ClearClosedAt clears the value of the "closed_at" field.
+func (u *PaperPositionUpsertBulk) ClearClosedAt() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearClosedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *PaperPositionUpsertBulk) SetUpdatedAt(v time.Time) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateUpdatedAt() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *PaperPositionUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the PaperPositionCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for PaperPositionCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *PaperPositionUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/dailyresult"
@@ -18,6 +19,7 @@ type DailyResultCreate struct {
 	config
 	mutation *DailyResultMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetUtcDate sets the "utc_date" field.
@@ -185,6 +187,7 @@ func (_c *DailyResultCreate) createSpec() (*DailyResult, *sqlgraph.CreateSpec) {
 		_node = &DailyResult{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(dailyresult.Table, sqlgraph.NewFieldSpec(dailyresult.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.UtcDate(); ok {
 		_spec.SetField(dailyresult.FieldUtcDate, field.TypeTime, value)
 		_node.UtcDate = value
@@ -212,11 +215,295 @@ func (_c *DailyResultCreate) createSpec() (*DailyResult, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.DailyResult.Create().
+//		SetUtcDate(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.DailyResultUpsert) {
+//			SetUtcDate(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *DailyResultCreate) OnConflict(opts ...sql.ConflictOption) *DailyResultUpsertOne {
+	_c.conflict = opts
+	return &DailyResultUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.DailyResult.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *DailyResultCreate) OnConflictColumns(columns ...string) *DailyResultUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &DailyResultUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// DailyResultUpsertOne is the builder for "upsert"-ing
+	//  one DailyResult node.
+	DailyResultUpsertOne struct {
+		create *DailyResultCreate
+	}
+
+	// DailyResultUpsert is the "OnConflict" setter.
+	DailyResultUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetUtcDate sets the "utc_date" field.
+func (u *DailyResultUpsert) SetUtcDate(v time.Time) *DailyResultUpsert {
+	u.Set(dailyresult.FieldUtcDate, v)
+	return u
+}
+
+// UpdateUtcDate sets the "utc_date" field to the value that was provided on create.
+func (u *DailyResultUpsert) UpdateUtcDate() *DailyResultUpsert {
+	u.SetExcluded(dailyresult.FieldUtcDate)
+	return u
+}
+
+// SetStrategyVersion sets the "strategy_version" field.
+func (u *DailyResultUpsert) SetStrategyVersion(v string) *DailyResultUpsert {
+	u.Set(dailyresult.FieldStrategyVersion, v)
+	return u
+}
+
+// UpdateStrategyVersion sets the "strategy_version" field to the value that was provided on create.
+func (u *DailyResultUpsert) UpdateStrategyVersion() *DailyResultUpsert {
+	u.SetExcluded(dailyresult.FieldStrategyVersion)
+	return u
+}
+
+// SetDailyAdmittedCount sets the "daily_admitted_count" field.
+func (u *DailyResultUpsert) SetDailyAdmittedCount(v int) *DailyResultUpsert {
+	u.Set(dailyresult.FieldDailyAdmittedCount, v)
+	return u
+}
+
+// UpdateDailyAdmittedCount sets the "daily_admitted_count" field to the value that was provided on create.
+func (u *DailyResultUpsert) UpdateDailyAdmittedCount() *DailyResultUpsert {
+	u.SetExcluded(dailyresult.FieldDailyAdmittedCount)
+	return u
+}
+
+// AddDailyAdmittedCount adds v to the "daily_admitted_count" field.
+func (u *DailyResultUpsert) AddDailyAdmittedCount(v int) *DailyResultUpsert {
+	u.Add(dailyresult.FieldDailyAdmittedCount, v)
+	return u
+}
+
+// SetRealizedPnlMicros sets the "realized_pnl_micros" field.
+func (u *DailyResultUpsert) SetRealizedPnlMicros(v int64) *DailyResultUpsert {
+	u.Set(dailyresult.FieldRealizedPnlMicros, v)
+	return u
+}
+
+// UpdateRealizedPnlMicros sets the "realized_pnl_micros" field to the value that was provided on create.
+func (u *DailyResultUpsert) UpdateRealizedPnlMicros() *DailyResultUpsert {
+	u.SetExcluded(dailyresult.FieldRealizedPnlMicros)
+	return u
+}
+
+// AddRealizedPnlMicros adds v to the "realized_pnl_micros" field.
+func (u *DailyResultUpsert) AddRealizedPnlMicros(v int64) *DailyResultUpsert {
+	u.Add(dailyresult.FieldRealizedPnlMicros, v)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *DailyResultUpsert) SetUpdatedAt(v time.Time) *DailyResultUpsert {
+	u.Set(dailyresult.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *DailyResultUpsert) UpdateUpdatedAt() *DailyResultUpsert {
+	u.SetExcluded(dailyresult.FieldUpdatedAt)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.DailyResult.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *DailyResultUpsertOne) UpdateNewValues() *DailyResultUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(dailyresult.FieldCreatedAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.DailyResult.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *DailyResultUpsertOne) Ignore() *DailyResultUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *DailyResultUpsertOne) DoNothing() *DailyResultUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the DailyResultCreate.OnConflict
+// documentation for more info.
+func (u *DailyResultUpsertOne) Update(set func(*DailyResultUpsert)) *DailyResultUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&DailyResultUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetUtcDate sets the "utc_date" field.
+func (u *DailyResultUpsertOne) SetUtcDate(v time.Time) *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetUtcDate(v)
+	})
+}
+
+// UpdateUtcDate sets the "utc_date" field to the value that was provided on create.
+func (u *DailyResultUpsertOne) UpdateUtcDate() *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateUtcDate()
+	})
+}
+
+// SetStrategyVersion sets the "strategy_version" field.
+func (u *DailyResultUpsertOne) SetStrategyVersion(v string) *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetStrategyVersion(v)
+	})
+}
+
+// UpdateStrategyVersion sets the "strategy_version" field to the value that was provided on create.
+func (u *DailyResultUpsertOne) UpdateStrategyVersion() *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateStrategyVersion()
+	})
+}
+
+// SetDailyAdmittedCount sets the "daily_admitted_count" field.
+func (u *DailyResultUpsertOne) SetDailyAdmittedCount(v int) *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetDailyAdmittedCount(v)
+	})
+}
+
+// AddDailyAdmittedCount adds v to the "daily_admitted_count" field.
+func (u *DailyResultUpsertOne) AddDailyAdmittedCount(v int) *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.AddDailyAdmittedCount(v)
+	})
+}
+
+// UpdateDailyAdmittedCount sets the "daily_admitted_count" field to the value that was provided on create.
+func (u *DailyResultUpsertOne) UpdateDailyAdmittedCount() *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateDailyAdmittedCount()
+	})
+}
+
+// SetRealizedPnlMicros sets the "realized_pnl_micros" field.
+func (u *DailyResultUpsertOne) SetRealizedPnlMicros(v int64) *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetRealizedPnlMicros(v)
+	})
+}
+
+// AddRealizedPnlMicros adds v to the "realized_pnl_micros" field.
+func (u *DailyResultUpsertOne) AddRealizedPnlMicros(v int64) *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.AddRealizedPnlMicros(v)
+	})
+}
+
+// UpdateRealizedPnlMicros sets the "realized_pnl_micros" field to the value that was provided on create.
+func (u *DailyResultUpsertOne) UpdateRealizedPnlMicros() *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateRealizedPnlMicros()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *DailyResultUpsertOne) SetUpdatedAt(v time.Time) *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *DailyResultUpsertOne) UpdateUpdatedAt() *DailyResultUpsertOne {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *DailyResultUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for DailyResultCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *DailyResultUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *DailyResultUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *DailyResultUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // DailyResultCreateBulk is the builder for creating many DailyResult entities in bulk.
 type DailyResultCreateBulk struct {
 	config
 	err      error
 	builders []*DailyResultCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the DailyResult entities in the database.
@@ -246,6 +533,7 @@ func (_c *DailyResultCreateBulk) Save(ctx context.Context) ([]*DailyResult, erro
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -296,6 +584,201 @@ func (_c *DailyResultCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *DailyResultCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.DailyResult.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.DailyResultUpsert) {
+//			SetUtcDate(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *DailyResultCreateBulk) OnConflict(opts ...sql.ConflictOption) *DailyResultUpsertBulk {
+	_c.conflict = opts
+	return &DailyResultUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.DailyResult.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *DailyResultCreateBulk) OnConflictColumns(columns ...string) *DailyResultUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &DailyResultUpsertBulk{
+		create: _c,
+	}
+}
+
+// DailyResultUpsertBulk is the builder for "upsert"-ing
+// a bulk of DailyResult nodes.
+type DailyResultUpsertBulk struct {
+	create *DailyResultCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.DailyResult.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *DailyResultUpsertBulk) UpdateNewValues() *DailyResultUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(dailyresult.FieldCreatedAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.DailyResult.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *DailyResultUpsertBulk) Ignore() *DailyResultUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *DailyResultUpsertBulk) DoNothing() *DailyResultUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the DailyResultCreateBulk.OnConflict
+// documentation for more info.
+func (u *DailyResultUpsertBulk) Update(set func(*DailyResultUpsert)) *DailyResultUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&DailyResultUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetUtcDate sets the "utc_date" field.
+func (u *DailyResultUpsertBulk) SetUtcDate(v time.Time) *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetUtcDate(v)
+	})
+}
+
+// UpdateUtcDate sets the "utc_date" field to the value that was provided on create.
+func (u *DailyResultUpsertBulk) UpdateUtcDate() *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateUtcDate()
+	})
+}
+
+// SetStrategyVersion sets the "strategy_version" field.
+func (u *DailyResultUpsertBulk) SetStrategyVersion(v string) *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetStrategyVersion(v)
+	})
+}
+
+// UpdateStrategyVersion sets the "strategy_version" field to the value that was provided on create.
+func (u *DailyResultUpsertBulk) UpdateStrategyVersion() *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateStrategyVersion()
+	})
+}
+
+// SetDailyAdmittedCount sets the "daily_admitted_count" field.
+func (u *DailyResultUpsertBulk) SetDailyAdmittedCount(v int) *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetDailyAdmittedCount(v)
+	})
+}
+
+// AddDailyAdmittedCount adds v to the "daily_admitted_count" field.
+func (u *DailyResultUpsertBulk) AddDailyAdmittedCount(v int) *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.AddDailyAdmittedCount(v)
+	})
+}
+
+// UpdateDailyAdmittedCount sets the "daily_admitted_count" field to the value that was provided on create.
+func (u *DailyResultUpsertBulk) UpdateDailyAdmittedCount() *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateDailyAdmittedCount()
+	})
+}
+
+// SetRealizedPnlMicros sets the "realized_pnl_micros" field.
+func (u *DailyResultUpsertBulk) SetRealizedPnlMicros(v int64) *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetRealizedPnlMicros(v)
+	})
+}
+
+// AddRealizedPnlMicros adds v to the "realized_pnl_micros" field.
+func (u *DailyResultUpsertBulk) AddRealizedPnlMicros(v int64) *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.AddRealizedPnlMicros(v)
+	})
+}
+
+// UpdateRealizedPnlMicros sets the "realized_pnl_micros" field to the value that was provided on create.
+func (u *DailyResultUpsertBulk) UpdateRealizedPnlMicros() *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateRealizedPnlMicros()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *DailyResultUpsertBulk) SetUpdatedAt(v time.Time) *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *DailyResultUpsertBulk) UpdateUpdatedAt() *DailyResultUpsertBulk {
+	return u.Update(func(s *DailyResultUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *DailyResultUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the DailyResultCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for DailyResultCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *DailyResultUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
@@ -23,6 +24,7 @@ type CandidateCreate struct {
 	config
 	mutation *CandidateMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetNetwork sets the "network" field.
@@ -270,6 +272,7 @@ func (_c *CandidateCreate) createSpec() (*Candidate, *sqlgraph.CreateSpec) {
 		_node = &Candidate{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(candidate.Table, sqlgraph.NewFieldSpec(candidate.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.Network(); ok {
 		_spec.SetField(candidate.FieldNetwork, field.TypeString, value)
 		_node.Network = value
@@ -377,11 +380,269 @@ func (_c *CandidateCreate) createSpec() (*Candidate, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Candidate.Create().
+//		SetNetwork(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.CandidateUpsert) {
+//			SetNetwork(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *CandidateCreate) OnConflict(opts ...sql.ConflictOption) *CandidateUpsertOne {
+	_c.conflict = opts
+	return &CandidateUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Candidate.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *CandidateCreate) OnConflictColumns(columns ...string) *CandidateUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &CandidateUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// CandidateUpsertOne is the builder for "upsert"-ing
+	//  one Candidate node.
+	CandidateUpsertOne struct {
+		create *CandidateCreate
+	}
+
+	// CandidateUpsert is the "OnConflict" setter.
+	CandidateUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetNetwork sets the "network" field.
+func (u *CandidateUpsert) SetNetwork(v string) *CandidateUpsert {
+	u.Set(candidate.FieldNetwork, v)
+	return u
+}
+
+// UpdateNetwork sets the "network" field to the value that was provided on create.
+func (u *CandidateUpsert) UpdateNetwork() *CandidateUpsert {
+	u.SetExcluded(candidate.FieldNetwork)
+	return u
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (u *CandidateUpsert) SetMintAddress(v string) *CandidateUpsert {
+	u.Set(candidate.FieldMintAddress, v)
+	return u
+}
+
+// UpdateMintAddress sets the "mint_address" field to the value that was provided on create.
+func (u *CandidateUpsert) UpdateMintAddress() *CandidateUpsert {
+	u.SetExcluded(candidate.FieldMintAddress)
+	return u
+}
+
+// SetPoolAddress sets the "pool_address" field.
+func (u *CandidateUpsert) SetPoolAddress(v string) *CandidateUpsert {
+	u.Set(candidate.FieldPoolAddress, v)
+	return u
+}
+
+// UpdatePoolAddress sets the "pool_address" field to the value that was provided on create.
+func (u *CandidateUpsert) UpdatePoolAddress() *CandidateUpsert {
+	u.SetExcluded(candidate.FieldPoolAddress)
+	return u
+}
+
+// SetDiscoveredAt sets the "discovered_at" field.
+func (u *CandidateUpsert) SetDiscoveredAt(v time.Time) *CandidateUpsert {
+	u.Set(candidate.FieldDiscoveredAt, v)
+	return u
+}
+
+// UpdateDiscoveredAt sets the "discovered_at" field to the value that was provided on create.
+func (u *CandidateUpsert) UpdateDiscoveredAt() *CandidateUpsert {
+	u.SetExcluded(candidate.FieldDiscoveredAt)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *CandidateUpsert) SetUpdatedAt(v time.Time) *CandidateUpsert {
+	u.Set(candidate.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *CandidateUpsert) UpdateUpdatedAt() *CandidateUpsert {
+	u.SetExcluded(candidate.FieldUpdatedAt)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.Candidate.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *CandidateUpsertOne) UpdateNewValues() *CandidateUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(candidate.FieldCreatedAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Candidate.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *CandidateUpsertOne) Ignore() *CandidateUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *CandidateUpsertOne) DoNothing() *CandidateUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the CandidateCreate.OnConflict
+// documentation for more info.
+func (u *CandidateUpsertOne) Update(set func(*CandidateUpsert)) *CandidateUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&CandidateUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetNetwork sets the "network" field.
+func (u *CandidateUpsertOne) SetNetwork(v string) *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetNetwork(v)
+	})
+}
+
+// UpdateNetwork sets the "network" field to the value that was provided on create.
+func (u *CandidateUpsertOne) UpdateNetwork() *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdateNetwork()
+	})
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (u *CandidateUpsertOne) SetMintAddress(v string) *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetMintAddress(v)
+	})
+}
+
+// UpdateMintAddress sets the "mint_address" field to the value that was provided on create.
+func (u *CandidateUpsertOne) UpdateMintAddress() *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdateMintAddress()
+	})
+}
+
+// SetPoolAddress sets the "pool_address" field.
+func (u *CandidateUpsertOne) SetPoolAddress(v string) *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetPoolAddress(v)
+	})
+}
+
+// UpdatePoolAddress sets the "pool_address" field to the value that was provided on create.
+func (u *CandidateUpsertOne) UpdatePoolAddress() *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdatePoolAddress()
+	})
+}
+
+// SetDiscoveredAt sets the "discovered_at" field.
+func (u *CandidateUpsertOne) SetDiscoveredAt(v time.Time) *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetDiscoveredAt(v)
+	})
+}
+
+// UpdateDiscoveredAt sets the "discovered_at" field to the value that was provided on create.
+func (u *CandidateUpsertOne) UpdateDiscoveredAt() *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdateDiscoveredAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *CandidateUpsertOne) SetUpdatedAt(v time.Time) *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *CandidateUpsertOne) UpdateUpdatedAt() *CandidateUpsertOne {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *CandidateUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for CandidateCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *CandidateUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *CandidateUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *CandidateUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // CandidateCreateBulk is the builder for creating many Candidate entities in bulk.
 type CandidateCreateBulk struct {
 	config
 	err      error
 	builders []*CandidateCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Candidate entities in the database.
@@ -411,6 +672,7 @@ func (_c *CandidateCreateBulk) Save(ctx context.Context) ([]*Candidate, error) {
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -461,6 +723,187 @@ func (_c *CandidateCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *CandidateCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Candidate.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.CandidateUpsert) {
+//			SetNetwork(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *CandidateCreateBulk) OnConflict(opts ...sql.ConflictOption) *CandidateUpsertBulk {
+	_c.conflict = opts
+	return &CandidateUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Candidate.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *CandidateCreateBulk) OnConflictColumns(columns ...string) *CandidateUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &CandidateUpsertBulk{
+		create: _c,
+	}
+}
+
+// CandidateUpsertBulk is the builder for "upsert"-ing
+// a bulk of Candidate nodes.
+type CandidateUpsertBulk struct {
+	create *CandidateCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Candidate.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *CandidateUpsertBulk) UpdateNewValues() *CandidateUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(candidate.FieldCreatedAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Candidate.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *CandidateUpsertBulk) Ignore() *CandidateUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *CandidateUpsertBulk) DoNothing() *CandidateUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the CandidateCreateBulk.OnConflict
+// documentation for more info.
+func (u *CandidateUpsertBulk) Update(set func(*CandidateUpsert)) *CandidateUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&CandidateUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetNetwork sets the "network" field.
+func (u *CandidateUpsertBulk) SetNetwork(v string) *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetNetwork(v)
+	})
+}
+
+// UpdateNetwork sets the "network" field to the value that was provided on create.
+func (u *CandidateUpsertBulk) UpdateNetwork() *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdateNetwork()
+	})
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (u *CandidateUpsertBulk) SetMintAddress(v string) *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetMintAddress(v)
+	})
+}
+
+// UpdateMintAddress sets the "mint_address" field to the value that was provided on create.
+func (u *CandidateUpsertBulk) UpdateMintAddress() *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdateMintAddress()
+	})
+}
+
+// SetPoolAddress sets the "pool_address" field.
+func (u *CandidateUpsertBulk) SetPoolAddress(v string) *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetPoolAddress(v)
+	})
+}
+
+// UpdatePoolAddress sets the "pool_address" field to the value that was provided on create.
+func (u *CandidateUpsertBulk) UpdatePoolAddress() *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdatePoolAddress()
+	})
+}
+
+// SetDiscoveredAt sets the "discovered_at" field.
+func (u *CandidateUpsertBulk) SetDiscoveredAt(v time.Time) *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetDiscoveredAt(v)
+	})
+}
+
+// UpdateDiscoveredAt sets the "discovered_at" field to the value that was provided on create.
+func (u *CandidateUpsertBulk) UpdateDiscoveredAt() *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdateDiscoveredAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *CandidateUpsertBulk) SetUpdatedAt(v time.Time) *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *CandidateUpsertBulk) UpdateUpdatedAt() *CandidateUpsertBulk {
+	return u.Update(func(s *CandidateUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *CandidateUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the CandidateCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for CandidateCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *CandidateUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

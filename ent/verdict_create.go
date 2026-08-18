@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
@@ -19,6 +20,7 @@ type VerdictCreate struct {
 	config
 	mutation *VerdictMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetProvider sets the "provider" field.
@@ -172,6 +174,7 @@ func (_c *VerdictCreate) createSpec() (*Verdict, *sqlgraph.CreateSpec) {
 		_node = &Verdict{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(verdict.Table, sqlgraph.NewFieldSpec(verdict.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.Provider(); ok {
 		_spec.SetField(verdict.FieldProvider, field.TypeString, value)
 		_node.Provider = value
@@ -212,11 +215,243 @@ func (_c *VerdictCreate) createSpec() (*Verdict, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Verdict.Create().
+//		SetProvider(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.VerdictUpsert) {
+//			SetProvider(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *VerdictCreate) OnConflict(opts ...sql.ConflictOption) *VerdictUpsertOne {
+	_c.conflict = opts
+	return &VerdictUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Verdict.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *VerdictCreate) OnConflictColumns(columns ...string) *VerdictUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &VerdictUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// VerdictUpsertOne is the builder for "upsert"-ing
+	//  one Verdict node.
+	VerdictUpsertOne struct {
+		create *VerdictCreate
+	}
+
+	// VerdictUpsert is the "OnConflict" setter.
+	VerdictUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetProvider sets the "provider" field.
+func (u *VerdictUpsert) SetProvider(v string) *VerdictUpsert {
+	u.Set(verdict.FieldProvider, v)
+	return u
+}
+
+// UpdateProvider sets the "provider" field to the value that was provided on create.
+func (u *VerdictUpsert) UpdateProvider() *VerdictUpsert {
+	u.SetExcluded(verdict.FieldProvider)
+	return u
+}
+
+// SetModel sets the "model" field.
+func (u *VerdictUpsert) SetModel(v string) *VerdictUpsert {
+	u.Set(verdict.FieldModel, v)
+	return u
+}
+
+// UpdateModel sets the "model" field to the value that was provided on create.
+func (u *VerdictUpsert) UpdateModel() *VerdictUpsert {
+	u.SetExcluded(verdict.FieldModel)
+	return u
+}
+
+// SetOutcome sets the "outcome" field.
+func (u *VerdictUpsert) SetOutcome(v string) *VerdictUpsert {
+	u.Set(verdict.FieldOutcome, v)
+	return u
+}
+
+// UpdateOutcome sets the "outcome" field to the value that was provided on create.
+func (u *VerdictUpsert) UpdateOutcome() *VerdictUpsert {
+	u.SetExcluded(verdict.FieldOutcome)
+	return u
+}
+
+// SetEvidence sets the "evidence" field.
+func (u *VerdictUpsert) SetEvidence(v map[string]interface{}) *VerdictUpsert {
+	u.Set(verdict.FieldEvidence, v)
+	return u
+}
+
+// UpdateEvidence sets the "evidence" field to the value that was provided on create.
+func (u *VerdictUpsert) UpdateEvidence() *VerdictUpsert {
+	u.SetExcluded(verdict.FieldEvidence)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.Verdict.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *VerdictUpsertOne) UpdateNewValues() *VerdictUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(verdict.FieldCreatedAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Verdict.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *VerdictUpsertOne) Ignore() *VerdictUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *VerdictUpsertOne) DoNothing() *VerdictUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the VerdictCreate.OnConflict
+// documentation for more info.
+func (u *VerdictUpsertOne) Update(set func(*VerdictUpsert)) *VerdictUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&VerdictUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetProvider sets the "provider" field.
+func (u *VerdictUpsertOne) SetProvider(v string) *VerdictUpsertOne {
+	return u.Update(func(s *VerdictUpsert) {
+		s.SetProvider(v)
+	})
+}
+
+// UpdateProvider sets the "provider" field to the value that was provided on create.
+func (u *VerdictUpsertOne) UpdateProvider() *VerdictUpsertOne {
+	return u.Update(func(s *VerdictUpsert) {
+		s.UpdateProvider()
+	})
+}
+
+// SetModel sets the "model" field.
+func (u *VerdictUpsertOne) SetModel(v string) *VerdictUpsertOne {
+	return u.Update(func(s *VerdictUpsert) {
+		s.SetModel(v)
+	})
+}
+
+// UpdateModel sets the "model" field to the value that was provided on create.
+func (u *VerdictUpsertOne) UpdateModel() *VerdictUpsertOne {
+	return u.Update(func(s *VerdictUpsert) {
+		s.UpdateModel()
+	})
+}
+
+// SetOutcome sets the "outcome" field.
+func (u *VerdictUpsertOne) SetOutcome(v string) *VerdictUpsertOne {
+	return u.Update(func(s *VerdictUpsert) {
+		s.SetOutcome(v)
+	})
+}
+
+// UpdateOutcome sets the "outcome" field to the value that was provided on create.
+func (u *VerdictUpsertOne) UpdateOutcome() *VerdictUpsertOne {
+	return u.Update(func(s *VerdictUpsert) {
+		s.UpdateOutcome()
+	})
+}
+
+// SetEvidence sets the "evidence" field.
+func (u *VerdictUpsertOne) SetEvidence(v map[string]interface{}) *VerdictUpsertOne {
+	return u.Update(func(s *VerdictUpsert) {
+		s.SetEvidence(v)
+	})
+}
+
+// UpdateEvidence sets the "evidence" field to the value that was provided on create.
+func (u *VerdictUpsertOne) UpdateEvidence() *VerdictUpsertOne {
+	return u.Update(func(s *VerdictUpsert) {
+		s.UpdateEvidence()
+	})
+}
+
+// Exec executes the query.
+func (u *VerdictUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for VerdictCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *VerdictUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *VerdictUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *VerdictUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // VerdictCreateBulk is the builder for creating many Verdict entities in bulk.
 type VerdictCreateBulk struct {
 	config
 	err      error
 	builders []*VerdictCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Verdict entities in the database.
@@ -246,6 +481,7 @@ func (_c *VerdictCreateBulk) Save(ctx context.Context) ([]*Verdict, error) {
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -296,6 +532,173 @@ func (_c *VerdictCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *VerdictCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Verdict.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.VerdictUpsert) {
+//			SetProvider(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *VerdictCreateBulk) OnConflict(opts ...sql.ConflictOption) *VerdictUpsertBulk {
+	_c.conflict = opts
+	return &VerdictUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Verdict.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *VerdictCreateBulk) OnConflictColumns(columns ...string) *VerdictUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &VerdictUpsertBulk{
+		create: _c,
+	}
+}
+
+// VerdictUpsertBulk is the builder for "upsert"-ing
+// a bulk of Verdict nodes.
+type VerdictUpsertBulk struct {
+	create *VerdictCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Verdict.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *VerdictUpsertBulk) UpdateNewValues() *VerdictUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(verdict.FieldCreatedAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Verdict.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *VerdictUpsertBulk) Ignore() *VerdictUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *VerdictUpsertBulk) DoNothing() *VerdictUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the VerdictCreateBulk.OnConflict
+// documentation for more info.
+func (u *VerdictUpsertBulk) Update(set func(*VerdictUpsert)) *VerdictUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&VerdictUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetProvider sets the "provider" field.
+func (u *VerdictUpsertBulk) SetProvider(v string) *VerdictUpsertBulk {
+	return u.Update(func(s *VerdictUpsert) {
+		s.SetProvider(v)
+	})
+}
+
+// UpdateProvider sets the "provider" field to the value that was provided on create.
+func (u *VerdictUpsertBulk) UpdateProvider() *VerdictUpsertBulk {
+	return u.Update(func(s *VerdictUpsert) {
+		s.UpdateProvider()
+	})
+}
+
+// SetModel sets the "model" field.
+func (u *VerdictUpsertBulk) SetModel(v string) *VerdictUpsertBulk {
+	return u.Update(func(s *VerdictUpsert) {
+		s.SetModel(v)
+	})
+}
+
+// UpdateModel sets the "model" field to the value that was provided on create.
+func (u *VerdictUpsertBulk) UpdateModel() *VerdictUpsertBulk {
+	return u.Update(func(s *VerdictUpsert) {
+		s.UpdateModel()
+	})
+}
+
+// SetOutcome sets the "outcome" field.
+func (u *VerdictUpsertBulk) SetOutcome(v string) *VerdictUpsertBulk {
+	return u.Update(func(s *VerdictUpsert) {
+		s.SetOutcome(v)
+	})
+}
+
+// UpdateOutcome sets the "outcome" field to the value that was provided on create.
+func (u *VerdictUpsertBulk) UpdateOutcome() *VerdictUpsertBulk {
+	return u.Update(func(s *VerdictUpsert) {
+		s.UpdateOutcome()
+	})
+}
+
+// SetEvidence sets the "evidence" field.
+func (u *VerdictUpsertBulk) SetEvidence(v map[string]interface{}) *VerdictUpsertBulk {
+	return u.Update(func(s *VerdictUpsert) {
+		s.SetEvidence(v)
+	})
+}
+
+// UpdateEvidence sets the "evidence" field to the value that was provided on create.
+func (u *VerdictUpsertBulk) UpdateEvidence() *VerdictUpsertBulk {
+	return u.Update(func(s *VerdictUpsert) {
+		s.UpdateEvidence()
+	})
+}
+
+// Exec executes the query.
+func (u *VerdictUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the VerdictCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for VerdictCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *VerdictUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

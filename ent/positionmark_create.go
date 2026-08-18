@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/paperposition"
@@ -19,6 +20,7 @@ type PositionMarkCreate struct {
 	config
 	mutation *PositionMarkMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetPrice sets the "price" field.
@@ -156,6 +158,7 @@ func (_c *PositionMarkCreate) createSpec() (*PositionMark, *sqlgraph.CreateSpec)
 		_node = &PositionMark{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(positionmark.Table, sqlgraph.NewFieldSpec(positionmark.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.Price(); ok {
 		_spec.SetField(positionmark.FieldPrice, field.TypeString, value)
 		_node.Price = value
@@ -188,11 +191,191 @@ func (_c *PositionMarkCreate) createSpec() (*PositionMark, *sqlgraph.CreateSpec)
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.PositionMark.Create().
+//		SetPrice(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.PositionMarkUpsert) {
+//			SetPrice(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *PositionMarkCreate) OnConflict(opts ...sql.ConflictOption) *PositionMarkUpsertOne {
+	_c.conflict = opts
+	return &PositionMarkUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.PositionMark.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *PositionMarkCreate) OnConflictColumns(columns ...string) *PositionMarkUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &PositionMarkUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// PositionMarkUpsertOne is the builder for "upsert"-ing
+	//  one PositionMark node.
+	PositionMarkUpsertOne struct {
+		create *PositionMarkCreate
+	}
+
+	// PositionMarkUpsert is the "OnConflict" setter.
+	PositionMarkUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetPrice sets the "price" field.
+func (u *PositionMarkUpsert) SetPrice(v string) *PositionMarkUpsert {
+	u.Set(positionmark.FieldPrice, v)
+	return u
+}
+
+// UpdatePrice sets the "price" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdatePrice() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldPrice)
+	return u
+}
+
+// SetObservedAt sets the "observed_at" field.
+func (u *PositionMarkUpsert) SetObservedAt(v time.Time) *PositionMarkUpsert {
+	u.Set(positionmark.FieldObservedAt, v)
+	return u
+}
+
+// UpdateObservedAt sets the "observed_at" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateObservedAt() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldObservedAt)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.PositionMark.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *PositionMarkUpsertOne) UpdateNewValues() *PositionMarkUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(positionmark.FieldCreatedAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.PositionMark.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *PositionMarkUpsertOne) Ignore() *PositionMarkUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *PositionMarkUpsertOne) DoNothing() *PositionMarkUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the PositionMarkCreate.OnConflict
+// documentation for more info.
+func (u *PositionMarkUpsertOne) Update(set func(*PositionMarkUpsert)) *PositionMarkUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&PositionMarkUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetPrice sets the "price" field.
+func (u *PositionMarkUpsertOne) SetPrice(v string) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetPrice(v)
+	})
+}
+
+// UpdatePrice sets the "price" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdatePrice() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdatePrice()
+	})
+}
+
+// SetObservedAt sets the "observed_at" field.
+func (u *PositionMarkUpsertOne) SetObservedAt(v time.Time) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetObservedAt(v)
+	})
+}
+
+// UpdateObservedAt sets the "observed_at" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateObservedAt() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateObservedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *PositionMarkUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for PositionMarkCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *PositionMarkUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *PositionMarkUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *PositionMarkUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // PositionMarkCreateBulk is the builder for creating many PositionMark entities in bulk.
 type PositionMarkCreateBulk struct {
 	config
 	err      error
 	builders []*PositionMarkCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the PositionMark entities in the database.
@@ -222,6 +405,7 @@ func (_c *PositionMarkCreateBulk) Save(ctx context.Context) ([]*PositionMark, er
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -272,6 +456,145 @@ func (_c *PositionMarkCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *PositionMarkCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.PositionMark.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.PositionMarkUpsert) {
+//			SetPrice(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *PositionMarkCreateBulk) OnConflict(opts ...sql.ConflictOption) *PositionMarkUpsertBulk {
+	_c.conflict = opts
+	return &PositionMarkUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.PositionMark.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *PositionMarkCreateBulk) OnConflictColumns(columns ...string) *PositionMarkUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &PositionMarkUpsertBulk{
+		create: _c,
+	}
+}
+
+// PositionMarkUpsertBulk is the builder for "upsert"-ing
+// a bulk of PositionMark nodes.
+type PositionMarkUpsertBulk struct {
+	create *PositionMarkCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.PositionMark.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *PositionMarkUpsertBulk) UpdateNewValues() *PositionMarkUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(positionmark.FieldCreatedAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.PositionMark.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *PositionMarkUpsertBulk) Ignore() *PositionMarkUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *PositionMarkUpsertBulk) DoNothing() *PositionMarkUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the PositionMarkCreateBulk.OnConflict
+// documentation for more info.
+func (u *PositionMarkUpsertBulk) Update(set func(*PositionMarkUpsert)) *PositionMarkUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&PositionMarkUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetPrice sets the "price" field.
+func (u *PositionMarkUpsertBulk) SetPrice(v string) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetPrice(v)
+	})
+}
+
+// UpdatePrice sets the "price" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdatePrice() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdatePrice()
+	})
+}
+
+// SetObservedAt sets the "observed_at" field.
+func (u *PositionMarkUpsertBulk) SetObservedAt(v time.Time) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetObservedAt(v)
+	})
+}
+
+// UpdateObservedAt sets the "observed_at" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateObservedAt() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateObservedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *PositionMarkUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the PositionMarkCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for PositionMarkCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *PositionMarkUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

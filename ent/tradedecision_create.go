@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
@@ -19,6 +20,7 @@ type TradeDecisionCreate struct {
 	config
 	mutation *TradeDecisionMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetIdempotencyKey sets the "idempotency_key" field.
@@ -158,6 +160,7 @@ func (_c *TradeDecisionCreate) createSpec() (*TradeDecision, *sqlgraph.CreateSpe
 		_node = &TradeDecision{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(tradedecision.Table, sqlgraph.NewFieldSpec(tradedecision.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.IdempotencyKey(); ok {
 		_spec.SetField(tradedecision.FieldIdempotencyKey, field.TypeString, value)
 		_node.IdempotencyKey = value
@@ -194,11 +197,217 @@ func (_c *TradeDecisionCreate) createSpec() (*TradeDecision, *sqlgraph.CreateSpe
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.TradeDecision.Create().
+//		SetIdempotencyKey(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.TradeDecisionUpsert) {
+//			SetIdempotencyKey(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *TradeDecisionCreate) OnConflict(opts ...sql.ConflictOption) *TradeDecisionUpsertOne {
+	_c.conflict = opts
+	return &TradeDecisionUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.TradeDecision.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *TradeDecisionCreate) OnConflictColumns(columns ...string) *TradeDecisionUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &TradeDecisionUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// TradeDecisionUpsertOne is the builder for "upsert"-ing
+	//  one TradeDecision node.
+	TradeDecisionUpsertOne struct {
+		create *TradeDecisionCreate
+	}
+
+	// TradeDecisionUpsert is the "OnConflict" setter.
+	TradeDecisionUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetIdempotencyKey sets the "idempotency_key" field.
+func (u *TradeDecisionUpsert) SetIdempotencyKey(v string) *TradeDecisionUpsert {
+	u.Set(tradedecision.FieldIdempotencyKey, v)
+	return u
+}
+
+// UpdateIdempotencyKey sets the "idempotency_key" field to the value that was provided on create.
+func (u *TradeDecisionUpsert) UpdateIdempotencyKey() *TradeDecisionUpsert {
+	u.SetExcluded(tradedecision.FieldIdempotencyKey)
+	return u
+}
+
+// SetOutcome sets the "outcome" field.
+func (u *TradeDecisionUpsert) SetOutcome(v string) *TradeDecisionUpsert {
+	u.Set(tradedecision.FieldOutcome, v)
+	return u
+}
+
+// UpdateOutcome sets the "outcome" field to the value that was provided on create.
+func (u *TradeDecisionUpsert) UpdateOutcome() *TradeDecisionUpsert {
+	u.SetExcluded(tradedecision.FieldOutcome)
+	return u
+}
+
+// SetRuleResults sets the "rule_results" field.
+func (u *TradeDecisionUpsert) SetRuleResults(v map[string]interface{}) *TradeDecisionUpsert {
+	u.Set(tradedecision.FieldRuleResults, v)
+	return u
+}
+
+// UpdateRuleResults sets the "rule_results" field to the value that was provided on create.
+func (u *TradeDecisionUpsert) UpdateRuleResults() *TradeDecisionUpsert {
+	u.SetExcluded(tradedecision.FieldRuleResults)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.TradeDecision.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *TradeDecisionUpsertOne) UpdateNewValues() *TradeDecisionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.CreatedAt(); exists {
+			s.SetIgnore(tradedecision.FieldCreatedAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.TradeDecision.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *TradeDecisionUpsertOne) Ignore() *TradeDecisionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *TradeDecisionUpsertOne) DoNothing() *TradeDecisionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the TradeDecisionCreate.OnConflict
+// documentation for more info.
+func (u *TradeDecisionUpsertOne) Update(set func(*TradeDecisionUpsert)) *TradeDecisionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&TradeDecisionUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetIdempotencyKey sets the "idempotency_key" field.
+func (u *TradeDecisionUpsertOne) SetIdempotencyKey(v string) *TradeDecisionUpsertOne {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.SetIdempotencyKey(v)
+	})
+}
+
+// UpdateIdempotencyKey sets the "idempotency_key" field to the value that was provided on create.
+func (u *TradeDecisionUpsertOne) UpdateIdempotencyKey() *TradeDecisionUpsertOne {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.UpdateIdempotencyKey()
+	})
+}
+
+// SetOutcome sets the "outcome" field.
+func (u *TradeDecisionUpsertOne) SetOutcome(v string) *TradeDecisionUpsertOne {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.SetOutcome(v)
+	})
+}
+
+// UpdateOutcome sets the "outcome" field to the value that was provided on create.
+func (u *TradeDecisionUpsertOne) UpdateOutcome() *TradeDecisionUpsertOne {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.UpdateOutcome()
+	})
+}
+
+// SetRuleResults sets the "rule_results" field.
+func (u *TradeDecisionUpsertOne) SetRuleResults(v map[string]interface{}) *TradeDecisionUpsertOne {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.SetRuleResults(v)
+	})
+}
+
+// UpdateRuleResults sets the "rule_results" field to the value that was provided on create.
+func (u *TradeDecisionUpsertOne) UpdateRuleResults() *TradeDecisionUpsertOne {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.UpdateRuleResults()
+	})
+}
+
+// Exec executes the query.
+func (u *TradeDecisionUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for TradeDecisionCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *TradeDecisionUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *TradeDecisionUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *TradeDecisionUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // TradeDecisionCreateBulk is the builder for creating many TradeDecision entities in bulk.
 type TradeDecisionCreateBulk struct {
 	config
 	err      error
 	builders []*TradeDecisionCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the TradeDecision entities in the database.
@@ -228,6 +437,7 @@ func (_c *TradeDecisionCreateBulk) Save(ctx context.Context) ([]*TradeDecision, 
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -278,6 +488,159 @@ func (_c *TradeDecisionCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *TradeDecisionCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.TradeDecision.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.TradeDecisionUpsert) {
+//			SetIdempotencyKey(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *TradeDecisionCreateBulk) OnConflict(opts ...sql.ConflictOption) *TradeDecisionUpsertBulk {
+	_c.conflict = opts
+	return &TradeDecisionUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.TradeDecision.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *TradeDecisionCreateBulk) OnConflictColumns(columns ...string) *TradeDecisionUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &TradeDecisionUpsertBulk{
+		create: _c,
+	}
+}
+
+// TradeDecisionUpsertBulk is the builder for "upsert"-ing
+// a bulk of TradeDecision nodes.
+type TradeDecisionUpsertBulk struct {
+	create *TradeDecisionCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.TradeDecision.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *TradeDecisionUpsertBulk) UpdateNewValues() *TradeDecisionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.CreatedAt(); exists {
+				s.SetIgnore(tradedecision.FieldCreatedAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.TradeDecision.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *TradeDecisionUpsertBulk) Ignore() *TradeDecisionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *TradeDecisionUpsertBulk) DoNothing() *TradeDecisionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the TradeDecisionCreateBulk.OnConflict
+// documentation for more info.
+func (u *TradeDecisionUpsertBulk) Update(set func(*TradeDecisionUpsert)) *TradeDecisionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&TradeDecisionUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetIdempotencyKey sets the "idempotency_key" field.
+func (u *TradeDecisionUpsertBulk) SetIdempotencyKey(v string) *TradeDecisionUpsertBulk {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.SetIdempotencyKey(v)
+	})
+}
+
+// UpdateIdempotencyKey sets the "idempotency_key" field to the value that was provided on create.
+func (u *TradeDecisionUpsertBulk) UpdateIdempotencyKey() *TradeDecisionUpsertBulk {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.UpdateIdempotencyKey()
+	})
+}
+
+// SetOutcome sets the "outcome" field.
+func (u *TradeDecisionUpsertBulk) SetOutcome(v string) *TradeDecisionUpsertBulk {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.SetOutcome(v)
+	})
+}
+
+// UpdateOutcome sets the "outcome" field to the value that was provided on create.
+func (u *TradeDecisionUpsertBulk) UpdateOutcome() *TradeDecisionUpsertBulk {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.UpdateOutcome()
+	})
+}
+
+// SetRuleResults sets the "rule_results" field.
+func (u *TradeDecisionUpsertBulk) SetRuleResults(v map[string]interface{}) *TradeDecisionUpsertBulk {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.SetRuleResults(v)
+	})
+}
+
+// UpdateRuleResults sets the "rule_results" field to the value that was provided on create.
+func (u *TradeDecisionUpsertBulk) UpdateRuleResults() *TradeDecisionUpsertBulk {
+	return u.Update(func(s *TradeDecisionUpsert) {
+		s.UpdateRuleResults()
+	})
+}
+
+// Exec executes the query.
+func (u *TradeDecisionUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the TradeDecisionCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for TradeDecisionCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *TradeDecisionUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
