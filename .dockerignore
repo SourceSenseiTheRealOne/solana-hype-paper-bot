@@ -1,0 +1,13 @@
+.git
+.codegraph
+.env
+.env.local
+var
+node_modules
+dashboard/node_modules
+dashboard/dist
+supabase/.branches
+supabase/.temp
+supabase/.env
+coverage
+*.coverprofile

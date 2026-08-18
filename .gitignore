@@ -26,6 +26,21 @@ go.work.sum
 
 # env file
 .env
+.env.local
+.env.*.local
+!.env.example
+
+# Local runtime state and code intelligence
+var/
+.codegraph/
+codegraph.json
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+
+# Frontend dependencies and build output
+dashboard/node_modules/
+dashboard/dist/
 
 # Editor/IDE
 # .idea/
