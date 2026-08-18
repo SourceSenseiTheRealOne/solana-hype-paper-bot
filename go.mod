@@ -4,6 +4,7 @@ go 1.26.2
 
 require (
 	entgo.io/ent v0.14.6
+	github.com/caarlos0/env/v11 v11.4.1
 	github.com/jackc/pgx/v5 v5.10.0
 )
 
