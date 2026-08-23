@@ -1,6 +1,7 @@
 package httpclient
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -72,17 +73,81 @@ func New(options Options) (*Client, error) {
 }
 
 func (client *Client) GetJSON(ctx context.Context, path string, query url.Values, destination any) error {
+	return client.getJSON(ctx, path, query, nil, destination)
+}
+
+func (client *Client) GetJSONWithHeaders(ctx context.Context, path string, query url.Values, headers http.Header, destination any) error {
+	return client.getJSON(ctx, path, query, headers, destination)
+}
+
+func (client *Client) PostJSON(ctx context.Context, path string, payload any, destination any) error {
+	return client.postJSON(ctx, path, payload, nil, destination)
+}
+
+func (client *Client) PostJSONWithHeaders(ctx context.Context, path string, payload any, headers http.Header, destination any) error {
+	return client.postJSON(ctx, path, payload, headers, destination)
+}
+
+func (client *Client) postJSON(ctx context.Context, path string, payload any, headers http.Header, destination any) error {
+	if !strings.HasPrefix(path, "/") || strings.HasPrefix(path, "//") {
+		return errors.New("provider path must be an absolute path within the configured base URL")
+	}
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("encode provider request: %w", err)
+	}
+	requestURL := client.requestURL(path, nil)
+	for attempt := 1; attempt <= client.maxAttempts; attempt++ {
+		requestContext, cancel := context.WithTimeout(ctx, client.timeout)
+		request, err := http.NewRequestWithContext(requestContext, http.MethodPost, requestURL.String(), bytes.NewReader(body))
+		if err == nil {
+			request.Header.Set("Accept", "application/json")
+			request.Header.Set("Content-Type", "application/json")
+			request.Header.Set("User-Agent", client.userAgent)
+			for name, values := range headers {
+				for _, value := range values {
+					request.Header.Add(name, value)
+				}
+			}
+			response, requestError := client.httpClient.Do(request)
+			if requestError == nil {
+				err = client.decodeResponse(response, destination)
+				_ = response.Body.Close()
+			} else {
+				err = requestError
+			}
+		}
+		cancel()
+		if err == nil {
+			return nil
+		}
+		if !isRetryable(err) || attempt == client.maxAttempts {
+			return err
+		}
+		if err := waitForRetry(ctx, retryDelay(err, attempt)); err != nil {
+			return err
+		}
+	}
+	return ErrUpstream
+}
+
+func (client *Client) getJSON(ctx context.Context, path string, query url.Values, headers http.Header, destination any) error {
 	if !strings.HasPrefix(path, "/") || strings.HasPrefix(path, "//") {
 		return errors.New("provider path must be an absolute path within the configured base URL")
 	}
 
-	requestURL := client.baseURL.ResolveReference(&url.URL{Path: path, RawQuery: query.Encode()})
+	requestURL := client.requestURL(path, query)
 	for attempt := 1; attempt <= client.maxAttempts; attempt++ {
 		requestContext, cancel := context.WithTimeout(ctx, client.timeout)
 		request, err := http.NewRequestWithContext(requestContext, http.MethodGet, requestURL.String(), nil)
 		if err == nil {
 			request.Header.Set("Accept", "application/json")
 			request.Header.Set("User-Agent", client.userAgent)
+			for name, values := range headers {
+				for _, value := range values {
+					request.Header.Add(name, value)
+				}
+			}
 			response, requestError := client.httpClient.Do(request)
 			if requestError == nil {
 				err = client.decodeResponse(response, destination)
@@ -121,6 +186,21 @@ func (client *Client) decodeResponse(response *http.Response, destination any) e
 		return ErrResponseTooLarge
 	}
 	return nil
+}
+
+func (client *Client) requestURL(path string, query url.Values) *url.URL {
+	requestURL := *client.baseURL
+	requestURL.Path = path
+	requestURL.RawPath = ""
+	parameters := requestURL.Query()
+	for name, values := range query {
+		if _, fixed := parameters[name]; fixed {
+			continue
+		}
+		parameters[name] = append([]string(nil), values...)
+	}
+	requestURL.RawQuery = parameters.Encode()
+	return &requestURL
 }
 
 func isRetryable(err error) bool {

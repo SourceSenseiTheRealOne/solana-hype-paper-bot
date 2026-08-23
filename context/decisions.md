@@ -23,7 +23,7 @@
 - **Status:** accepted
 - **Date:** 2026-08-18
 - **Context:** The product researches and evaluates trades without financial custody or blockchain-write risk.
-- **Decision:** Simulate $10 entries and exits from read-only executable quotes; forbid wallets, signing, transaction building, swaps, Trigger orders, and all blockchain writes.
+- **Decision:** Simulate $100 entries and exits from read-only executable quotes; forbid wallets, signing, transaction building, swaps, Trigger orders, and all blockchain writes.
 - **Alternatives:** wallet-backed execution; third-party trade automation.
 - **Consequences:** A forbidden-dependency script and code review guard the boundary.
 

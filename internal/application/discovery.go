@@ -18,6 +18,7 @@ type DiscoveryResult struct {
 	Inserted    int
 	Overlapped  bool
 	CoverageGap bool
+	Pools       []domain.DiscoveredPool
 }
 
 type Discovery struct {
@@ -69,6 +70,7 @@ func (discovery *Discovery) Run(ctx context.Context) (DiscoveryResult, error) {
 				return result, fmt.Errorf("persist discovery page %d: %w", pageNumber, err)
 			}
 			result.Inserted += inserted
+			result.Pools = append(result.Pools, unseen...)
 		}
 
 		if overlap {

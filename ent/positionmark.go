@@ -20,6 +20,22 @@ type PositionMark struct {
 	ID int `json:"id,omitempty"`
 	// Price holds the value of the "price" field.
 	Price string `json:"price,omitempty"`
+	// NetOutputAmount holds the value of the "net_output_amount" field.
+	NetOutputAmount *string `json:"net_output_amount,omitempty"`
+	// FeeEstimate holds the value of the "fee_estimate" field.
+	FeeEstimate *int64 `json:"fee_estimate,omitempty"`
+	// ReturnBps holds the value of the "return_bps" field.
+	ReturnBps *int64 `json:"return_bps,omitempty"`
+	// QuoteHash holds the value of the "quote_hash" field.
+	QuoteHash *string `json:"quote_hash,omitempty"`
+	// RouteState holds the value of the "route_state" field.
+	RouteState positionmark.RouteState `json:"route_state,omitempty"`
+	// MfeBps holds the value of the "mfe_bps" field.
+	MfeBps *int64 `json:"mfe_bps,omitempty"`
+	// MaeBps holds the value of the "mae_bps" field.
+	MaeBps *int64 `json:"mae_bps,omitempty"`
+	// NoRouteCount holds the value of the "no_route_count" field.
+	NoRouteCount int `json:"no_route_count,omitempty"`
 	// ObservedAt holds the value of the "observed_at" field.
 	ObservedAt time.Time `json:"observed_at,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
@@ -56,9 +72,9 @@ func (*PositionMark) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case positionmark.FieldID:
+		case positionmark.FieldID, positionmark.FieldFeeEstimate, positionmark.FieldReturnBps, positionmark.FieldMfeBps, positionmark.FieldMaeBps, positionmark.FieldNoRouteCount:
 			values[i] = new(sql.NullInt64)
-		case positionmark.FieldPrice:
+		case positionmark.FieldPrice, positionmark.FieldNetOutputAmount, positionmark.FieldQuoteHash, positionmark.FieldRouteState:
 			values[i] = new(sql.NullString)
 		case positionmark.FieldObservedAt, positionmark.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -90,6 +106,60 @@ func (_m *PositionMark) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field price", values[i])
 			} else if value.Valid {
 				_m.Price = value.String
+			}
+		case positionmark.FieldNetOutputAmount:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field net_output_amount", values[i])
+			} else if value.Valid {
+				_m.NetOutputAmount = new(string)
+				*_m.NetOutputAmount = value.String
+			}
+		case positionmark.FieldFeeEstimate:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field fee_estimate", values[i])
+			} else if value.Valid {
+				_m.FeeEstimate = new(int64)
+				*_m.FeeEstimate = value.Int64
+			}
+		case positionmark.FieldReturnBps:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field return_bps", values[i])
+			} else if value.Valid {
+				_m.ReturnBps = new(int64)
+				*_m.ReturnBps = value.Int64
+			}
+		case positionmark.FieldQuoteHash:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field quote_hash", values[i])
+			} else if value.Valid {
+				_m.QuoteHash = new(string)
+				*_m.QuoteHash = value.String
+			}
+		case positionmark.FieldRouteState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field route_state", values[i])
+			} else if value.Valid {
+				_m.RouteState = positionmark.RouteState(value.String)
+			}
+		case positionmark.FieldMfeBps:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field mfe_bps", values[i])
+			} else if value.Valid {
+				_m.MfeBps = new(int64)
+				*_m.MfeBps = value.Int64
+			}
+		case positionmark.FieldMaeBps:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field mae_bps", values[i])
+			} else if value.Valid {
+				_m.MaeBps = new(int64)
+				*_m.MaeBps = value.Int64
+			}
+		case positionmark.FieldNoRouteCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field no_route_count", values[i])
+			} else if value.Valid {
+				_m.NoRouteCount = int(value.Int64)
 			}
 		case positionmark.FieldObservedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -153,6 +223,42 @@ func (_m *PositionMark) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("price=")
 	builder.WriteString(_m.Price)
+	builder.WriteString(", ")
+	if v := _m.NetOutputAmount; v != nil {
+		builder.WriteString("net_output_amount=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.FeeEstimate; v != nil {
+		builder.WriteString("fee_estimate=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.ReturnBps; v != nil {
+		builder.WriteString("return_bps=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.QuoteHash; v != nil {
+		builder.WriteString("quote_hash=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	builder.WriteString("route_state=")
+	builder.WriteString(fmt.Sprintf("%v", _m.RouteState))
+	builder.WriteString(", ")
+	if v := _m.MfeBps; v != nil {
+		builder.WriteString("mfe_bps=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.MaeBps; v != nil {
+		builder.WriteString("mae_bps=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	builder.WriteString("no_route_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.NoRouteCount))
 	builder.WriteString(", ")
 	builder.WriteString("observed_at=")
 	builder.WriteString(_m.ObservedAt.Format(time.ANSIC))

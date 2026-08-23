@@ -14,6 +14,8 @@ Browser on 127.0.0.1 → read-only Go API → Ent/Postgres
 
 The browser never contacts Supabase or providers directly. Containers reach Postgres and restricted local Hermes only through explicit `host.docker.internal` boundaries.
 
+TwitterAPI.io receives only bounded exact-mint social-search windows. Birdeye receives only Solana new-listing or single-mint security-report reads; its listing hints are supplemental discovery inputs and its security report availability never replaces the Solana-RPC authority/extension inspection used by deterministic policy.
+
 ## Module boundaries
 
 `domain` defines validated value types and policy. `application` orchestrates use cases through `ports`. `adapters` implement provider and Postgres ports. `transport/httpapi` maps only read-only HTTP DTOs. Dependency direction is domain → application → ports → adapters/transport. Domain/application do not import Chi, Ent, database drivers, or provider clients.
@@ -28,9 +30,9 @@ Only one local Supabase project stack runs at a time. Its standard local ports r
 
 ## Invariants
 
-- Paper trade notional is $10.
+- Paper trade notional is $100.
 - At most 3 open virtual positions and 30 newly admitted positions per UTC day.
-- Initial exits are +30%, -15%, or 60 minutes.
+- `bold-momentum-v2` exits are +50%, -20%, or 45 minutes.
 - UTC controls all timestamps and quota dates.
 - Financial persistence excludes `float64`.
 - No signing, wallet, transaction-building, swap execution, or blockchain writes exist.

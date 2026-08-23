@@ -43,6 +43,189 @@ func (_u *PositionMarkUpdate) SetNillablePrice(v *string) *PositionMarkUpdate {
 	return _u
 }
 
+// SetNetOutputAmount sets the "net_output_amount" field.
+func (_u *PositionMarkUpdate) SetNetOutputAmount(v string) *PositionMarkUpdate {
+	_u.mutation.SetNetOutputAmount(v)
+	return _u
+}
+
+// SetNillableNetOutputAmount sets the "net_output_amount" field if the given value is not nil.
+func (_u *PositionMarkUpdate) SetNillableNetOutputAmount(v *string) *PositionMarkUpdate {
+	if v != nil {
+		_u.SetNetOutputAmount(*v)
+	}
+	return _u
+}
+
+// ClearNetOutputAmount clears the value of the "net_output_amount" field.
+func (_u *PositionMarkUpdate) ClearNetOutputAmount() *PositionMarkUpdate {
+	_u.mutation.ClearNetOutputAmount()
+	return _u
+}
+
+// SetFeeEstimate sets the "fee_estimate" field.
+func (_u *PositionMarkUpdate) SetFeeEstimate(v int64) *PositionMarkUpdate {
+	_u.mutation.ResetFeeEstimate()
+	_u.mutation.SetFeeEstimate(v)
+	return _u
+}
+
+// SetNillableFeeEstimate sets the "fee_estimate" field if the given value is not nil.
+func (_u *PositionMarkUpdate) SetNillableFeeEstimate(v *int64) *PositionMarkUpdate {
+	if v != nil {
+		_u.SetFeeEstimate(*v)
+	}
+	return _u
+}
+
+// AddFeeEstimate adds value to the "fee_estimate" field.
+func (_u *PositionMarkUpdate) AddFeeEstimate(v int64) *PositionMarkUpdate {
+	_u.mutation.AddFeeEstimate(v)
+	return _u
+}
+
+// ClearFeeEstimate clears the value of the "fee_estimate" field.
+func (_u *PositionMarkUpdate) ClearFeeEstimate() *PositionMarkUpdate {
+	_u.mutation.ClearFeeEstimate()
+	return _u
+}
+
+// SetReturnBps sets the "return_bps" field.
+func (_u *PositionMarkUpdate) SetReturnBps(v int64) *PositionMarkUpdate {
+	_u.mutation.ResetReturnBps()
+	_u.mutation.SetReturnBps(v)
+	return _u
+}
+
+// SetNillableReturnBps sets the "return_bps" field if the given value is not nil.
+func (_u *PositionMarkUpdate) SetNillableReturnBps(v *int64) *PositionMarkUpdate {
+	if v != nil {
+		_u.SetReturnBps(*v)
+	}
+	return _u
+}
+
+// AddReturnBps adds value to the "return_bps" field.
+func (_u *PositionMarkUpdate) AddReturnBps(v int64) *PositionMarkUpdate {
+	_u.mutation.AddReturnBps(v)
+	return _u
+}
+
+// ClearReturnBps clears the value of the "return_bps" field.
+func (_u *PositionMarkUpdate) ClearReturnBps() *PositionMarkUpdate {
+	_u.mutation.ClearReturnBps()
+	return _u
+}
+
+// SetQuoteHash sets the "quote_hash" field.
+func (_u *PositionMarkUpdate) SetQuoteHash(v string) *PositionMarkUpdate {
+	_u.mutation.SetQuoteHash(v)
+	return _u
+}
+
+// SetNillableQuoteHash sets the "quote_hash" field if the given value is not nil.
+func (_u *PositionMarkUpdate) SetNillableQuoteHash(v *string) *PositionMarkUpdate {
+	if v != nil {
+		_u.SetQuoteHash(*v)
+	}
+	return _u
+}
+
+// ClearQuoteHash clears the value of the "quote_hash" field.
+func (_u *PositionMarkUpdate) ClearQuoteHash() *PositionMarkUpdate {
+	_u.mutation.ClearQuoteHash()
+	return _u
+}
+
+// SetRouteState sets the "route_state" field.
+func (_u *PositionMarkUpdate) SetRouteState(v positionmark.RouteState) *PositionMarkUpdate {
+	_u.mutation.SetRouteState(v)
+	return _u
+}
+
+// SetNillableRouteState sets the "route_state" field if the given value is not nil.
+func (_u *PositionMarkUpdate) SetNillableRouteState(v *positionmark.RouteState) *PositionMarkUpdate {
+	if v != nil {
+		_u.SetRouteState(*v)
+	}
+	return _u
+}
+
+// SetMfeBps sets the "mfe_bps" field.
+func (_u *PositionMarkUpdate) SetMfeBps(v int64) *PositionMarkUpdate {
+	_u.mutation.ResetMfeBps()
+	_u.mutation.SetMfeBps(v)
+	return _u
+}
+
+// SetNillableMfeBps sets the "mfe_bps" field if the given value is not nil.
+func (_u *PositionMarkUpdate) SetNillableMfeBps(v *int64) *PositionMarkUpdate {
+	if v != nil {
+		_u.SetMfeBps(*v)
+	}
+	return _u
+}
+
+// AddMfeBps adds value to the "mfe_bps" field.
+func (_u *PositionMarkUpdate) AddMfeBps(v int64) *PositionMarkUpdate {
+	_u.mutation.AddMfeBps(v)
+	return _u
+}
+
+// ClearMfeBps clears the value of the "mfe_bps" field.
+func (_u *PositionMarkUpdate) ClearMfeBps() *PositionMarkUpdate {
+	_u.mutation.ClearMfeBps()
+	return _u
+}
+
+// SetMaeBps sets the "mae_bps" field.
+func (_u *PositionMarkUpdate) SetMaeBps(v int64) *PositionMarkUpdate {
+	_u.mutation.ResetMaeBps()
+	_u.mutation.SetMaeBps(v)
+	return _u
+}
+
+// SetNillableMaeBps sets the "mae_bps" field if the given value is not nil.
+func (_u *PositionMarkUpdate) SetNillableMaeBps(v *int64) *PositionMarkUpdate {
+	if v != nil {
+		_u.SetMaeBps(*v)
+	}
+	return _u
+}
+
+// AddMaeBps adds value to the "mae_bps" field.
+func (_u *PositionMarkUpdate) AddMaeBps(v int64) *PositionMarkUpdate {
+	_u.mutation.AddMaeBps(v)
+	return _u
+}
+
+// ClearMaeBps clears the value of the "mae_bps" field.
+func (_u *PositionMarkUpdate) ClearMaeBps() *PositionMarkUpdate {
+	_u.mutation.ClearMaeBps()
+	return _u
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (_u *PositionMarkUpdate) SetNoRouteCount(v int) *PositionMarkUpdate {
+	_u.mutation.ResetNoRouteCount()
+	_u.mutation.SetNoRouteCount(v)
+	return _u
+}
+
+// SetNillableNoRouteCount sets the "no_route_count" field if the given value is not nil.
+func (_u *PositionMarkUpdate) SetNillableNoRouteCount(v *int) *PositionMarkUpdate {
+	if v != nil {
+		_u.SetNoRouteCount(*v)
+	}
+	return _u
+}
+
+// AddNoRouteCount adds value to the "no_route_count" field.
+func (_u *PositionMarkUpdate) AddNoRouteCount(v int) *PositionMarkUpdate {
+	_u.mutation.AddNoRouteCount(v)
+	return _u
+}
+
 // SetObservedAt sets the "observed_at" field.
 func (_u *PositionMarkUpdate) SetObservedAt(v time.Time) *PositionMarkUpdate {
 	_u.mutation.SetObservedAt(v)
@@ -113,6 +296,21 @@ func (_u *PositionMarkUpdate) check() error {
 			return &ValidationError{Name: "price", err: fmt.Errorf(`ent: validator failed for field "PositionMark.price": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.FeeEstimate(); ok {
+		if err := positionmark.FeeEstimateValidator(v); err != nil {
+			return &ValidationError{Name: "fee_estimate", err: fmt.Errorf(`ent: validator failed for field "PositionMark.fee_estimate": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.RouteState(); ok {
+		if err := positionmark.RouteStateValidator(v); err != nil {
+			return &ValidationError{Name: "route_state", err: fmt.Errorf(`ent: validator failed for field "PositionMark.route_state": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.NoRouteCount(); ok {
+		if err := positionmark.NoRouteCountValidator(v); err != nil {
+			return &ValidationError{Name: "no_route_count", err: fmt.Errorf(`ent: validator failed for field "PositionMark.no_route_count": %w`, err)}
+		}
+	}
 	if _u.mutation.PositionCleared() && len(_u.mutation.PositionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "PositionMark.position"`)
 	}
@@ -133,6 +331,63 @@ func (_u *PositionMarkUpdate) sqlSave(ctx context.Context) (_node int, err error
 	}
 	if value, ok := _u.mutation.Price(); ok {
 		_spec.SetField(positionmark.FieldPrice, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.NetOutputAmount(); ok {
+		_spec.SetField(positionmark.FieldNetOutputAmount, field.TypeString, value)
+	}
+	if _u.mutation.NetOutputAmountCleared() {
+		_spec.ClearField(positionmark.FieldNetOutputAmount, field.TypeString)
+	}
+	if value, ok := _u.mutation.FeeEstimate(); ok {
+		_spec.SetField(positionmark.FieldFeeEstimate, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedFeeEstimate(); ok {
+		_spec.AddField(positionmark.FieldFeeEstimate, field.TypeInt64, value)
+	}
+	if _u.mutation.FeeEstimateCleared() {
+		_spec.ClearField(positionmark.FieldFeeEstimate, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.ReturnBps(); ok {
+		_spec.SetField(positionmark.FieldReturnBps, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedReturnBps(); ok {
+		_spec.AddField(positionmark.FieldReturnBps, field.TypeInt64, value)
+	}
+	if _u.mutation.ReturnBpsCleared() {
+		_spec.ClearField(positionmark.FieldReturnBps, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.QuoteHash(); ok {
+		_spec.SetField(positionmark.FieldQuoteHash, field.TypeString, value)
+	}
+	if _u.mutation.QuoteHashCleared() {
+		_spec.ClearField(positionmark.FieldQuoteHash, field.TypeString)
+	}
+	if value, ok := _u.mutation.RouteState(); ok {
+		_spec.SetField(positionmark.FieldRouteState, field.TypeEnum, value)
+	}
+	if value, ok := _u.mutation.MfeBps(); ok {
+		_spec.SetField(positionmark.FieldMfeBps, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedMfeBps(); ok {
+		_spec.AddField(positionmark.FieldMfeBps, field.TypeInt64, value)
+	}
+	if _u.mutation.MfeBpsCleared() {
+		_spec.ClearField(positionmark.FieldMfeBps, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.MaeBps(); ok {
+		_spec.SetField(positionmark.FieldMaeBps, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedMaeBps(); ok {
+		_spec.AddField(positionmark.FieldMaeBps, field.TypeInt64, value)
+	}
+	if _u.mutation.MaeBpsCleared() {
+		_spec.ClearField(positionmark.FieldMaeBps, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.NoRouteCount(); ok {
+		_spec.SetField(positionmark.FieldNoRouteCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedNoRouteCount(); ok {
+		_spec.AddField(positionmark.FieldNoRouteCount, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.ObservedAt(); ok {
 		_spec.SetField(positionmark.FieldObservedAt, field.TypeTime, value)
@@ -197,6 +452,189 @@ func (_u *PositionMarkUpdateOne) SetNillablePrice(v *string) *PositionMarkUpdate
 	if v != nil {
 		_u.SetPrice(*v)
 	}
+	return _u
+}
+
+// SetNetOutputAmount sets the "net_output_amount" field.
+func (_u *PositionMarkUpdateOne) SetNetOutputAmount(v string) *PositionMarkUpdateOne {
+	_u.mutation.SetNetOutputAmount(v)
+	return _u
+}
+
+// SetNillableNetOutputAmount sets the "net_output_amount" field if the given value is not nil.
+func (_u *PositionMarkUpdateOne) SetNillableNetOutputAmount(v *string) *PositionMarkUpdateOne {
+	if v != nil {
+		_u.SetNetOutputAmount(*v)
+	}
+	return _u
+}
+
+// ClearNetOutputAmount clears the value of the "net_output_amount" field.
+func (_u *PositionMarkUpdateOne) ClearNetOutputAmount() *PositionMarkUpdateOne {
+	_u.mutation.ClearNetOutputAmount()
+	return _u
+}
+
+// SetFeeEstimate sets the "fee_estimate" field.
+func (_u *PositionMarkUpdateOne) SetFeeEstimate(v int64) *PositionMarkUpdateOne {
+	_u.mutation.ResetFeeEstimate()
+	_u.mutation.SetFeeEstimate(v)
+	return _u
+}
+
+// SetNillableFeeEstimate sets the "fee_estimate" field if the given value is not nil.
+func (_u *PositionMarkUpdateOne) SetNillableFeeEstimate(v *int64) *PositionMarkUpdateOne {
+	if v != nil {
+		_u.SetFeeEstimate(*v)
+	}
+	return _u
+}
+
+// AddFeeEstimate adds value to the "fee_estimate" field.
+func (_u *PositionMarkUpdateOne) AddFeeEstimate(v int64) *PositionMarkUpdateOne {
+	_u.mutation.AddFeeEstimate(v)
+	return _u
+}
+
+// ClearFeeEstimate clears the value of the "fee_estimate" field.
+func (_u *PositionMarkUpdateOne) ClearFeeEstimate() *PositionMarkUpdateOne {
+	_u.mutation.ClearFeeEstimate()
+	return _u
+}
+
+// SetReturnBps sets the "return_bps" field.
+func (_u *PositionMarkUpdateOne) SetReturnBps(v int64) *PositionMarkUpdateOne {
+	_u.mutation.ResetReturnBps()
+	_u.mutation.SetReturnBps(v)
+	return _u
+}
+
+// SetNillableReturnBps sets the "return_bps" field if the given value is not nil.
+func (_u *PositionMarkUpdateOne) SetNillableReturnBps(v *int64) *PositionMarkUpdateOne {
+	if v != nil {
+		_u.SetReturnBps(*v)
+	}
+	return _u
+}
+
+// AddReturnBps adds value to the "return_bps" field.
+func (_u *PositionMarkUpdateOne) AddReturnBps(v int64) *PositionMarkUpdateOne {
+	_u.mutation.AddReturnBps(v)
+	return _u
+}
+
+// ClearReturnBps clears the value of the "return_bps" field.
+func (_u *PositionMarkUpdateOne) ClearReturnBps() *PositionMarkUpdateOne {
+	_u.mutation.ClearReturnBps()
+	return _u
+}
+
+// SetQuoteHash sets the "quote_hash" field.
+func (_u *PositionMarkUpdateOne) SetQuoteHash(v string) *PositionMarkUpdateOne {
+	_u.mutation.SetQuoteHash(v)
+	return _u
+}
+
+// SetNillableQuoteHash sets the "quote_hash" field if the given value is not nil.
+func (_u *PositionMarkUpdateOne) SetNillableQuoteHash(v *string) *PositionMarkUpdateOne {
+	if v != nil {
+		_u.SetQuoteHash(*v)
+	}
+	return _u
+}
+
+// ClearQuoteHash clears the value of the "quote_hash" field.
+func (_u *PositionMarkUpdateOne) ClearQuoteHash() *PositionMarkUpdateOne {
+	_u.mutation.ClearQuoteHash()
+	return _u
+}
+
+// SetRouteState sets the "route_state" field.
+func (_u *PositionMarkUpdateOne) SetRouteState(v positionmark.RouteState) *PositionMarkUpdateOne {
+	_u.mutation.SetRouteState(v)
+	return _u
+}
+
+// SetNillableRouteState sets the "route_state" field if the given value is not nil.
+func (_u *PositionMarkUpdateOne) SetNillableRouteState(v *positionmark.RouteState) *PositionMarkUpdateOne {
+	if v != nil {
+		_u.SetRouteState(*v)
+	}
+	return _u
+}
+
+// SetMfeBps sets the "mfe_bps" field.
+func (_u *PositionMarkUpdateOne) SetMfeBps(v int64) *PositionMarkUpdateOne {
+	_u.mutation.ResetMfeBps()
+	_u.mutation.SetMfeBps(v)
+	return _u
+}
+
+// SetNillableMfeBps sets the "mfe_bps" field if the given value is not nil.
+func (_u *PositionMarkUpdateOne) SetNillableMfeBps(v *int64) *PositionMarkUpdateOne {
+	if v != nil {
+		_u.SetMfeBps(*v)
+	}
+	return _u
+}
+
+// AddMfeBps adds value to the "mfe_bps" field.
+func (_u *PositionMarkUpdateOne) AddMfeBps(v int64) *PositionMarkUpdateOne {
+	_u.mutation.AddMfeBps(v)
+	return _u
+}
+
+// ClearMfeBps clears the value of the "mfe_bps" field.
+func (_u *PositionMarkUpdateOne) ClearMfeBps() *PositionMarkUpdateOne {
+	_u.mutation.ClearMfeBps()
+	return _u
+}
+
+// SetMaeBps sets the "mae_bps" field.
+func (_u *PositionMarkUpdateOne) SetMaeBps(v int64) *PositionMarkUpdateOne {
+	_u.mutation.ResetMaeBps()
+	_u.mutation.SetMaeBps(v)
+	return _u
+}
+
+// SetNillableMaeBps sets the "mae_bps" field if the given value is not nil.
+func (_u *PositionMarkUpdateOne) SetNillableMaeBps(v *int64) *PositionMarkUpdateOne {
+	if v != nil {
+		_u.SetMaeBps(*v)
+	}
+	return _u
+}
+
+// AddMaeBps adds value to the "mae_bps" field.
+func (_u *PositionMarkUpdateOne) AddMaeBps(v int64) *PositionMarkUpdateOne {
+	_u.mutation.AddMaeBps(v)
+	return _u
+}
+
+// ClearMaeBps clears the value of the "mae_bps" field.
+func (_u *PositionMarkUpdateOne) ClearMaeBps() *PositionMarkUpdateOne {
+	_u.mutation.ClearMaeBps()
+	return _u
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (_u *PositionMarkUpdateOne) SetNoRouteCount(v int) *PositionMarkUpdateOne {
+	_u.mutation.ResetNoRouteCount()
+	_u.mutation.SetNoRouteCount(v)
+	return _u
+}
+
+// SetNillableNoRouteCount sets the "no_route_count" field if the given value is not nil.
+func (_u *PositionMarkUpdateOne) SetNillableNoRouteCount(v *int) *PositionMarkUpdateOne {
+	if v != nil {
+		_u.SetNoRouteCount(*v)
+	}
+	return _u
+}
+
+// AddNoRouteCount adds value to the "no_route_count" field.
+func (_u *PositionMarkUpdateOne) AddNoRouteCount(v int) *PositionMarkUpdateOne {
+	_u.mutation.AddNoRouteCount(v)
 	return _u
 }
 
@@ -283,6 +721,21 @@ func (_u *PositionMarkUpdateOne) check() error {
 			return &ValidationError{Name: "price", err: fmt.Errorf(`ent: validator failed for field "PositionMark.price": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.FeeEstimate(); ok {
+		if err := positionmark.FeeEstimateValidator(v); err != nil {
+			return &ValidationError{Name: "fee_estimate", err: fmt.Errorf(`ent: validator failed for field "PositionMark.fee_estimate": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.RouteState(); ok {
+		if err := positionmark.RouteStateValidator(v); err != nil {
+			return &ValidationError{Name: "route_state", err: fmt.Errorf(`ent: validator failed for field "PositionMark.route_state": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.NoRouteCount(); ok {
+		if err := positionmark.NoRouteCountValidator(v); err != nil {
+			return &ValidationError{Name: "no_route_count", err: fmt.Errorf(`ent: validator failed for field "PositionMark.no_route_count": %w`, err)}
+		}
+	}
 	if _u.mutation.PositionCleared() && len(_u.mutation.PositionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "PositionMark.position"`)
 	}
@@ -320,6 +773,63 @@ func (_u *PositionMarkUpdateOne) sqlSave(ctx context.Context) (_node *PositionMa
 	}
 	if value, ok := _u.mutation.Price(); ok {
 		_spec.SetField(positionmark.FieldPrice, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.NetOutputAmount(); ok {
+		_spec.SetField(positionmark.FieldNetOutputAmount, field.TypeString, value)
+	}
+	if _u.mutation.NetOutputAmountCleared() {
+		_spec.ClearField(positionmark.FieldNetOutputAmount, field.TypeString)
+	}
+	if value, ok := _u.mutation.FeeEstimate(); ok {
+		_spec.SetField(positionmark.FieldFeeEstimate, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedFeeEstimate(); ok {
+		_spec.AddField(positionmark.FieldFeeEstimate, field.TypeInt64, value)
+	}
+	if _u.mutation.FeeEstimateCleared() {
+		_spec.ClearField(positionmark.FieldFeeEstimate, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.ReturnBps(); ok {
+		_spec.SetField(positionmark.FieldReturnBps, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedReturnBps(); ok {
+		_spec.AddField(positionmark.FieldReturnBps, field.TypeInt64, value)
+	}
+	if _u.mutation.ReturnBpsCleared() {
+		_spec.ClearField(positionmark.FieldReturnBps, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.QuoteHash(); ok {
+		_spec.SetField(positionmark.FieldQuoteHash, field.TypeString, value)
+	}
+	if _u.mutation.QuoteHashCleared() {
+		_spec.ClearField(positionmark.FieldQuoteHash, field.TypeString)
+	}
+	if value, ok := _u.mutation.RouteState(); ok {
+		_spec.SetField(positionmark.FieldRouteState, field.TypeEnum, value)
+	}
+	if value, ok := _u.mutation.MfeBps(); ok {
+		_spec.SetField(positionmark.FieldMfeBps, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedMfeBps(); ok {
+		_spec.AddField(positionmark.FieldMfeBps, field.TypeInt64, value)
+	}
+	if _u.mutation.MfeBpsCleared() {
+		_spec.ClearField(positionmark.FieldMfeBps, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.MaeBps(); ok {
+		_spec.SetField(positionmark.FieldMaeBps, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedMaeBps(); ok {
+		_spec.AddField(positionmark.FieldMaeBps, field.TypeInt64, value)
+	}
+	if _u.mutation.MaeBpsCleared() {
+		_spec.ClearField(positionmark.FieldMaeBps, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.NoRouteCount(); ok {
+		_spec.SetField(positionmark.FieldNoRouteCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedNoRouteCount(); ok {
+		_spec.AddField(positionmark.FieldNoRouteCount, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.ObservedAt(); ok {
 		_spec.SetField(positionmark.FieldObservedAt, field.TypeTime, value)

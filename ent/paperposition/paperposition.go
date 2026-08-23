@@ -19,8 +19,22 @@ const (
 	FieldState = "state"
 	// FieldNotionalMicros holds the string denoting the notional_micros field in the database.
 	FieldNotionalMicros = "notional_micros"
+	// FieldStrategyVersion holds the string denoting the strategy_version field in the database.
+	FieldStrategyVersion = "strategy_version"
+	// FieldNoRouteCount holds the string denoting the no_route_count field in the database.
+	FieldNoRouteCount = "no_route_count"
+	// FieldQuoteMint holds the string denoting the quote_mint field in the database.
+	FieldQuoteMint = "quote_mint"
+	// FieldMintAddress holds the string denoting the mint_address field in the database.
+	FieldMintAddress = "mint_address"
 	// FieldEntryPrice holds the string denoting the entry_price field in the database.
 	FieldEntryPrice = "entry_price"
+	// FieldEntryInputAmount holds the string denoting the entry_input_amount field in the database.
+	FieldEntryInputAmount = "entry_input_amount"
+	// FieldEntryNetworkFeeMicros holds the string denoting the entry_network_fee_micros field in the database.
+	FieldEntryNetworkFeeMicros = "entry_network_fee_micros"
+	// FieldEntryPriorityFeeMicros holds the string denoting the entry_priority_fee_micros field in the database.
+	FieldEntryPriorityFeeMicros = "entry_priority_fee_micros"
 	// FieldTokenQuantity holds the string denoting the token_quantity field in the database.
 	FieldTokenQuantity = "token_quantity"
 	// FieldOpenedAt holds the string denoting the opened_at field in the database.
@@ -33,6 +47,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// EdgeCandidate holds the string denoting the candidate edge name in mutations.
 	EdgeCandidate = "candidate"
+	// EdgeDecision holds the string denoting the decision edge name in mutations.
+	EdgeDecision = "decision"
 	// EdgeMarks holds the string denoting the marks edge name in mutations.
 	EdgeMarks = "marks"
 	// EdgeEvents holds the string denoting the events edge name in mutations.
@@ -46,6 +62,13 @@ const (
 	CandidateInverseTable = "candidates"
 	// CandidateColumn is the table column denoting the candidate relation/edge.
 	CandidateColumn = "candidate_positions"
+	// DecisionTable is the table that holds the decision relation/edge.
+	DecisionTable = "paper_positions"
+	// DecisionInverseTable is the table name for the TradeDecision entity.
+	// It exists in this package in order to avoid circular dependency with the "tradedecision" package.
+	DecisionInverseTable = "trade_decisions"
+	// DecisionColumn is the table column denoting the decision relation/edge.
+	DecisionColumn = "trade_decision_position"
 	// MarksTable is the table that holds the marks relation/edge.
 	MarksTable = "position_marks"
 	// MarksInverseTable is the table name for the PositionMark entity.
@@ -67,7 +90,14 @@ var Columns = []string{
 	FieldID,
 	FieldState,
 	FieldNotionalMicros,
+	FieldStrategyVersion,
+	FieldNoRouteCount,
+	FieldQuoteMint,
+	FieldMintAddress,
 	FieldEntryPrice,
+	FieldEntryInputAmount,
+	FieldEntryNetworkFeeMicros,
+	FieldEntryPriorityFeeMicros,
 	FieldTokenQuantity,
 	FieldOpenedAt,
 	FieldClosedAt,
@@ -79,6 +109,7 @@ var Columns = []string{
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"candidate_positions",
+	"trade_decision_position",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -99,10 +130,14 @@ func ValidColumn(column string) bool {
 var (
 	// NotionalMicrosValidator is a validator for the "notional_micros" field. It is called by the builders before save.
 	NotionalMicrosValidator func(int64) error
-	// EntryPriceValidator is a validator for the "entry_price" field. It is called by the builders before save.
-	EntryPriceValidator func(string) error
-	// TokenQuantityValidator is a validator for the "token_quantity" field. It is called by the builders before save.
-	TokenQuantityValidator func(string) error
+	// DefaultStrategyVersion holds the default value on creation for the "strategy_version" field.
+	DefaultStrategyVersion string
+	// StrategyVersionValidator is a validator for the "strategy_version" field. It is called by the builders before save.
+	StrategyVersionValidator func(string) error
+	// DefaultNoRouteCount holds the default value on creation for the "no_route_count" field.
+	DefaultNoRouteCount int
+	// NoRouteCountValidator is a validator for the "no_route_count" field. It is called by the builders before save.
+	NoRouteCountValidator func(int) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -155,9 +190,44 @@ func ByNotionalMicros(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldNotionalMicros, opts...).ToFunc()
 }
 
+// ByStrategyVersion orders the results by the strategy_version field.
+func ByStrategyVersion(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStrategyVersion, opts...).ToFunc()
+}
+
+// ByNoRouteCount orders the results by the no_route_count field.
+func ByNoRouteCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNoRouteCount, opts...).ToFunc()
+}
+
+// ByQuoteMint orders the results by the quote_mint field.
+func ByQuoteMint(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldQuoteMint, opts...).ToFunc()
+}
+
+// ByMintAddress orders the results by the mint_address field.
+func ByMintAddress(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMintAddress, opts...).ToFunc()
+}
+
 // ByEntryPrice orders the results by the entry_price field.
 func ByEntryPrice(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEntryPrice, opts...).ToFunc()
+}
+
+// ByEntryInputAmount orders the results by the entry_input_amount field.
+func ByEntryInputAmount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEntryInputAmount, opts...).ToFunc()
+}
+
+// ByEntryNetworkFeeMicros orders the results by the entry_network_fee_micros field.
+func ByEntryNetworkFeeMicros(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEntryNetworkFeeMicros, opts...).ToFunc()
+}
+
+// ByEntryPriorityFeeMicros orders the results by the entry_priority_fee_micros field.
+func ByEntryPriorityFeeMicros(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEntryPriorityFeeMicros, opts...).ToFunc()
 }
 
 // ByTokenQuantity orders the results by the token_quantity field.
@@ -189,6 +259,13 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 func ByCandidateField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newCandidateStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByDecisionField orders the results by decision field.
+func ByDecisionField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newDecisionStep(), sql.OrderByField(field, opts...))
 	}
 }
 
@@ -224,6 +301,13 @@ func newCandidateStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(CandidateInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, true, CandidateTable, CandidateColumn),
+	)
+}
+func newDecisionStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(DecisionInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, true, DecisionTable, DecisionColumn),
 	)
 }
 func newMarksStep() *sqlgraph.Step {

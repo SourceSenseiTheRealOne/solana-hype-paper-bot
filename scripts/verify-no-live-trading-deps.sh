@@ -4,7 +4,7 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
-forbidden_pattern='@solana/wallet-adapter|@solana/web3\.js|solana-go|solana-sdk|wallet-adapter|seed[[:space:]_-]*phrase|private[[:space:]_-]*key|sign(Transaction|AllTransactions|Message)|send(Raw)?Transaction|swap(Transaction|Instructions)|jupiter[^[:space:]]*(swap|execute)|/swap/v[0-9]'
+forbidden_pattern='@solana/wallet-adapter|@solana/web3\.js|solana-go|solana-sdk|wallet-adapter|seed[[:space:]_-]*phrase|private[[:space:]_-]*key|sign(Transaction|AllTransactions|Message)|send(Raw)?Transaction|swap(Transaction|Instructions)|jupiter[^[:space:]]*(swap|execute)|/swap/v[0-9]+/(build|execute|order|swap|transaction|instructions)|(^|[^[:alnum:]_])(func|function)[[:space:]]+(\([^)]*\)[[:space:]]+)?(BuildSwap|CreateTrigger|SendTransaction|Sign)[[:space:]]*\('
 
 declare -a files=()
 while IFS= read -r -d '' path; do

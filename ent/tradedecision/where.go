@@ -263,6 +263,29 @@ func HasCandidateWith(preds ...predicate.Candidate) predicate.TradeDecision {
 	})
 }
 
+// HasPosition applies the HasEdge predicate on the "position" edge.
+func HasPosition() predicate.TradeDecision {
+	return predicate.TradeDecision(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, PositionTable, PositionColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPositionWith applies the HasEdge predicate on the "position" edge with a given conditions (other predicates).
+func HasPositionWith(preds ...predicate.PaperPosition) predicate.TradeDecision {
+	return predicate.TradeDecision(func(s *sql.Selector) {
+		step := newPositionStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.TradeDecision) predicate.TradeDecision {
 	return predicate.TradeDecision(sql.AndPredicates(predicates...))

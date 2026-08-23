@@ -16,6 +16,7 @@ import (
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/positionevent"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/positionmark"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/predicate"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/tradedecision"
 )
 
 // PaperPositionUpdate is the builder for updating PaperPosition entities.
@@ -66,6 +67,81 @@ func (_u *PaperPositionUpdate) AddNotionalMicros(v int64) *PaperPositionUpdate {
 	return _u
 }
 
+// SetStrategyVersion sets the "strategy_version" field.
+func (_u *PaperPositionUpdate) SetStrategyVersion(v string) *PaperPositionUpdate {
+	_u.mutation.SetStrategyVersion(v)
+	return _u
+}
+
+// SetNillableStrategyVersion sets the "strategy_version" field if the given value is not nil.
+func (_u *PaperPositionUpdate) SetNillableStrategyVersion(v *string) *PaperPositionUpdate {
+	if v != nil {
+		_u.SetStrategyVersion(*v)
+	}
+	return _u
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (_u *PaperPositionUpdate) SetNoRouteCount(v int) *PaperPositionUpdate {
+	_u.mutation.ResetNoRouteCount()
+	_u.mutation.SetNoRouteCount(v)
+	return _u
+}
+
+// SetNillableNoRouteCount sets the "no_route_count" field if the given value is not nil.
+func (_u *PaperPositionUpdate) SetNillableNoRouteCount(v *int) *PaperPositionUpdate {
+	if v != nil {
+		_u.SetNoRouteCount(*v)
+	}
+	return _u
+}
+
+// AddNoRouteCount adds value to the "no_route_count" field.
+func (_u *PaperPositionUpdate) AddNoRouteCount(v int) *PaperPositionUpdate {
+	_u.mutation.AddNoRouteCount(v)
+	return _u
+}
+
+// SetQuoteMint sets the "quote_mint" field.
+func (_u *PaperPositionUpdate) SetQuoteMint(v string) *PaperPositionUpdate {
+	_u.mutation.SetQuoteMint(v)
+	return _u
+}
+
+// SetNillableQuoteMint sets the "quote_mint" field if the given value is not nil.
+func (_u *PaperPositionUpdate) SetNillableQuoteMint(v *string) *PaperPositionUpdate {
+	if v != nil {
+		_u.SetQuoteMint(*v)
+	}
+	return _u
+}
+
+// ClearQuoteMint clears the value of the "quote_mint" field.
+func (_u *PaperPositionUpdate) ClearQuoteMint() *PaperPositionUpdate {
+	_u.mutation.ClearQuoteMint()
+	return _u
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (_u *PaperPositionUpdate) SetMintAddress(v string) *PaperPositionUpdate {
+	_u.mutation.SetMintAddress(v)
+	return _u
+}
+
+// SetNillableMintAddress sets the "mint_address" field if the given value is not nil.
+func (_u *PaperPositionUpdate) SetNillableMintAddress(v *string) *PaperPositionUpdate {
+	if v != nil {
+		_u.SetMintAddress(*v)
+	}
+	return _u
+}
+
+// ClearMintAddress clears the value of the "mint_address" field.
+func (_u *PaperPositionUpdate) ClearMintAddress() *PaperPositionUpdate {
+	_u.mutation.ClearMintAddress()
+	return _u
+}
+
 // SetEntryPrice sets the "entry_price" field.
 func (_u *PaperPositionUpdate) SetEntryPrice(v string) *PaperPositionUpdate {
 	_u.mutation.SetEntryPrice(v)
@@ -80,6 +156,86 @@ func (_u *PaperPositionUpdate) SetNillableEntryPrice(v *string) *PaperPositionUp
 	return _u
 }
 
+// ClearEntryPrice clears the value of the "entry_price" field.
+func (_u *PaperPositionUpdate) ClearEntryPrice() *PaperPositionUpdate {
+	_u.mutation.ClearEntryPrice()
+	return _u
+}
+
+// SetEntryInputAmount sets the "entry_input_amount" field.
+func (_u *PaperPositionUpdate) SetEntryInputAmount(v string) *PaperPositionUpdate {
+	_u.mutation.SetEntryInputAmount(v)
+	return _u
+}
+
+// SetNillableEntryInputAmount sets the "entry_input_amount" field if the given value is not nil.
+func (_u *PaperPositionUpdate) SetNillableEntryInputAmount(v *string) *PaperPositionUpdate {
+	if v != nil {
+		_u.SetEntryInputAmount(*v)
+	}
+	return _u
+}
+
+// ClearEntryInputAmount clears the value of the "entry_input_amount" field.
+func (_u *PaperPositionUpdate) ClearEntryInputAmount() *PaperPositionUpdate {
+	_u.mutation.ClearEntryInputAmount()
+	return _u
+}
+
+// SetEntryNetworkFeeMicros sets the "entry_network_fee_micros" field.
+func (_u *PaperPositionUpdate) SetEntryNetworkFeeMicros(v int64) *PaperPositionUpdate {
+	_u.mutation.ResetEntryNetworkFeeMicros()
+	_u.mutation.SetEntryNetworkFeeMicros(v)
+	return _u
+}
+
+// SetNillableEntryNetworkFeeMicros sets the "entry_network_fee_micros" field if the given value is not nil.
+func (_u *PaperPositionUpdate) SetNillableEntryNetworkFeeMicros(v *int64) *PaperPositionUpdate {
+	if v != nil {
+		_u.SetEntryNetworkFeeMicros(*v)
+	}
+	return _u
+}
+
+// AddEntryNetworkFeeMicros adds value to the "entry_network_fee_micros" field.
+func (_u *PaperPositionUpdate) AddEntryNetworkFeeMicros(v int64) *PaperPositionUpdate {
+	_u.mutation.AddEntryNetworkFeeMicros(v)
+	return _u
+}
+
+// ClearEntryNetworkFeeMicros clears the value of the "entry_network_fee_micros" field.
+func (_u *PaperPositionUpdate) ClearEntryNetworkFeeMicros() *PaperPositionUpdate {
+	_u.mutation.ClearEntryNetworkFeeMicros()
+	return _u
+}
+
+// SetEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field.
+func (_u *PaperPositionUpdate) SetEntryPriorityFeeMicros(v int64) *PaperPositionUpdate {
+	_u.mutation.ResetEntryPriorityFeeMicros()
+	_u.mutation.SetEntryPriorityFeeMicros(v)
+	return _u
+}
+
+// SetNillableEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field if the given value is not nil.
+func (_u *PaperPositionUpdate) SetNillableEntryPriorityFeeMicros(v *int64) *PaperPositionUpdate {
+	if v != nil {
+		_u.SetEntryPriorityFeeMicros(*v)
+	}
+	return _u
+}
+
+// AddEntryPriorityFeeMicros adds value to the "entry_priority_fee_micros" field.
+func (_u *PaperPositionUpdate) AddEntryPriorityFeeMicros(v int64) *PaperPositionUpdate {
+	_u.mutation.AddEntryPriorityFeeMicros(v)
+	return _u
+}
+
+// ClearEntryPriorityFeeMicros clears the value of the "entry_priority_fee_micros" field.
+func (_u *PaperPositionUpdate) ClearEntryPriorityFeeMicros() *PaperPositionUpdate {
+	_u.mutation.ClearEntryPriorityFeeMicros()
+	return _u
+}
+
 // SetTokenQuantity sets the "token_quantity" field.
 func (_u *PaperPositionUpdate) SetTokenQuantity(v string) *PaperPositionUpdate {
 	_u.mutation.SetTokenQuantity(v)
@@ -91,6 +247,12 @@ func (_u *PaperPositionUpdate) SetNillableTokenQuantity(v *string) *PaperPositio
 	if v != nil {
 		_u.SetTokenQuantity(*v)
 	}
+	return _u
+}
+
+// ClearTokenQuantity clears the value of the "token_quantity" field.
+func (_u *PaperPositionUpdate) ClearTokenQuantity() *PaperPositionUpdate {
+	_u.mutation.ClearTokenQuantity()
 	return _u
 }
 
@@ -151,6 +313,17 @@ func (_u *PaperPositionUpdate) SetCandidate(v *Candidate) *PaperPositionUpdate {
 	return _u.SetCandidateID(v.ID)
 }
 
+// SetDecisionID sets the "decision" edge to the TradeDecision entity by ID.
+func (_u *PaperPositionUpdate) SetDecisionID(id int) *PaperPositionUpdate {
+	_u.mutation.SetDecisionID(id)
+	return _u
+}
+
+// SetDecision sets the "decision" edge to the TradeDecision entity.
+func (_u *PaperPositionUpdate) SetDecision(v *TradeDecision) *PaperPositionUpdate {
+	return _u.SetDecisionID(v.ID)
+}
+
 // AddMarkIDs adds the "marks" edge to the PositionMark entity by IDs.
 func (_u *PaperPositionUpdate) AddMarkIDs(ids ...int) *PaperPositionUpdate {
 	_u.mutation.AddMarkIDs(ids...)
@@ -189,6 +362,12 @@ func (_u *PaperPositionUpdate) Mutation() *PaperPositionMutation {
 // ClearCandidate clears the "candidate" edge to the Candidate entity.
 func (_u *PaperPositionUpdate) ClearCandidate() *PaperPositionUpdate {
 	_u.mutation.ClearCandidate()
+	return _u
+}
+
+// ClearDecision clears the "decision" edge to the TradeDecision entity.
+func (_u *PaperPositionUpdate) ClearDecision() *PaperPositionUpdate {
+	_u.mutation.ClearDecision()
 	return _u
 }
 
@@ -282,18 +461,21 @@ func (_u *PaperPositionUpdate) check() error {
 			return &ValidationError{Name: "notional_micros", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.notional_micros": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.EntryPrice(); ok {
-		if err := paperposition.EntryPriceValidator(v); err != nil {
-			return &ValidationError{Name: "entry_price", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.entry_price": %w`, err)}
+	if v, ok := _u.mutation.StrategyVersion(); ok {
+		if err := paperposition.StrategyVersionValidator(v); err != nil {
+			return &ValidationError{Name: "strategy_version", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.strategy_version": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.TokenQuantity(); ok {
-		if err := paperposition.TokenQuantityValidator(v); err != nil {
-			return &ValidationError{Name: "token_quantity", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.token_quantity": %w`, err)}
+	if v, ok := _u.mutation.NoRouteCount(); ok {
+		if err := paperposition.NoRouteCountValidator(v); err != nil {
+			return &ValidationError{Name: "no_route_count", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.no_route_count": %w`, err)}
 		}
 	}
 	if _u.mutation.CandidateCleared() && len(_u.mutation.CandidateIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "PaperPosition.candidate"`)
+	}
+	if _u.mutation.DecisionCleared() && len(_u.mutation.DecisionIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "PaperPosition.decision"`)
 	}
 	return nil
 }
@@ -319,11 +501,62 @@ func (_u *PaperPositionUpdate) sqlSave(ctx context.Context) (_node int, err erro
 	if value, ok := _u.mutation.AddedNotionalMicros(); ok {
 		_spec.AddField(paperposition.FieldNotionalMicros, field.TypeInt64, value)
 	}
+	if value, ok := _u.mutation.StrategyVersion(); ok {
+		_spec.SetField(paperposition.FieldStrategyVersion, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.NoRouteCount(); ok {
+		_spec.SetField(paperposition.FieldNoRouteCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedNoRouteCount(); ok {
+		_spec.AddField(paperposition.FieldNoRouteCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.QuoteMint(); ok {
+		_spec.SetField(paperposition.FieldQuoteMint, field.TypeString, value)
+	}
+	if _u.mutation.QuoteMintCleared() {
+		_spec.ClearField(paperposition.FieldQuoteMint, field.TypeString)
+	}
+	if value, ok := _u.mutation.MintAddress(); ok {
+		_spec.SetField(paperposition.FieldMintAddress, field.TypeString, value)
+	}
+	if _u.mutation.MintAddressCleared() {
+		_spec.ClearField(paperposition.FieldMintAddress, field.TypeString)
+	}
 	if value, ok := _u.mutation.EntryPrice(); ok {
 		_spec.SetField(paperposition.FieldEntryPrice, field.TypeString, value)
 	}
+	if _u.mutation.EntryPriceCleared() {
+		_spec.ClearField(paperposition.FieldEntryPrice, field.TypeString)
+	}
+	if value, ok := _u.mutation.EntryInputAmount(); ok {
+		_spec.SetField(paperposition.FieldEntryInputAmount, field.TypeString, value)
+	}
+	if _u.mutation.EntryInputAmountCleared() {
+		_spec.ClearField(paperposition.FieldEntryInputAmount, field.TypeString)
+	}
+	if value, ok := _u.mutation.EntryNetworkFeeMicros(); ok {
+		_spec.SetField(paperposition.FieldEntryNetworkFeeMicros, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedEntryNetworkFeeMicros(); ok {
+		_spec.AddField(paperposition.FieldEntryNetworkFeeMicros, field.TypeInt64, value)
+	}
+	if _u.mutation.EntryNetworkFeeMicrosCleared() {
+		_spec.ClearField(paperposition.FieldEntryNetworkFeeMicros, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.EntryPriorityFeeMicros(); ok {
+		_spec.SetField(paperposition.FieldEntryPriorityFeeMicros, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedEntryPriorityFeeMicros(); ok {
+		_spec.AddField(paperposition.FieldEntryPriorityFeeMicros, field.TypeInt64, value)
+	}
+	if _u.mutation.EntryPriorityFeeMicrosCleared() {
+		_spec.ClearField(paperposition.FieldEntryPriorityFeeMicros, field.TypeInt64)
+	}
 	if value, ok := _u.mutation.TokenQuantity(); ok {
 		_spec.SetField(paperposition.FieldTokenQuantity, field.TypeString, value)
+	}
+	if _u.mutation.TokenQuantityCleared() {
+		_spec.ClearField(paperposition.FieldTokenQuantity, field.TypeString)
 	}
 	if value, ok := _u.mutation.OpenedAt(); ok {
 		_spec.SetField(paperposition.FieldOpenedAt, field.TypeTime, value)
@@ -362,6 +595,35 @@ func (_u *PaperPositionUpdate) sqlSave(ctx context.Context) (_node int, err erro
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(candidate.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.DecisionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: true,
+			Table:   paperposition.DecisionTable,
+			Columns: []string{paperposition.DecisionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tradedecision.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.DecisionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: true,
+			Table:   paperposition.DecisionTable,
+			Columns: []string{paperposition.DecisionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tradedecision.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -514,6 +776,81 @@ func (_u *PaperPositionUpdateOne) AddNotionalMicros(v int64) *PaperPositionUpdat
 	return _u
 }
 
+// SetStrategyVersion sets the "strategy_version" field.
+func (_u *PaperPositionUpdateOne) SetStrategyVersion(v string) *PaperPositionUpdateOne {
+	_u.mutation.SetStrategyVersion(v)
+	return _u
+}
+
+// SetNillableStrategyVersion sets the "strategy_version" field if the given value is not nil.
+func (_u *PaperPositionUpdateOne) SetNillableStrategyVersion(v *string) *PaperPositionUpdateOne {
+	if v != nil {
+		_u.SetStrategyVersion(*v)
+	}
+	return _u
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (_u *PaperPositionUpdateOne) SetNoRouteCount(v int) *PaperPositionUpdateOne {
+	_u.mutation.ResetNoRouteCount()
+	_u.mutation.SetNoRouteCount(v)
+	return _u
+}
+
+// SetNillableNoRouteCount sets the "no_route_count" field if the given value is not nil.
+func (_u *PaperPositionUpdateOne) SetNillableNoRouteCount(v *int) *PaperPositionUpdateOne {
+	if v != nil {
+		_u.SetNoRouteCount(*v)
+	}
+	return _u
+}
+
+// AddNoRouteCount adds value to the "no_route_count" field.
+func (_u *PaperPositionUpdateOne) AddNoRouteCount(v int) *PaperPositionUpdateOne {
+	_u.mutation.AddNoRouteCount(v)
+	return _u
+}
+
+// SetQuoteMint sets the "quote_mint" field.
+func (_u *PaperPositionUpdateOne) SetQuoteMint(v string) *PaperPositionUpdateOne {
+	_u.mutation.SetQuoteMint(v)
+	return _u
+}
+
+// SetNillableQuoteMint sets the "quote_mint" field if the given value is not nil.
+func (_u *PaperPositionUpdateOne) SetNillableQuoteMint(v *string) *PaperPositionUpdateOne {
+	if v != nil {
+		_u.SetQuoteMint(*v)
+	}
+	return _u
+}
+
+// ClearQuoteMint clears the value of the "quote_mint" field.
+func (_u *PaperPositionUpdateOne) ClearQuoteMint() *PaperPositionUpdateOne {
+	_u.mutation.ClearQuoteMint()
+	return _u
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (_u *PaperPositionUpdateOne) SetMintAddress(v string) *PaperPositionUpdateOne {
+	_u.mutation.SetMintAddress(v)
+	return _u
+}
+
+// SetNillableMintAddress sets the "mint_address" field if the given value is not nil.
+func (_u *PaperPositionUpdateOne) SetNillableMintAddress(v *string) *PaperPositionUpdateOne {
+	if v != nil {
+		_u.SetMintAddress(*v)
+	}
+	return _u
+}
+
+// ClearMintAddress clears the value of the "mint_address" field.
+func (_u *PaperPositionUpdateOne) ClearMintAddress() *PaperPositionUpdateOne {
+	_u.mutation.ClearMintAddress()
+	return _u
+}
+
 // SetEntryPrice sets the "entry_price" field.
 func (_u *PaperPositionUpdateOne) SetEntryPrice(v string) *PaperPositionUpdateOne {
 	_u.mutation.SetEntryPrice(v)
@@ -528,6 +865,86 @@ func (_u *PaperPositionUpdateOne) SetNillableEntryPrice(v *string) *PaperPositio
 	return _u
 }
 
+// ClearEntryPrice clears the value of the "entry_price" field.
+func (_u *PaperPositionUpdateOne) ClearEntryPrice() *PaperPositionUpdateOne {
+	_u.mutation.ClearEntryPrice()
+	return _u
+}
+
+// SetEntryInputAmount sets the "entry_input_amount" field.
+func (_u *PaperPositionUpdateOne) SetEntryInputAmount(v string) *PaperPositionUpdateOne {
+	_u.mutation.SetEntryInputAmount(v)
+	return _u
+}
+
+// SetNillableEntryInputAmount sets the "entry_input_amount" field if the given value is not nil.
+func (_u *PaperPositionUpdateOne) SetNillableEntryInputAmount(v *string) *PaperPositionUpdateOne {
+	if v != nil {
+		_u.SetEntryInputAmount(*v)
+	}
+	return _u
+}
+
+// ClearEntryInputAmount clears the value of the "entry_input_amount" field.
+func (_u *PaperPositionUpdateOne) ClearEntryInputAmount() *PaperPositionUpdateOne {
+	_u.mutation.ClearEntryInputAmount()
+	return _u
+}
+
+// SetEntryNetworkFeeMicros sets the "entry_network_fee_micros" field.
+func (_u *PaperPositionUpdateOne) SetEntryNetworkFeeMicros(v int64) *PaperPositionUpdateOne {
+	_u.mutation.ResetEntryNetworkFeeMicros()
+	_u.mutation.SetEntryNetworkFeeMicros(v)
+	return _u
+}
+
+// SetNillableEntryNetworkFeeMicros sets the "entry_network_fee_micros" field if the given value is not nil.
+func (_u *PaperPositionUpdateOne) SetNillableEntryNetworkFeeMicros(v *int64) *PaperPositionUpdateOne {
+	if v != nil {
+		_u.SetEntryNetworkFeeMicros(*v)
+	}
+	return _u
+}
+
+// AddEntryNetworkFeeMicros adds value to the "entry_network_fee_micros" field.
+func (_u *PaperPositionUpdateOne) AddEntryNetworkFeeMicros(v int64) *PaperPositionUpdateOne {
+	_u.mutation.AddEntryNetworkFeeMicros(v)
+	return _u
+}
+
+// ClearEntryNetworkFeeMicros clears the value of the "entry_network_fee_micros" field.
+func (_u *PaperPositionUpdateOne) ClearEntryNetworkFeeMicros() *PaperPositionUpdateOne {
+	_u.mutation.ClearEntryNetworkFeeMicros()
+	return _u
+}
+
+// SetEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field.
+func (_u *PaperPositionUpdateOne) SetEntryPriorityFeeMicros(v int64) *PaperPositionUpdateOne {
+	_u.mutation.ResetEntryPriorityFeeMicros()
+	_u.mutation.SetEntryPriorityFeeMicros(v)
+	return _u
+}
+
+// SetNillableEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field if the given value is not nil.
+func (_u *PaperPositionUpdateOne) SetNillableEntryPriorityFeeMicros(v *int64) *PaperPositionUpdateOne {
+	if v != nil {
+		_u.SetEntryPriorityFeeMicros(*v)
+	}
+	return _u
+}
+
+// AddEntryPriorityFeeMicros adds value to the "entry_priority_fee_micros" field.
+func (_u *PaperPositionUpdateOne) AddEntryPriorityFeeMicros(v int64) *PaperPositionUpdateOne {
+	_u.mutation.AddEntryPriorityFeeMicros(v)
+	return _u
+}
+
+// ClearEntryPriorityFeeMicros clears the value of the "entry_priority_fee_micros" field.
+func (_u *PaperPositionUpdateOne) ClearEntryPriorityFeeMicros() *PaperPositionUpdateOne {
+	_u.mutation.ClearEntryPriorityFeeMicros()
+	return _u
+}
+
 // SetTokenQuantity sets the "token_quantity" field.
 func (_u *PaperPositionUpdateOne) SetTokenQuantity(v string) *PaperPositionUpdateOne {
 	_u.mutation.SetTokenQuantity(v)
@@ -539,6 +956,12 @@ func (_u *PaperPositionUpdateOne) SetNillableTokenQuantity(v *string) *PaperPosi
 	if v != nil {
 		_u.SetTokenQuantity(*v)
 	}
+	return _u
+}
+
+// ClearTokenQuantity clears the value of the "token_quantity" field.
+func (_u *PaperPositionUpdateOne) ClearTokenQuantity() *PaperPositionUpdateOne {
+	_u.mutation.ClearTokenQuantity()
 	return _u
 }
 
@@ -599,6 +1022,17 @@ func (_u *PaperPositionUpdateOne) SetCandidate(v *Candidate) *PaperPositionUpdat
 	return _u.SetCandidateID(v.ID)
 }
 
+// SetDecisionID sets the "decision" edge to the TradeDecision entity by ID.
+func (_u *PaperPositionUpdateOne) SetDecisionID(id int) *PaperPositionUpdateOne {
+	_u.mutation.SetDecisionID(id)
+	return _u
+}
+
+// SetDecision sets the "decision" edge to the TradeDecision entity.
+func (_u *PaperPositionUpdateOne) SetDecision(v *TradeDecision) *PaperPositionUpdateOne {
+	return _u.SetDecisionID(v.ID)
+}
+
 // AddMarkIDs adds the "marks" edge to the PositionMark entity by IDs.
 func (_u *PaperPositionUpdateOne) AddMarkIDs(ids ...int) *PaperPositionUpdateOne {
 	_u.mutation.AddMarkIDs(ids...)
@@ -637,6 +1071,12 @@ func (_u *PaperPositionUpdateOne) Mutation() *PaperPositionMutation {
 // ClearCandidate clears the "candidate" edge to the Candidate entity.
 func (_u *PaperPositionUpdateOne) ClearCandidate() *PaperPositionUpdateOne {
 	_u.mutation.ClearCandidate()
+	return _u
+}
+
+// ClearDecision clears the "decision" edge to the TradeDecision entity.
+func (_u *PaperPositionUpdateOne) ClearDecision() *PaperPositionUpdateOne {
+	_u.mutation.ClearDecision()
 	return _u
 }
 
@@ -743,18 +1183,21 @@ func (_u *PaperPositionUpdateOne) check() error {
 			return &ValidationError{Name: "notional_micros", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.notional_micros": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.EntryPrice(); ok {
-		if err := paperposition.EntryPriceValidator(v); err != nil {
-			return &ValidationError{Name: "entry_price", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.entry_price": %w`, err)}
+	if v, ok := _u.mutation.StrategyVersion(); ok {
+		if err := paperposition.StrategyVersionValidator(v); err != nil {
+			return &ValidationError{Name: "strategy_version", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.strategy_version": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.TokenQuantity(); ok {
-		if err := paperposition.TokenQuantityValidator(v); err != nil {
-			return &ValidationError{Name: "token_quantity", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.token_quantity": %w`, err)}
+	if v, ok := _u.mutation.NoRouteCount(); ok {
+		if err := paperposition.NoRouteCountValidator(v); err != nil {
+			return &ValidationError{Name: "no_route_count", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.no_route_count": %w`, err)}
 		}
 	}
 	if _u.mutation.CandidateCleared() && len(_u.mutation.CandidateIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "PaperPosition.candidate"`)
+	}
+	if _u.mutation.DecisionCleared() && len(_u.mutation.DecisionIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "PaperPosition.decision"`)
 	}
 	return nil
 }
@@ -797,11 +1240,62 @@ func (_u *PaperPositionUpdateOne) sqlSave(ctx context.Context) (_node *PaperPosi
 	if value, ok := _u.mutation.AddedNotionalMicros(); ok {
 		_spec.AddField(paperposition.FieldNotionalMicros, field.TypeInt64, value)
 	}
+	if value, ok := _u.mutation.StrategyVersion(); ok {
+		_spec.SetField(paperposition.FieldStrategyVersion, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.NoRouteCount(); ok {
+		_spec.SetField(paperposition.FieldNoRouteCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedNoRouteCount(); ok {
+		_spec.AddField(paperposition.FieldNoRouteCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.QuoteMint(); ok {
+		_spec.SetField(paperposition.FieldQuoteMint, field.TypeString, value)
+	}
+	if _u.mutation.QuoteMintCleared() {
+		_spec.ClearField(paperposition.FieldQuoteMint, field.TypeString)
+	}
+	if value, ok := _u.mutation.MintAddress(); ok {
+		_spec.SetField(paperposition.FieldMintAddress, field.TypeString, value)
+	}
+	if _u.mutation.MintAddressCleared() {
+		_spec.ClearField(paperposition.FieldMintAddress, field.TypeString)
+	}
 	if value, ok := _u.mutation.EntryPrice(); ok {
 		_spec.SetField(paperposition.FieldEntryPrice, field.TypeString, value)
 	}
+	if _u.mutation.EntryPriceCleared() {
+		_spec.ClearField(paperposition.FieldEntryPrice, field.TypeString)
+	}
+	if value, ok := _u.mutation.EntryInputAmount(); ok {
+		_spec.SetField(paperposition.FieldEntryInputAmount, field.TypeString, value)
+	}
+	if _u.mutation.EntryInputAmountCleared() {
+		_spec.ClearField(paperposition.FieldEntryInputAmount, field.TypeString)
+	}
+	if value, ok := _u.mutation.EntryNetworkFeeMicros(); ok {
+		_spec.SetField(paperposition.FieldEntryNetworkFeeMicros, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedEntryNetworkFeeMicros(); ok {
+		_spec.AddField(paperposition.FieldEntryNetworkFeeMicros, field.TypeInt64, value)
+	}
+	if _u.mutation.EntryNetworkFeeMicrosCleared() {
+		_spec.ClearField(paperposition.FieldEntryNetworkFeeMicros, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.EntryPriorityFeeMicros(); ok {
+		_spec.SetField(paperposition.FieldEntryPriorityFeeMicros, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedEntryPriorityFeeMicros(); ok {
+		_spec.AddField(paperposition.FieldEntryPriorityFeeMicros, field.TypeInt64, value)
+	}
+	if _u.mutation.EntryPriorityFeeMicrosCleared() {
+		_spec.ClearField(paperposition.FieldEntryPriorityFeeMicros, field.TypeInt64)
+	}
 	if value, ok := _u.mutation.TokenQuantity(); ok {
 		_spec.SetField(paperposition.FieldTokenQuantity, field.TypeString, value)
+	}
+	if _u.mutation.TokenQuantityCleared() {
+		_spec.ClearField(paperposition.FieldTokenQuantity, field.TypeString)
 	}
 	if value, ok := _u.mutation.OpenedAt(); ok {
 		_spec.SetField(paperposition.FieldOpenedAt, field.TypeTime, value)
@@ -840,6 +1334,35 @@ func (_u *PaperPositionUpdateOne) sqlSave(ctx context.Context) (_node *PaperPosi
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(candidate.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.DecisionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: true,
+			Table:   paperposition.DecisionTable,
+			Columns: []string{paperposition.DecisionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tradedecision.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.DecisionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: true,
+			Table:   paperposition.DecisionTable,
+			Columns: []string{paperposition.DecisionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tradedecision.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

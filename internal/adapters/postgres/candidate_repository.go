@@ -141,6 +141,88 @@ func (repository *CandidateRepository) RecordCoverageGap(ctx context.Context, so
 	return nil
 }
 
+func (repository *CandidateRepository) Save(ctx context.Context, pool domain.DiscoveredPool, evidence domain.CandidateEvidence, evaluation domain.CandidateEvaluation) error {
+	if err := pool.Validate(); err != nil {
+		return fmt.Errorf("validate snapshot candidate: %w", err)
+	}
+	candidateRecord, err := repository.client.Candidate.Query().Where(
+		candidate.NetworkEQ(pool.Network),
+		candidate.MintAddressEQ(pool.MintAddress),
+		candidate.PoolAddressEQ(pool.PoolAddress),
+	).Only(ctx)
+	if err != nil {
+		return fmt.Errorf("load snapshot candidate: %w", err)
+	}
+	marketEvidence := candidateMarketEvidence(evidence, evaluation)
+	if err := repository.client.CandidateSnapshot.Create().SetCandidateID(candidateRecord.ID).SetObservedAt(evidence.MarketObservedAt.UTC()).SetMarketEvidence(marketEvidence).Exec(ctx); err != nil {
+		return fmt.Errorf("save candidate snapshot: %w", err)
+	}
+	return nil
+}
+
+func candidateMarketEvidence(evidence domain.CandidateEvidence, evaluation domain.CandidateEvaluation) map[string]any {
+	rules := make([]map[string]any, 0, len(evaluation.Rules))
+	for _, rule := range evaluation.Rules {
+		rules = append(rules, map[string]any{"code": rule.Code, "passed": rule.Passed, "observed": rule.Observed, "limit": rule.Limit})
+	}
+	return map[string]any{
+		"source_observed_at":            evidence.MarketObservedAt.UTC().Format(time.RFC3339Nano),
+		"received_at":                   evidence.ReceivedAt.UTC().Format(time.RFC3339Nano),
+		"liquidity_usd_micros":          evidence.LiquidityUSD.Micros,
+		"five_minute_transactions":      evidence.FiveMinuteTransactions,
+		"five_minute_buys":              evidence.FiveMinuteBuys,
+		"five_minute_sells":             evidence.FiveMinuteSells,
+		"five_minute_volume_usd_micros": evidence.FiveMinuteVolumeUSD.Micros,
+		"five_minute_price_change_bps":  evidence.FiveMinutePriceChangeBPS,
+		"token_program":                 string(evidence.Token.Program),
+		"token_extensions":              tokenExtensions(evidence.Token.Extensions),
+		"mint_authority_revoked":        evidence.Token.MintAuthorityRevoked,
+		"freeze_authority_revoked":      evidence.Token.FreezeAuthorityRevoked,
+		"entry_quote":                   quoteEvidence(evidence.EntryQuote),
+		"exit_quote":                    quoteEvidence(evidence.ExitQuote),
+		"eligible":                      evaluation.Eligible,
+		"rules":                         rules,
+	}
+}
+
+func (repository *CandidateRepository) FindID(ctx context.Context, pool domain.DiscoveredPool) (int, error) {
+	if err := pool.Validate(); err != nil {
+		return 0, fmt.Errorf("validate candidate identity: %w", err)
+	}
+	candidateRecord, err := repository.client.Candidate.Query().Where(
+		candidate.NetworkEQ(pool.Network),
+		candidate.MintAddressEQ(pool.MintAddress),
+		candidate.PoolAddressEQ(pool.PoolAddress),
+	).Only(ctx)
+	if err != nil {
+		return 0, fmt.Errorf("load candidate identity: %w", err)
+	}
+	return candidateRecord.ID, nil
+}
+
+func tokenExtensions(extensions []domain.TokenExtension) []string {
+	values := make([]string, len(extensions))
+	for index, extension := range extensions {
+		values[index] = string(extension)
+	}
+	return values
+}
+
+func quoteEvidence(quote domain.QuoteEvidence) map[string]any {
+	route := make([]map[string]any, 0, len(quote.RoutePlan))
+	for _, leg := range quote.RoutePlan {
+		route = append(route, map[string]any{"amm_key": leg.AMMKey, "label": leg.Label})
+	}
+	return map[string]any{
+		"input_mint":       quote.InputMint,
+		"output_mint":      quote.OutputMint,
+		"in_amount":        quote.InAmount,
+		"out_amount":       quote.OutAmount,
+		"price_impact_bps": quote.PriceImpactBPS,
+		"route":            route,
+	}
+}
+
 func validatedUniquePools(pools []domain.DiscoveredPool) ([]domain.DiscoveredPool, error) {
 	unique := make([]domain.DiscoveredPool, 0, len(pools))
 	seen := make(map[string]struct{}, len(pools))

@@ -24,6 +24,8 @@ const (
 	FieldCreatedAt = "created_at"
 	// EdgeCandidate holds the string denoting the candidate edge name in mutations.
 	EdgeCandidate = "candidate"
+	// EdgePosition holds the string denoting the position edge name in mutations.
+	EdgePosition = "position"
 	// Table holds the table name of the tradedecision in the database.
 	Table = "trade_decisions"
 	// CandidateTable is the table that holds the candidate relation/edge.
@@ -33,6 +35,13 @@ const (
 	CandidateInverseTable = "candidates"
 	// CandidateColumn is the table column denoting the candidate relation/edge.
 	CandidateColumn = "candidate_decisions"
+	// PositionTable is the table that holds the position relation/edge.
+	PositionTable = "paper_positions"
+	// PositionInverseTable is the table name for the PaperPosition entity.
+	// It exists in this package in order to avoid circular dependency with the "paperposition" package.
+	PositionInverseTable = "paper_positions"
+	// PositionColumn is the table column denoting the position relation/edge.
+	PositionColumn = "trade_decision_position"
 )
 
 // Columns holds all SQL columns for tradedecision fields.
@@ -103,10 +112,24 @@ func ByCandidateField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newCandidateStep(), sql.OrderByField(field, opts...))
 	}
 }
+
+// ByPositionField orders the results by position field.
+func ByPositionField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPositionStep(), sql.OrderByField(field, opts...))
+	}
+}
 func newCandidateStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(CandidateInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, true, CandidateTable, CandidateColumn),
+	)
+}
+func newPositionStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PositionInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, PositionTable, PositionColumn),
 	)
 }

@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	SourceBirdeye       = "birdeye"
 	SourceDexScreener   = "dexscreener"
 	SourceGeckoTerminal = "geckoterminal"
 	NetworkSolana       = "solana"

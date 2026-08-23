@@ -34,6 +34,8 @@ go.work.sum
 var/
 .codegraph/
 codegraph.json
+.claude/memory/
+.claude/memories/
 supabase/.branches/
 supabase/.temp/
 supabase/.env

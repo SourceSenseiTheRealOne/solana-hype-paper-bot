@@ -15,6 +15,7 @@ import (
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/paperposition"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/positionevent"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/positionmark"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/tradedecision"
 )
 
 // PaperPositionCreate is the builder for creating a PaperPosition entity.
@@ -37,15 +38,129 @@ func (_c *PaperPositionCreate) SetNotionalMicros(v int64) *PaperPositionCreate {
 	return _c
 }
 
+// SetStrategyVersion sets the "strategy_version" field.
+func (_c *PaperPositionCreate) SetStrategyVersion(v string) *PaperPositionCreate {
+	_c.mutation.SetStrategyVersion(v)
+	return _c
+}
+
+// SetNillableStrategyVersion sets the "strategy_version" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableStrategyVersion(v *string) *PaperPositionCreate {
+	if v != nil {
+		_c.SetStrategyVersion(*v)
+	}
+	return _c
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (_c *PaperPositionCreate) SetNoRouteCount(v int) *PaperPositionCreate {
+	_c.mutation.SetNoRouteCount(v)
+	return _c
+}
+
+// SetNillableNoRouteCount sets the "no_route_count" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableNoRouteCount(v *int) *PaperPositionCreate {
+	if v != nil {
+		_c.SetNoRouteCount(*v)
+	}
+	return _c
+}
+
+// SetQuoteMint sets the "quote_mint" field.
+func (_c *PaperPositionCreate) SetQuoteMint(v string) *PaperPositionCreate {
+	_c.mutation.SetQuoteMint(v)
+	return _c
+}
+
+// SetNillableQuoteMint sets the "quote_mint" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableQuoteMint(v *string) *PaperPositionCreate {
+	if v != nil {
+		_c.SetQuoteMint(*v)
+	}
+	return _c
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (_c *PaperPositionCreate) SetMintAddress(v string) *PaperPositionCreate {
+	_c.mutation.SetMintAddress(v)
+	return _c
+}
+
+// SetNillableMintAddress sets the "mint_address" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableMintAddress(v *string) *PaperPositionCreate {
+	if v != nil {
+		_c.SetMintAddress(*v)
+	}
+	return _c
+}
+
 // SetEntryPrice sets the "entry_price" field.
 func (_c *PaperPositionCreate) SetEntryPrice(v string) *PaperPositionCreate {
 	_c.mutation.SetEntryPrice(v)
 	return _c
 }
 
+// SetNillableEntryPrice sets the "entry_price" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableEntryPrice(v *string) *PaperPositionCreate {
+	if v != nil {
+		_c.SetEntryPrice(*v)
+	}
+	return _c
+}
+
+// SetEntryInputAmount sets the "entry_input_amount" field.
+func (_c *PaperPositionCreate) SetEntryInputAmount(v string) *PaperPositionCreate {
+	_c.mutation.SetEntryInputAmount(v)
+	return _c
+}
+
+// SetNillableEntryInputAmount sets the "entry_input_amount" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableEntryInputAmount(v *string) *PaperPositionCreate {
+	if v != nil {
+		_c.SetEntryInputAmount(*v)
+	}
+	return _c
+}
+
+// SetEntryNetworkFeeMicros sets the "entry_network_fee_micros" field.
+func (_c *PaperPositionCreate) SetEntryNetworkFeeMicros(v int64) *PaperPositionCreate {
+	_c.mutation.SetEntryNetworkFeeMicros(v)
+	return _c
+}
+
+// SetNillableEntryNetworkFeeMicros sets the "entry_network_fee_micros" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableEntryNetworkFeeMicros(v *int64) *PaperPositionCreate {
+	if v != nil {
+		_c.SetEntryNetworkFeeMicros(*v)
+	}
+	return _c
+}
+
+// SetEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field.
+func (_c *PaperPositionCreate) SetEntryPriorityFeeMicros(v int64) *PaperPositionCreate {
+	_c.mutation.SetEntryPriorityFeeMicros(v)
+	return _c
+}
+
+// SetNillableEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableEntryPriorityFeeMicros(v *int64) *PaperPositionCreate {
+	if v != nil {
+		_c.SetEntryPriorityFeeMicros(*v)
+	}
+	return _c
+}
+
 // SetTokenQuantity sets the "token_quantity" field.
 func (_c *PaperPositionCreate) SetTokenQuantity(v string) *PaperPositionCreate {
 	_c.mutation.SetTokenQuantity(v)
+	return _c
+}
+
+// SetNillableTokenQuantity sets the "token_quantity" field if the given value is not nil.
+func (_c *PaperPositionCreate) SetNillableTokenQuantity(v *string) *PaperPositionCreate {
+	if v != nil {
+		_c.SetTokenQuantity(*v)
+	}
 	return _c
 }
 
@@ -116,6 +231,17 @@ func (_c *PaperPositionCreate) SetCandidate(v *Candidate) *PaperPositionCreate {
 	return _c.SetCandidateID(v.ID)
 }
 
+// SetDecisionID sets the "decision" edge to the TradeDecision entity by ID.
+func (_c *PaperPositionCreate) SetDecisionID(id int) *PaperPositionCreate {
+	_c.mutation.SetDecisionID(id)
+	return _c
+}
+
+// SetDecision sets the "decision" edge to the TradeDecision entity.
+func (_c *PaperPositionCreate) SetDecision(v *TradeDecision) *PaperPositionCreate {
+	return _c.SetDecisionID(v.ID)
+}
+
 // AddMarkIDs adds the "marks" edge to the PositionMark entity by IDs.
 func (_c *PaperPositionCreate) AddMarkIDs(ids ...int) *PaperPositionCreate {
 	_c.mutation.AddMarkIDs(ids...)
@@ -181,6 +307,14 @@ func (_c *PaperPositionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *PaperPositionCreate) defaults() {
+	if _, ok := _c.mutation.StrategyVersion(); !ok {
+		v := paperposition.DefaultStrategyVersion
+		_c.mutation.SetStrategyVersion(v)
+	}
+	if _, ok := _c.mutation.NoRouteCount(); !ok {
+		v := paperposition.DefaultNoRouteCount
+		_c.mutation.SetNoRouteCount(v)
+	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := paperposition.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
@@ -209,20 +343,20 @@ func (_c *PaperPositionCreate) check() error {
 			return &ValidationError{Name: "notional_micros", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.notional_micros": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.EntryPrice(); !ok {
-		return &ValidationError{Name: "entry_price", err: errors.New(`ent: missing required field "PaperPosition.entry_price"`)}
+	if _, ok := _c.mutation.StrategyVersion(); !ok {
+		return &ValidationError{Name: "strategy_version", err: errors.New(`ent: missing required field "PaperPosition.strategy_version"`)}
 	}
-	if v, ok := _c.mutation.EntryPrice(); ok {
-		if err := paperposition.EntryPriceValidator(v); err != nil {
-			return &ValidationError{Name: "entry_price", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.entry_price": %w`, err)}
+	if v, ok := _c.mutation.StrategyVersion(); ok {
+		if err := paperposition.StrategyVersionValidator(v); err != nil {
+			return &ValidationError{Name: "strategy_version", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.strategy_version": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.TokenQuantity(); !ok {
-		return &ValidationError{Name: "token_quantity", err: errors.New(`ent: missing required field "PaperPosition.token_quantity"`)}
+	if _, ok := _c.mutation.NoRouteCount(); !ok {
+		return &ValidationError{Name: "no_route_count", err: errors.New(`ent: missing required field "PaperPosition.no_route_count"`)}
 	}
-	if v, ok := _c.mutation.TokenQuantity(); ok {
-		if err := paperposition.TokenQuantityValidator(v); err != nil {
-			return &ValidationError{Name: "token_quantity", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.token_quantity": %w`, err)}
+	if v, ok := _c.mutation.NoRouteCount(); ok {
+		if err := paperposition.NoRouteCountValidator(v); err != nil {
+			return &ValidationError{Name: "no_route_count", err: fmt.Errorf(`ent: validator failed for field "PaperPosition.no_route_count": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
@@ -233,6 +367,9 @@ func (_c *PaperPositionCreate) check() error {
 	}
 	if len(_c.mutation.CandidateIDs()) == 0 {
 		return &ValidationError{Name: "candidate", err: errors.New(`ent: missing required edge "PaperPosition.candidate"`)}
+	}
+	if len(_c.mutation.DecisionIDs()) == 0 {
+		return &ValidationError{Name: "decision", err: errors.New(`ent: missing required edge "PaperPosition.decision"`)}
 	}
 	return nil
 }
@@ -269,13 +406,41 @@ func (_c *PaperPositionCreate) createSpec() (*PaperPosition, *sqlgraph.CreateSpe
 		_spec.SetField(paperposition.FieldNotionalMicros, field.TypeInt64, value)
 		_node.NotionalMicros = value
 	}
+	if value, ok := _c.mutation.StrategyVersion(); ok {
+		_spec.SetField(paperposition.FieldStrategyVersion, field.TypeString, value)
+		_node.StrategyVersion = value
+	}
+	if value, ok := _c.mutation.NoRouteCount(); ok {
+		_spec.SetField(paperposition.FieldNoRouteCount, field.TypeInt, value)
+		_node.NoRouteCount = value
+	}
+	if value, ok := _c.mutation.QuoteMint(); ok {
+		_spec.SetField(paperposition.FieldQuoteMint, field.TypeString, value)
+		_node.QuoteMint = &value
+	}
+	if value, ok := _c.mutation.MintAddress(); ok {
+		_spec.SetField(paperposition.FieldMintAddress, field.TypeString, value)
+		_node.MintAddress = &value
+	}
 	if value, ok := _c.mutation.EntryPrice(); ok {
 		_spec.SetField(paperposition.FieldEntryPrice, field.TypeString, value)
-		_node.EntryPrice = value
+		_node.EntryPrice = &value
+	}
+	if value, ok := _c.mutation.EntryInputAmount(); ok {
+		_spec.SetField(paperposition.FieldEntryInputAmount, field.TypeString, value)
+		_node.EntryInputAmount = &value
+	}
+	if value, ok := _c.mutation.EntryNetworkFeeMicros(); ok {
+		_spec.SetField(paperposition.FieldEntryNetworkFeeMicros, field.TypeInt64, value)
+		_node.EntryNetworkFeeMicros = &value
+	}
+	if value, ok := _c.mutation.EntryPriorityFeeMicros(); ok {
+		_spec.SetField(paperposition.FieldEntryPriorityFeeMicros, field.TypeInt64, value)
+		_node.EntryPriorityFeeMicros = &value
 	}
 	if value, ok := _c.mutation.TokenQuantity(); ok {
 		_spec.SetField(paperposition.FieldTokenQuantity, field.TypeString, value)
-		_node.TokenQuantity = value
+		_node.TokenQuantity = &value
 	}
 	if value, ok := _c.mutation.OpenedAt(); ok {
 		_spec.SetField(paperposition.FieldOpenedAt, field.TypeTime, value)
@@ -308,6 +473,23 @@ func (_c *PaperPositionCreate) createSpec() (*PaperPosition, *sqlgraph.CreateSpe
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.candidate_positions = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.DecisionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: true,
+			Table:   paperposition.DecisionTable,
+			Columns: []string{paperposition.DecisionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tradedecision.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.trade_decision_position = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := _c.mutation.MarksIDs(); len(nodes) > 0 {
@@ -424,6 +606,72 @@ func (u *PaperPositionUpsert) AddNotionalMicros(v int64) *PaperPositionUpsert {
 	return u
 }
 
+// SetStrategyVersion sets the "strategy_version" field.
+func (u *PaperPositionUpsert) SetStrategyVersion(v string) *PaperPositionUpsert {
+	u.Set(paperposition.FieldStrategyVersion, v)
+	return u
+}
+
+// UpdateStrategyVersion sets the "strategy_version" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateStrategyVersion() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldStrategyVersion)
+	return u
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (u *PaperPositionUpsert) SetNoRouteCount(v int) *PaperPositionUpsert {
+	u.Set(paperposition.FieldNoRouteCount, v)
+	return u
+}
+
+// UpdateNoRouteCount sets the "no_route_count" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateNoRouteCount() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldNoRouteCount)
+	return u
+}
+
+// AddNoRouteCount adds v to the "no_route_count" field.
+func (u *PaperPositionUpsert) AddNoRouteCount(v int) *PaperPositionUpsert {
+	u.Add(paperposition.FieldNoRouteCount, v)
+	return u
+}
+
+// SetQuoteMint sets the "quote_mint" field.
+func (u *PaperPositionUpsert) SetQuoteMint(v string) *PaperPositionUpsert {
+	u.Set(paperposition.FieldQuoteMint, v)
+	return u
+}
+
+// UpdateQuoteMint sets the "quote_mint" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateQuoteMint() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldQuoteMint)
+	return u
+}
+
+// ClearQuoteMint clears the value of the "quote_mint" field.
+func (u *PaperPositionUpsert) ClearQuoteMint() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldQuoteMint)
+	return u
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (u *PaperPositionUpsert) SetMintAddress(v string) *PaperPositionUpsert {
+	u.Set(paperposition.FieldMintAddress, v)
+	return u
+}
+
+// UpdateMintAddress sets the "mint_address" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateMintAddress() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldMintAddress)
+	return u
+}
+
+// ClearMintAddress clears the value of the "mint_address" field.
+func (u *PaperPositionUpsert) ClearMintAddress() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldMintAddress)
+	return u
+}
+
 // SetEntryPrice sets the "entry_price" field.
 func (u *PaperPositionUpsert) SetEntryPrice(v string) *PaperPositionUpsert {
 	u.Set(paperposition.FieldEntryPrice, v)
@@ -436,6 +684,78 @@ func (u *PaperPositionUpsert) UpdateEntryPrice() *PaperPositionUpsert {
 	return u
 }
 
+// ClearEntryPrice clears the value of the "entry_price" field.
+func (u *PaperPositionUpsert) ClearEntryPrice() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldEntryPrice)
+	return u
+}
+
+// SetEntryInputAmount sets the "entry_input_amount" field.
+func (u *PaperPositionUpsert) SetEntryInputAmount(v string) *PaperPositionUpsert {
+	u.Set(paperposition.FieldEntryInputAmount, v)
+	return u
+}
+
+// UpdateEntryInputAmount sets the "entry_input_amount" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateEntryInputAmount() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldEntryInputAmount)
+	return u
+}
+
+// ClearEntryInputAmount clears the value of the "entry_input_amount" field.
+func (u *PaperPositionUpsert) ClearEntryInputAmount() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldEntryInputAmount)
+	return u
+}
+
+// SetEntryNetworkFeeMicros sets the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsert) SetEntryNetworkFeeMicros(v int64) *PaperPositionUpsert {
+	u.Set(paperposition.FieldEntryNetworkFeeMicros, v)
+	return u
+}
+
+// UpdateEntryNetworkFeeMicros sets the "entry_network_fee_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateEntryNetworkFeeMicros() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldEntryNetworkFeeMicros)
+	return u
+}
+
+// AddEntryNetworkFeeMicros adds v to the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsert) AddEntryNetworkFeeMicros(v int64) *PaperPositionUpsert {
+	u.Add(paperposition.FieldEntryNetworkFeeMicros, v)
+	return u
+}
+
+// ClearEntryNetworkFeeMicros clears the value of the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsert) ClearEntryNetworkFeeMicros() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldEntryNetworkFeeMicros)
+	return u
+}
+
+// SetEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsert) SetEntryPriorityFeeMicros(v int64) *PaperPositionUpsert {
+	u.Set(paperposition.FieldEntryPriorityFeeMicros, v)
+	return u
+}
+
+// UpdateEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsert) UpdateEntryPriorityFeeMicros() *PaperPositionUpsert {
+	u.SetExcluded(paperposition.FieldEntryPriorityFeeMicros)
+	return u
+}
+
+// AddEntryPriorityFeeMicros adds v to the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsert) AddEntryPriorityFeeMicros(v int64) *PaperPositionUpsert {
+	u.Add(paperposition.FieldEntryPriorityFeeMicros, v)
+	return u
+}
+
+// ClearEntryPriorityFeeMicros clears the value of the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsert) ClearEntryPriorityFeeMicros() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldEntryPriorityFeeMicros)
+	return u
+}
+
 // SetTokenQuantity sets the "token_quantity" field.
 func (u *PaperPositionUpsert) SetTokenQuantity(v string) *PaperPositionUpsert {
 	u.Set(paperposition.FieldTokenQuantity, v)
@@ -445,6 +765,12 @@ func (u *PaperPositionUpsert) SetTokenQuantity(v string) *PaperPositionUpsert {
 // UpdateTokenQuantity sets the "token_quantity" field to the value that was provided on create.
 func (u *PaperPositionUpsert) UpdateTokenQuantity() *PaperPositionUpsert {
 	u.SetExcluded(paperposition.FieldTokenQuantity)
+	return u
+}
+
+// ClearTokenQuantity clears the value of the "token_quantity" field.
+func (u *PaperPositionUpsert) ClearTokenQuantity() *PaperPositionUpsert {
+	u.SetNull(paperposition.FieldTokenQuantity)
 	return u
 }
 
@@ -576,6 +902,83 @@ func (u *PaperPositionUpsertOne) UpdateNotionalMicros() *PaperPositionUpsertOne 
 	})
 }
 
+// SetStrategyVersion sets the "strategy_version" field.
+func (u *PaperPositionUpsertOne) SetStrategyVersion(v string) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetStrategyVersion(v)
+	})
+}
+
+// UpdateStrategyVersion sets the "strategy_version" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateStrategyVersion() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateStrategyVersion()
+	})
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (u *PaperPositionUpsertOne) SetNoRouteCount(v int) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetNoRouteCount(v)
+	})
+}
+
+// AddNoRouteCount adds v to the "no_route_count" field.
+func (u *PaperPositionUpsertOne) AddNoRouteCount(v int) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.AddNoRouteCount(v)
+	})
+}
+
+// UpdateNoRouteCount sets the "no_route_count" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateNoRouteCount() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateNoRouteCount()
+	})
+}
+
+// SetQuoteMint sets the "quote_mint" field.
+func (u *PaperPositionUpsertOne) SetQuoteMint(v string) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetQuoteMint(v)
+	})
+}
+
+// UpdateQuoteMint sets the "quote_mint" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateQuoteMint() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateQuoteMint()
+	})
+}
+
+// ClearQuoteMint clears the value of the "quote_mint" field.
+func (u *PaperPositionUpsertOne) ClearQuoteMint() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearQuoteMint()
+	})
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (u *PaperPositionUpsertOne) SetMintAddress(v string) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetMintAddress(v)
+	})
+}
+
+// UpdateMintAddress sets the "mint_address" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateMintAddress() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateMintAddress()
+	})
+}
+
+// ClearMintAddress clears the value of the "mint_address" field.
+func (u *PaperPositionUpsertOne) ClearMintAddress() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearMintAddress()
+	})
+}
+
 // SetEntryPrice sets the "entry_price" field.
 func (u *PaperPositionUpsertOne) SetEntryPrice(v string) *PaperPositionUpsertOne {
 	return u.Update(func(s *PaperPositionUpsert) {
@@ -590,6 +993,90 @@ func (u *PaperPositionUpsertOne) UpdateEntryPrice() *PaperPositionUpsertOne {
 	})
 }
 
+// ClearEntryPrice clears the value of the "entry_price" field.
+func (u *PaperPositionUpsertOne) ClearEntryPrice() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearEntryPrice()
+	})
+}
+
+// SetEntryInputAmount sets the "entry_input_amount" field.
+func (u *PaperPositionUpsertOne) SetEntryInputAmount(v string) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetEntryInputAmount(v)
+	})
+}
+
+// UpdateEntryInputAmount sets the "entry_input_amount" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateEntryInputAmount() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateEntryInputAmount()
+	})
+}
+
+// ClearEntryInputAmount clears the value of the "entry_input_amount" field.
+func (u *PaperPositionUpsertOne) ClearEntryInputAmount() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearEntryInputAmount()
+	})
+}
+
+// SetEntryNetworkFeeMicros sets the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsertOne) SetEntryNetworkFeeMicros(v int64) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetEntryNetworkFeeMicros(v)
+	})
+}
+
+// AddEntryNetworkFeeMicros adds v to the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsertOne) AddEntryNetworkFeeMicros(v int64) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.AddEntryNetworkFeeMicros(v)
+	})
+}
+
+// UpdateEntryNetworkFeeMicros sets the "entry_network_fee_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateEntryNetworkFeeMicros() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateEntryNetworkFeeMicros()
+	})
+}
+
+// ClearEntryNetworkFeeMicros clears the value of the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsertOne) ClearEntryNetworkFeeMicros() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearEntryNetworkFeeMicros()
+	})
+}
+
+// SetEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsertOne) SetEntryPriorityFeeMicros(v int64) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetEntryPriorityFeeMicros(v)
+	})
+}
+
+// AddEntryPriorityFeeMicros adds v to the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsertOne) AddEntryPriorityFeeMicros(v int64) *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.AddEntryPriorityFeeMicros(v)
+	})
+}
+
+// UpdateEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsertOne) UpdateEntryPriorityFeeMicros() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateEntryPriorityFeeMicros()
+	})
+}
+
+// ClearEntryPriorityFeeMicros clears the value of the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsertOne) ClearEntryPriorityFeeMicros() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearEntryPriorityFeeMicros()
+	})
+}
+
 // SetTokenQuantity sets the "token_quantity" field.
 func (u *PaperPositionUpsertOne) SetTokenQuantity(v string) *PaperPositionUpsertOne {
 	return u.Update(func(s *PaperPositionUpsert) {
@@ -601,6 +1088,13 @@ func (u *PaperPositionUpsertOne) SetTokenQuantity(v string) *PaperPositionUpsert
 func (u *PaperPositionUpsertOne) UpdateTokenQuantity() *PaperPositionUpsertOne {
 	return u.Update(func(s *PaperPositionUpsert) {
 		s.UpdateTokenQuantity()
+	})
+}
+
+// ClearTokenQuantity clears the value of the "token_quantity" field.
+func (u *PaperPositionUpsertOne) ClearTokenQuantity() *PaperPositionUpsertOne {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearTokenQuantity()
 	})
 }
 
@@ -906,6 +1400,83 @@ func (u *PaperPositionUpsertBulk) UpdateNotionalMicros() *PaperPositionUpsertBul
 	})
 }
 
+// SetStrategyVersion sets the "strategy_version" field.
+func (u *PaperPositionUpsertBulk) SetStrategyVersion(v string) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetStrategyVersion(v)
+	})
+}
+
+// UpdateStrategyVersion sets the "strategy_version" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateStrategyVersion() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateStrategyVersion()
+	})
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (u *PaperPositionUpsertBulk) SetNoRouteCount(v int) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetNoRouteCount(v)
+	})
+}
+
+// AddNoRouteCount adds v to the "no_route_count" field.
+func (u *PaperPositionUpsertBulk) AddNoRouteCount(v int) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.AddNoRouteCount(v)
+	})
+}
+
+// UpdateNoRouteCount sets the "no_route_count" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateNoRouteCount() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateNoRouteCount()
+	})
+}
+
+// SetQuoteMint sets the "quote_mint" field.
+func (u *PaperPositionUpsertBulk) SetQuoteMint(v string) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetQuoteMint(v)
+	})
+}
+
+// UpdateQuoteMint sets the "quote_mint" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateQuoteMint() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateQuoteMint()
+	})
+}
+
+// ClearQuoteMint clears the value of the "quote_mint" field.
+func (u *PaperPositionUpsertBulk) ClearQuoteMint() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearQuoteMint()
+	})
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (u *PaperPositionUpsertBulk) SetMintAddress(v string) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetMintAddress(v)
+	})
+}
+
+// UpdateMintAddress sets the "mint_address" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateMintAddress() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateMintAddress()
+	})
+}
+
+// ClearMintAddress clears the value of the "mint_address" field.
+func (u *PaperPositionUpsertBulk) ClearMintAddress() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearMintAddress()
+	})
+}
+
 // SetEntryPrice sets the "entry_price" field.
 func (u *PaperPositionUpsertBulk) SetEntryPrice(v string) *PaperPositionUpsertBulk {
 	return u.Update(func(s *PaperPositionUpsert) {
@@ -920,6 +1491,90 @@ func (u *PaperPositionUpsertBulk) UpdateEntryPrice() *PaperPositionUpsertBulk {
 	})
 }
 
+// ClearEntryPrice clears the value of the "entry_price" field.
+func (u *PaperPositionUpsertBulk) ClearEntryPrice() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearEntryPrice()
+	})
+}
+
+// SetEntryInputAmount sets the "entry_input_amount" field.
+func (u *PaperPositionUpsertBulk) SetEntryInputAmount(v string) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetEntryInputAmount(v)
+	})
+}
+
+// UpdateEntryInputAmount sets the "entry_input_amount" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateEntryInputAmount() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateEntryInputAmount()
+	})
+}
+
+// ClearEntryInputAmount clears the value of the "entry_input_amount" field.
+func (u *PaperPositionUpsertBulk) ClearEntryInputAmount() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearEntryInputAmount()
+	})
+}
+
+// SetEntryNetworkFeeMicros sets the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsertBulk) SetEntryNetworkFeeMicros(v int64) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetEntryNetworkFeeMicros(v)
+	})
+}
+
+// AddEntryNetworkFeeMicros adds v to the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsertBulk) AddEntryNetworkFeeMicros(v int64) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.AddEntryNetworkFeeMicros(v)
+	})
+}
+
+// UpdateEntryNetworkFeeMicros sets the "entry_network_fee_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateEntryNetworkFeeMicros() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateEntryNetworkFeeMicros()
+	})
+}
+
+// ClearEntryNetworkFeeMicros clears the value of the "entry_network_fee_micros" field.
+func (u *PaperPositionUpsertBulk) ClearEntryNetworkFeeMicros() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearEntryNetworkFeeMicros()
+	})
+}
+
+// SetEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsertBulk) SetEntryPriorityFeeMicros(v int64) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.SetEntryPriorityFeeMicros(v)
+	})
+}
+
+// AddEntryPriorityFeeMicros adds v to the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsertBulk) AddEntryPriorityFeeMicros(v int64) *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.AddEntryPriorityFeeMicros(v)
+	})
+}
+
+// UpdateEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field to the value that was provided on create.
+func (u *PaperPositionUpsertBulk) UpdateEntryPriorityFeeMicros() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.UpdateEntryPriorityFeeMicros()
+	})
+}
+
+// ClearEntryPriorityFeeMicros clears the value of the "entry_priority_fee_micros" field.
+func (u *PaperPositionUpsertBulk) ClearEntryPriorityFeeMicros() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearEntryPriorityFeeMicros()
+	})
+}
+
 // SetTokenQuantity sets the "token_quantity" field.
 func (u *PaperPositionUpsertBulk) SetTokenQuantity(v string) *PaperPositionUpsertBulk {
 	return u.Update(func(s *PaperPositionUpsert) {
@@ -931,6 +1586,13 @@ func (u *PaperPositionUpsertBulk) SetTokenQuantity(v string) *PaperPositionUpser
 func (u *PaperPositionUpsertBulk) UpdateTokenQuantity() *PaperPositionUpsertBulk {
 	return u.Update(func(s *PaperPositionUpsert) {
 		s.UpdateTokenQuantity()
+	})
+}
+
+// ClearTokenQuantity clears the value of the "token_quantity" field.
+func (u *PaperPositionUpsertBulk) ClearTokenQuantity() *PaperPositionUpsertBulk {
+	return u.Update(func(s *PaperPositionUpsert) {
+		s.ClearTokenQuantity()
 	})
 }
 

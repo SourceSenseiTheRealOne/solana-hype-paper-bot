@@ -3390,30 +3390,42 @@ func (m *DailyResultMutation) ResetEdge(name string) error {
 // PaperPositionMutation represents an operation that mutates the PaperPosition nodes in the graph.
 type PaperPositionMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	state              *paperposition.State
-	notional_micros    *int64
-	addnotional_micros *int64
-	entry_price        *string
-	token_quantity     *string
-	opened_at          *time.Time
-	closed_at          *time.Time
-	created_at         *time.Time
-	updated_at         *time.Time
-	clearedFields      map[string]struct{}
-	candidate          *int
-	clearedcandidate   bool
-	marks              map[int]struct{}
-	removedmarks       map[int]struct{}
-	clearedmarks       bool
-	events             map[int]struct{}
-	removedevents      map[int]struct{}
-	clearedevents      bool
-	done               bool
-	oldValue           func(context.Context) (*PaperPosition, error)
-	predicates         []predicate.PaperPosition
+	op                           Op
+	typ                          string
+	id                           *int
+	state                        *paperposition.State
+	notional_micros              *int64
+	addnotional_micros           *int64
+	strategy_version             *string
+	no_route_count               *int
+	addno_route_count            *int
+	quote_mint                   *string
+	mint_address                 *string
+	entry_price                  *string
+	entry_input_amount           *string
+	entry_network_fee_micros     *int64
+	addentry_network_fee_micros  *int64
+	entry_priority_fee_micros    *int64
+	addentry_priority_fee_micros *int64
+	token_quantity               *string
+	opened_at                    *time.Time
+	closed_at                    *time.Time
+	created_at                   *time.Time
+	updated_at                   *time.Time
+	clearedFields                map[string]struct{}
+	candidate                    *int
+	clearedcandidate             bool
+	decision                     *int
+	cleareddecision              bool
+	marks                        map[int]struct{}
+	removedmarks                 map[int]struct{}
+	clearedmarks                 bool
+	events                       map[int]struct{}
+	removedevents                map[int]struct{}
+	clearedevents                bool
+	done                         bool
+	oldValue                     func(context.Context) (*PaperPosition, error)
+	predicates                   []predicate.PaperPosition
 }
 
 var _ ent.Mutation = (*PaperPositionMutation)(nil)
@@ -3606,6 +3618,196 @@ func (m *PaperPositionMutation) ResetNotionalMicros() {
 	m.addnotional_micros = nil
 }
 
+// SetStrategyVersion sets the "strategy_version" field.
+func (m *PaperPositionMutation) SetStrategyVersion(s string) {
+	m.strategy_version = &s
+}
+
+// StrategyVersion returns the value of the "strategy_version" field in the mutation.
+func (m *PaperPositionMutation) StrategyVersion() (r string, exists bool) {
+	v := m.strategy_version
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStrategyVersion returns the old "strategy_version" field's value of the PaperPosition entity.
+// If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaperPositionMutation) OldStrategyVersion(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStrategyVersion is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStrategyVersion requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStrategyVersion: %w", err)
+	}
+	return oldValue.StrategyVersion, nil
+}
+
+// ResetStrategyVersion resets all changes to the "strategy_version" field.
+func (m *PaperPositionMutation) ResetStrategyVersion() {
+	m.strategy_version = nil
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (m *PaperPositionMutation) SetNoRouteCount(i int) {
+	m.no_route_count = &i
+	m.addno_route_count = nil
+}
+
+// NoRouteCount returns the value of the "no_route_count" field in the mutation.
+func (m *PaperPositionMutation) NoRouteCount() (r int, exists bool) {
+	v := m.no_route_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNoRouteCount returns the old "no_route_count" field's value of the PaperPosition entity.
+// If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaperPositionMutation) OldNoRouteCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNoRouteCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNoRouteCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNoRouteCount: %w", err)
+	}
+	return oldValue.NoRouteCount, nil
+}
+
+// AddNoRouteCount adds i to the "no_route_count" field.
+func (m *PaperPositionMutation) AddNoRouteCount(i int) {
+	if m.addno_route_count != nil {
+		*m.addno_route_count += i
+	} else {
+		m.addno_route_count = &i
+	}
+}
+
+// AddedNoRouteCount returns the value that was added to the "no_route_count" field in this mutation.
+func (m *PaperPositionMutation) AddedNoRouteCount() (r int, exists bool) {
+	v := m.addno_route_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetNoRouteCount resets all changes to the "no_route_count" field.
+func (m *PaperPositionMutation) ResetNoRouteCount() {
+	m.no_route_count = nil
+	m.addno_route_count = nil
+}
+
+// SetQuoteMint sets the "quote_mint" field.
+func (m *PaperPositionMutation) SetQuoteMint(s string) {
+	m.quote_mint = &s
+}
+
+// QuoteMint returns the value of the "quote_mint" field in the mutation.
+func (m *PaperPositionMutation) QuoteMint() (r string, exists bool) {
+	v := m.quote_mint
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQuoteMint returns the old "quote_mint" field's value of the PaperPosition entity.
+// If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaperPositionMutation) OldQuoteMint(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldQuoteMint is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldQuoteMint requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQuoteMint: %w", err)
+	}
+	return oldValue.QuoteMint, nil
+}
+
+// ClearQuoteMint clears the value of the "quote_mint" field.
+func (m *PaperPositionMutation) ClearQuoteMint() {
+	m.quote_mint = nil
+	m.clearedFields[paperposition.FieldQuoteMint] = struct{}{}
+}
+
+// QuoteMintCleared returns if the "quote_mint" field was cleared in this mutation.
+func (m *PaperPositionMutation) QuoteMintCleared() bool {
+	_, ok := m.clearedFields[paperposition.FieldQuoteMint]
+	return ok
+}
+
+// ResetQuoteMint resets all changes to the "quote_mint" field.
+func (m *PaperPositionMutation) ResetQuoteMint() {
+	m.quote_mint = nil
+	delete(m.clearedFields, paperposition.FieldQuoteMint)
+}
+
+// SetMintAddress sets the "mint_address" field.
+func (m *PaperPositionMutation) SetMintAddress(s string) {
+	m.mint_address = &s
+}
+
+// MintAddress returns the value of the "mint_address" field in the mutation.
+func (m *PaperPositionMutation) MintAddress() (r string, exists bool) {
+	v := m.mint_address
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMintAddress returns the old "mint_address" field's value of the PaperPosition entity.
+// If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaperPositionMutation) OldMintAddress(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMintAddress is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMintAddress requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMintAddress: %w", err)
+	}
+	return oldValue.MintAddress, nil
+}
+
+// ClearMintAddress clears the value of the "mint_address" field.
+func (m *PaperPositionMutation) ClearMintAddress() {
+	m.mint_address = nil
+	m.clearedFields[paperposition.FieldMintAddress] = struct{}{}
+}
+
+// MintAddressCleared returns if the "mint_address" field was cleared in this mutation.
+func (m *PaperPositionMutation) MintAddressCleared() bool {
+	_, ok := m.clearedFields[paperposition.FieldMintAddress]
+	return ok
+}
+
+// ResetMintAddress resets all changes to the "mint_address" field.
+func (m *PaperPositionMutation) ResetMintAddress() {
+	m.mint_address = nil
+	delete(m.clearedFields, paperposition.FieldMintAddress)
+}
+
 // SetEntryPrice sets the "entry_price" field.
 func (m *PaperPositionMutation) SetEntryPrice(s string) {
 	m.entry_price = &s
@@ -3623,7 +3825,7 @@ func (m *PaperPositionMutation) EntryPrice() (r string, exists bool) {
 // OldEntryPrice returns the old "entry_price" field's value of the PaperPosition entity.
 // If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaperPositionMutation) OldEntryPrice(ctx context.Context) (v string, err error) {
+func (m *PaperPositionMutation) OldEntryPrice(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldEntryPrice is only allowed on UpdateOne operations")
 	}
@@ -3637,9 +3839,211 @@ func (m *PaperPositionMutation) OldEntryPrice(ctx context.Context) (v string, er
 	return oldValue.EntryPrice, nil
 }
 
+// ClearEntryPrice clears the value of the "entry_price" field.
+func (m *PaperPositionMutation) ClearEntryPrice() {
+	m.entry_price = nil
+	m.clearedFields[paperposition.FieldEntryPrice] = struct{}{}
+}
+
+// EntryPriceCleared returns if the "entry_price" field was cleared in this mutation.
+func (m *PaperPositionMutation) EntryPriceCleared() bool {
+	_, ok := m.clearedFields[paperposition.FieldEntryPrice]
+	return ok
+}
+
 // ResetEntryPrice resets all changes to the "entry_price" field.
 func (m *PaperPositionMutation) ResetEntryPrice() {
 	m.entry_price = nil
+	delete(m.clearedFields, paperposition.FieldEntryPrice)
+}
+
+// SetEntryInputAmount sets the "entry_input_amount" field.
+func (m *PaperPositionMutation) SetEntryInputAmount(s string) {
+	m.entry_input_amount = &s
+}
+
+// EntryInputAmount returns the value of the "entry_input_amount" field in the mutation.
+func (m *PaperPositionMutation) EntryInputAmount() (r string, exists bool) {
+	v := m.entry_input_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntryInputAmount returns the old "entry_input_amount" field's value of the PaperPosition entity.
+// If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaperPositionMutation) OldEntryInputAmount(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntryInputAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntryInputAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntryInputAmount: %w", err)
+	}
+	return oldValue.EntryInputAmount, nil
+}
+
+// ClearEntryInputAmount clears the value of the "entry_input_amount" field.
+func (m *PaperPositionMutation) ClearEntryInputAmount() {
+	m.entry_input_amount = nil
+	m.clearedFields[paperposition.FieldEntryInputAmount] = struct{}{}
+}
+
+// EntryInputAmountCleared returns if the "entry_input_amount" field was cleared in this mutation.
+func (m *PaperPositionMutation) EntryInputAmountCleared() bool {
+	_, ok := m.clearedFields[paperposition.FieldEntryInputAmount]
+	return ok
+}
+
+// ResetEntryInputAmount resets all changes to the "entry_input_amount" field.
+func (m *PaperPositionMutation) ResetEntryInputAmount() {
+	m.entry_input_amount = nil
+	delete(m.clearedFields, paperposition.FieldEntryInputAmount)
+}
+
+// SetEntryNetworkFeeMicros sets the "entry_network_fee_micros" field.
+func (m *PaperPositionMutation) SetEntryNetworkFeeMicros(i int64) {
+	m.entry_network_fee_micros = &i
+	m.addentry_network_fee_micros = nil
+}
+
+// EntryNetworkFeeMicros returns the value of the "entry_network_fee_micros" field in the mutation.
+func (m *PaperPositionMutation) EntryNetworkFeeMicros() (r int64, exists bool) {
+	v := m.entry_network_fee_micros
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntryNetworkFeeMicros returns the old "entry_network_fee_micros" field's value of the PaperPosition entity.
+// If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaperPositionMutation) OldEntryNetworkFeeMicros(ctx context.Context) (v *int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntryNetworkFeeMicros is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntryNetworkFeeMicros requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntryNetworkFeeMicros: %w", err)
+	}
+	return oldValue.EntryNetworkFeeMicros, nil
+}
+
+// AddEntryNetworkFeeMicros adds i to the "entry_network_fee_micros" field.
+func (m *PaperPositionMutation) AddEntryNetworkFeeMicros(i int64) {
+	if m.addentry_network_fee_micros != nil {
+		*m.addentry_network_fee_micros += i
+	} else {
+		m.addentry_network_fee_micros = &i
+	}
+}
+
+// AddedEntryNetworkFeeMicros returns the value that was added to the "entry_network_fee_micros" field in this mutation.
+func (m *PaperPositionMutation) AddedEntryNetworkFeeMicros() (r int64, exists bool) {
+	v := m.addentry_network_fee_micros
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearEntryNetworkFeeMicros clears the value of the "entry_network_fee_micros" field.
+func (m *PaperPositionMutation) ClearEntryNetworkFeeMicros() {
+	m.entry_network_fee_micros = nil
+	m.addentry_network_fee_micros = nil
+	m.clearedFields[paperposition.FieldEntryNetworkFeeMicros] = struct{}{}
+}
+
+// EntryNetworkFeeMicrosCleared returns if the "entry_network_fee_micros" field was cleared in this mutation.
+func (m *PaperPositionMutation) EntryNetworkFeeMicrosCleared() bool {
+	_, ok := m.clearedFields[paperposition.FieldEntryNetworkFeeMicros]
+	return ok
+}
+
+// ResetEntryNetworkFeeMicros resets all changes to the "entry_network_fee_micros" field.
+func (m *PaperPositionMutation) ResetEntryNetworkFeeMicros() {
+	m.entry_network_fee_micros = nil
+	m.addentry_network_fee_micros = nil
+	delete(m.clearedFields, paperposition.FieldEntryNetworkFeeMicros)
+}
+
+// SetEntryPriorityFeeMicros sets the "entry_priority_fee_micros" field.
+func (m *PaperPositionMutation) SetEntryPriorityFeeMicros(i int64) {
+	m.entry_priority_fee_micros = &i
+	m.addentry_priority_fee_micros = nil
+}
+
+// EntryPriorityFeeMicros returns the value of the "entry_priority_fee_micros" field in the mutation.
+func (m *PaperPositionMutation) EntryPriorityFeeMicros() (r int64, exists bool) {
+	v := m.entry_priority_fee_micros
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEntryPriorityFeeMicros returns the old "entry_priority_fee_micros" field's value of the PaperPosition entity.
+// If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PaperPositionMutation) OldEntryPriorityFeeMicros(ctx context.Context) (v *int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEntryPriorityFeeMicros is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEntryPriorityFeeMicros requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEntryPriorityFeeMicros: %w", err)
+	}
+	return oldValue.EntryPriorityFeeMicros, nil
+}
+
+// AddEntryPriorityFeeMicros adds i to the "entry_priority_fee_micros" field.
+func (m *PaperPositionMutation) AddEntryPriorityFeeMicros(i int64) {
+	if m.addentry_priority_fee_micros != nil {
+		*m.addentry_priority_fee_micros += i
+	} else {
+		m.addentry_priority_fee_micros = &i
+	}
+}
+
+// AddedEntryPriorityFeeMicros returns the value that was added to the "entry_priority_fee_micros" field in this mutation.
+func (m *PaperPositionMutation) AddedEntryPriorityFeeMicros() (r int64, exists bool) {
+	v := m.addentry_priority_fee_micros
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearEntryPriorityFeeMicros clears the value of the "entry_priority_fee_micros" field.
+func (m *PaperPositionMutation) ClearEntryPriorityFeeMicros() {
+	m.entry_priority_fee_micros = nil
+	m.addentry_priority_fee_micros = nil
+	m.clearedFields[paperposition.FieldEntryPriorityFeeMicros] = struct{}{}
+}
+
+// EntryPriorityFeeMicrosCleared returns if the "entry_priority_fee_micros" field was cleared in this mutation.
+func (m *PaperPositionMutation) EntryPriorityFeeMicrosCleared() bool {
+	_, ok := m.clearedFields[paperposition.FieldEntryPriorityFeeMicros]
+	return ok
+}
+
+// ResetEntryPriorityFeeMicros resets all changes to the "entry_priority_fee_micros" field.
+func (m *PaperPositionMutation) ResetEntryPriorityFeeMicros() {
+	m.entry_priority_fee_micros = nil
+	m.addentry_priority_fee_micros = nil
+	delete(m.clearedFields, paperposition.FieldEntryPriorityFeeMicros)
 }
 
 // SetTokenQuantity sets the "token_quantity" field.
@@ -3659,7 +4063,7 @@ func (m *PaperPositionMutation) TokenQuantity() (r string, exists bool) {
 // OldTokenQuantity returns the old "token_quantity" field's value of the PaperPosition entity.
 // If the PaperPosition object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PaperPositionMutation) OldTokenQuantity(ctx context.Context) (v string, err error) {
+func (m *PaperPositionMutation) OldTokenQuantity(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldTokenQuantity is only allowed on UpdateOne operations")
 	}
@@ -3673,9 +4077,22 @@ func (m *PaperPositionMutation) OldTokenQuantity(ctx context.Context) (v string,
 	return oldValue.TokenQuantity, nil
 }
 
+// ClearTokenQuantity clears the value of the "token_quantity" field.
+func (m *PaperPositionMutation) ClearTokenQuantity() {
+	m.token_quantity = nil
+	m.clearedFields[paperposition.FieldTokenQuantity] = struct{}{}
+}
+
+// TokenQuantityCleared returns if the "token_quantity" field was cleared in this mutation.
+func (m *PaperPositionMutation) TokenQuantityCleared() bool {
+	_, ok := m.clearedFields[paperposition.FieldTokenQuantity]
+	return ok
+}
+
 // ResetTokenQuantity resets all changes to the "token_quantity" field.
 func (m *PaperPositionMutation) ResetTokenQuantity() {
 	m.token_quantity = nil
+	delete(m.clearedFields, paperposition.FieldTokenQuantity)
 }
 
 // SetOpenedAt sets the "opened_at" field.
@@ -3887,6 +4304,45 @@ func (m *PaperPositionMutation) ResetCandidate() {
 	m.clearedcandidate = false
 }
 
+// SetDecisionID sets the "decision" edge to the TradeDecision entity by id.
+func (m *PaperPositionMutation) SetDecisionID(id int) {
+	m.decision = &id
+}
+
+// ClearDecision clears the "decision" edge to the TradeDecision entity.
+func (m *PaperPositionMutation) ClearDecision() {
+	m.cleareddecision = true
+}
+
+// DecisionCleared reports if the "decision" edge to the TradeDecision entity was cleared.
+func (m *PaperPositionMutation) DecisionCleared() bool {
+	return m.cleareddecision
+}
+
+// DecisionID returns the "decision" edge ID in the mutation.
+func (m *PaperPositionMutation) DecisionID() (id int, exists bool) {
+	if m.decision != nil {
+		return *m.decision, true
+	}
+	return
+}
+
+// DecisionIDs returns the "decision" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// DecisionID instead. It exists only for internal usage by the builders.
+func (m *PaperPositionMutation) DecisionIDs() (ids []int) {
+	if id := m.decision; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetDecision resets all changes to the "decision" edge.
+func (m *PaperPositionMutation) ResetDecision() {
+	m.decision = nil
+	m.cleareddecision = false
+}
+
 // AddMarkIDs adds the "marks" edge to the PositionMark entity by ids.
 func (m *PaperPositionMutation) AddMarkIDs(ids ...int) {
 	if m.marks == nil {
@@ -4029,15 +4485,36 @@ func (m *PaperPositionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PaperPositionMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 15)
 	if m.state != nil {
 		fields = append(fields, paperposition.FieldState)
 	}
 	if m.notional_micros != nil {
 		fields = append(fields, paperposition.FieldNotionalMicros)
 	}
+	if m.strategy_version != nil {
+		fields = append(fields, paperposition.FieldStrategyVersion)
+	}
+	if m.no_route_count != nil {
+		fields = append(fields, paperposition.FieldNoRouteCount)
+	}
+	if m.quote_mint != nil {
+		fields = append(fields, paperposition.FieldQuoteMint)
+	}
+	if m.mint_address != nil {
+		fields = append(fields, paperposition.FieldMintAddress)
+	}
 	if m.entry_price != nil {
 		fields = append(fields, paperposition.FieldEntryPrice)
+	}
+	if m.entry_input_amount != nil {
+		fields = append(fields, paperposition.FieldEntryInputAmount)
+	}
+	if m.entry_network_fee_micros != nil {
+		fields = append(fields, paperposition.FieldEntryNetworkFeeMicros)
+	}
+	if m.entry_priority_fee_micros != nil {
+		fields = append(fields, paperposition.FieldEntryPriorityFeeMicros)
 	}
 	if m.token_quantity != nil {
 		fields = append(fields, paperposition.FieldTokenQuantity)
@@ -4066,8 +4543,22 @@ func (m *PaperPositionMutation) Field(name string) (ent.Value, bool) {
 		return m.State()
 	case paperposition.FieldNotionalMicros:
 		return m.NotionalMicros()
+	case paperposition.FieldStrategyVersion:
+		return m.StrategyVersion()
+	case paperposition.FieldNoRouteCount:
+		return m.NoRouteCount()
+	case paperposition.FieldQuoteMint:
+		return m.QuoteMint()
+	case paperposition.FieldMintAddress:
+		return m.MintAddress()
 	case paperposition.FieldEntryPrice:
 		return m.EntryPrice()
+	case paperposition.FieldEntryInputAmount:
+		return m.EntryInputAmount()
+	case paperposition.FieldEntryNetworkFeeMicros:
+		return m.EntryNetworkFeeMicros()
+	case paperposition.FieldEntryPriorityFeeMicros:
+		return m.EntryPriorityFeeMicros()
 	case paperposition.FieldTokenQuantity:
 		return m.TokenQuantity()
 	case paperposition.FieldOpenedAt:
@@ -4091,8 +4582,22 @@ func (m *PaperPositionMutation) OldField(ctx context.Context, name string) (ent.
 		return m.OldState(ctx)
 	case paperposition.FieldNotionalMicros:
 		return m.OldNotionalMicros(ctx)
+	case paperposition.FieldStrategyVersion:
+		return m.OldStrategyVersion(ctx)
+	case paperposition.FieldNoRouteCount:
+		return m.OldNoRouteCount(ctx)
+	case paperposition.FieldQuoteMint:
+		return m.OldQuoteMint(ctx)
+	case paperposition.FieldMintAddress:
+		return m.OldMintAddress(ctx)
 	case paperposition.FieldEntryPrice:
 		return m.OldEntryPrice(ctx)
+	case paperposition.FieldEntryInputAmount:
+		return m.OldEntryInputAmount(ctx)
+	case paperposition.FieldEntryNetworkFeeMicros:
+		return m.OldEntryNetworkFeeMicros(ctx)
+	case paperposition.FieldEntryPriorityFeeMicros:
+		return m.OldEntryPriorityFeeMicros(ctx)
 	case paperposition.FieldTokenQuantity:
 		return m.OldTokenQuantity(ctx)
 	case paperposition.FieldOpenedAt:
@@ -4126,12 +4631,61 @@ func (m *PaperPositionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNotionalMicros(v)
 		return nil
+	case paperposition.FieldStrategyVersion:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStrategyVersion(v)
+		return nil
+	case paperposition.FieldNoRouteCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNoRouteCount(v)
+		return nil
+	case paperposition.FieldQuoteMint:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQuoteMint(v)
+		return nil
+	case paperposition.FieldMintAddress:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMintAddress(v)
+		return nil
 	case paperposition.FieldEntryPrice:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEntryPrice(v)
+		return nil
+	case paperposition.FieldEntryInputAmount:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntryInputAmount(v)
+		return nil
+	case paperposition.FieldEntryNetworkFeeMicros:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntryNetworkFeeMicros(v)
+		return nil
+	case paperposition.FieldEntryPriorityFeeMicros:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEntryPriorityFeeMicros(v)
 		return nil
 	case paperposition.FieldTokenQuantity:
 		v, ok := value.(string)
@@ -4179,6 +4733,15 @@ func (m *PaperPositionMutation) AddedFields() []string {
 	if m.addnotional_micros != nil {
 		fields = append(fields, paperposition.FieldNotionalMicros)
 	}
+	if m.addno_route_count != nil {
+		fields = append(fields, paperposition.FieldNoRouteCount)
+	}
+	if m.addentry_network_fee_micros != nil {
+		fields = append(fields, paperposition.FieldEntryNetworkFeeMicros)
+	}
+	if m.addentry_priority_fee_micros != nil {
+		fields = append(fields, paperposition.FieldEntryPriorityFeeMicros)
+	}
 	return fields
 }
 
@@ -4189,6 +4752,12 @@ func (m *PaperPositionMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case paperposition.FieldNotionalMicros:
 		return m.AddedNotionalMicros()
+	case paperposition.FieldNoRouteCount:
+		return m.AddedNoRouteCount()
+	case paperposition.FieldEntryNetworkFeeMicros:
+		return m.AddedEntryNetworkFeeMicros()
+	case paperposition.FieldEntryPriorityFeeMicros:
+		return m.AddedEntryPriorityFeeMicros()
 	}
 	return nil, false
 }
@@ -4205,6 +4774,27 @@ func (m *PaperPositionMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddNotionalMicros(v)
 		return nil
+	case paperposition.FieldNoRouteCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddNoRouteCount(v)
+		return nil
+	case paperposition.FieldEntryNetworkFeeMicros:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEntryNetworkFeeMicros(v)
+		return nil
+	case paperposition.FieldEntryPriorityFeeMicros:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEntryPriorityFeeMicros(v)
+		return nil
 	}
 	return fmt.Errorf("unknown PaperPosition numeric field %s", name)
 }
@@ -4213,6 +4803,27 @@ func (m *PaperPositionMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *PaperPositionMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(paperposition.FieldQuoteMint) {
+		fields = append(fields, paperposition.FieldQuoteMint)
+	}
+	if m.FieldCleared(paperposition.FieldMintAddress) {
+		fields = append(fields, paperposition.FieldMintAddress)
+	}
+	if m.FieldCleared(paperposition.FieldEntryPrice) {
+		fields = append(fields, paperposition.FieldEntryPrice)
+	}
+	if m.FieldCleared(paperposition.FieldEntryInputAmount) {
+		fields = append(fields, paperposition.FieldEntryInputAmount)
+	}
+	if m.FieldCleared(paperposition.FieldEntryNetworkFeeMicros) {
+		fields = append(fields, paperposition.FieldEntryNetworkFeeMicros)
+	}
+	if m.FieldCleared(paperposition.FieldEntryPriorityFeeMicros) {
+		fields = append(fields, paperposition.FieldEntryPriorityFeeMicros)
+	}
+	if m.FieldCleared(paperposition.FieldTokenQuantity) {
+		fields = append(fields, paperposition.FieldTokenQuantity)
+	}
 	if m.FieldCleared(paperposition.FieldOpenedAt) {
 		fields = append(fields, paperposition.FieldOpenedAt)
 	}
@@ -4233,6 +4844,27 @@ func (m *PaperPositionMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *PaperPositionMutation) ClearField(name string) error {
 	switch name {
+	case paperposition.FieldQuoteMint:
+		m.ClearQuoteMint()
+		return nil
+	case paperposition.FieldMintAddress:
+		m.ClearMintAddress()
+		return nil
+	case paperposition.FieldEntryPrice:
+		m.ClearEntryPrice()
+		return nil
+	case paperposition.FieldEntryInputAmount:
+		m.ClearEntryInputAmount()
+		return nil
+	case paperposition.FieldEntryNetworkFeeMicros:
+		m.ClearEntryNetworkFeeMicros()
+		return nil
+	case paperposition.FieldEntryPriorityFeeMicros:
+		m.ClearEntryPriorityFeeMicros()
+		return nil
+	case paperposition.FieldTokenQuantity:
+		m.ClearTokenQuantity()
+		return nil
 	case paperposition.FieldOpenedAt:
 		m.ClearOpenedAt()
 		return nil
@@ -4253,8 +4885,29 @@ func (m *PaperPositionMutation) ResetField(name string) error {
 	case paperposition.FieldNotionalMicros:
 		m.ResetNotionalMicros()
 		return nil
+	case paperposition.FieldStrategyVersion:
+		m.ResetStrategyVersion()
+		return nil
+	case paperposition.FieldNoRouteCount:
+		m.ResetNoRouteCount()
+		return nil
+	case paperposition.FieldQuoteMint:
+		m.ResetQuoteMint()
+		return nil
+	case paperposition.FieldMintAddress:
+		m.ResetMintAddress()
+		return nil
 	case paperposition.FieldEntryPrice:
 		m.ResetEntryPrice()
+		return nil
+	case paperposition.FieldEntryInputAmount:
+		m.ResetEntryInputAmount()
+		return nil
+	case paperposition.FieldEntryNetworkFeeMicros:
+		m.ResetEntryNetworkFeeMicros()
+		return nil
+	case paperposition.FieldEntryPriorityFeeMicros:
+		m.ResetEntryPriorityFeeMicros()
 		return nil
 	case paperposition.FieldTokenQuantity:
 		m.ResetTokenQuantity()
@@ -4277,9 +4930,12 @@ func (m *PaperPositionMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *PaperPositionMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.candidate != nil {
 		edges = append(edges, paperposition.EdgeCandidate)
+	}
+	if m.decision != nil {
+		edges = append(edges, paperposition.EdgeDecision)
 	}
 	if m.marks != nil {
 		edges = append(edges, paperposition.EdgeMarks)
@@ -4296,6 +4952,10 @@ func (m *PaperPositionMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case paperposition.EdgeCandidate:
 		if id := m.candidate; id != nil {
+			return []ent.Value{*id}
+		}
+	case paperposition.EdgeDecision:
+		if id := m.decision; id != nil {
 			return []ent.Value{*id}
 		}
 	case paperposition.EdgeMarks:
@@ -4316,7 +4976,7 @@ func (m *PaperPositionMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *PaperPositionMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.removedmarks != nil {
 		edges = append(edges, paperposition.EdgeMarks)
 	}
@@ -4348,9 +5008,12 @@ func (m *PaperPositionMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *PaperPositionMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.clearedcandidate {
 		edges = append(edges, paperposition.EdgeCandidate)
+	}
+	if m.cleareddecision {
+		edges = append(edges, paperposition.EdgeDecision)
 	}
 	if m.clearedmarks {
 		edges = append(edges, paperposition.EdgeMarks)
@@ -4367,6 +5030,8 @@ func (m *PaperPositionMutation) EdgeCleared(name string) bool {
 	switch name {
 	case paperposition.EdgeCandidate:
 		return m.clearedcandidate
+	case paperposition.EdgeDecision:
+		return m.cleareddecision
 	case paperposition.EdgeMarks:
 		return m.clearedmarks
 	case paperposition.EdgeEvents:
@@ -4382,6 +5047,9 @@ func (m *PaperPositionMutation) ClearEdge(name string) error {
 	case paperposition.EdgeCandidate:
 		m.ClearCandidate()
 		return nil
+	case paperposition.EdgeDecision:
+		m.ClearDecision()
+		return nil
 	}
 	return fmt.Errorf("unknown PaperPosition unique edge %s", name)
 }
@@ -4392,6 +5060,9 @@ func (m *PaperPositionMutation) ResetEdge(name string) error {
 	switch name {
 	case paperposition.EdgeCandidate:
 		m.ResetCandidate()
+		return nil
+	case paperposition.EdgeDecision:
+		m.ResetDecision()
 		return nil
 	case paperposition.EdgeMarks:
 		m.ResetMarks()
@@ -4907,18 +5578,31 @@ func (m *PositionEventMutation) ResetEdge(name string) error {
 // PositionMarkMutation represents an operation that mutates the PositionMark nodes in the graph.
 type PositionMarkMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *int
-	price           *string
-	observed_at     *time.Time
-	created_at      *time.Time
-	clearedFields   map[string]struct{}
-	position        *int
-	clearedposition bool
-	done            bool
-	oldValue        func(context.Context) (*PositionMark, error)
-	predicates      []predicate.PositionMark
+	op                Op
+	typ               string
+	id                *int
+	price             *string
+	net_output_amount *string
+	fee_estimate      *int64
+	addfee_estimate   *int64
+	return_bps        *int64
+	addreturn_bps     *int64
+	quote_hash        *string
+	route_state       *positionmark.RouteState
+	mfe_bps           *int64
+	addmfe_bps        *int64
+	mae_bps           *int64
+	addmae_bps        *int64
+	no_route_count    *int
+	addno_route_count *int
+	observed_at       *time.Time
+	created_at        *time.Time
+	clearedFields     map[string]struct{}
+	position          *int
+	clearedposition   bool
+	done              bool
+	oldValue          func(context.Context) (*PositionMark, error)
+	predicates        []predicate.PositionMark
 }
 
 var _ ent.Mutation = (*PositionMarkMutation)(nil)
@@ -5053,6 +5737,476 @@ func (m *PositionMarkMutation) OldPrice(ctx context.Context) (v string, err erro
 // ResetPrice resets all changes to the "price" field.
 func (m *PositionMarkMutation) ResetPrice() {
 	m.price = nil
+}
+
+// SetNetOutputAmount sets the "net_output_amount" field.
+func (m *PositionMarkMutation) SetNetOutputAmount(s string) {
+	m.net_output_amount = &s
+}
+
+// NetOutputAmount returns the value of the "net_output_amount" field in the mutation.
+func (m *PositionMarkMutation) NetOutputAmount() (r string, exists bool) {
+	v := m.net_output_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNetOutputAmount returns the old "net_output_amount" field's value of the PositionMark entity.
+// If the PositionMark object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMarkMutation) OldNetOutputAmount(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNetOutputAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNetOutputAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNetOutputAmount: %w", err)
+	}
+	return oldValue.NetOutputAmount, nil
+}
+
+// ClearNetOutputAmount clears the value of the "net_output_amount" field.
+func (m *PositionMarkMutation) ClearNetOutputAmount() {
+	m.net_output_amount = nil
+	m.clearedFields[positionmark.FieldNetOutputAmount] = struct{}{}
+}
+
+// NetOutputAmountCleared returns if the "net_output_amount" field was cleared in this mutation.
+func (m *PositionMarkMutation) NetOutputAmountCleared() bool {
+	_, ok := m.clearedFields[positionmark.FieldNetOutputAmount]
+	return ok
+}
+
+// ResetNetOutputAmount resets all changes to the "net_output_amount" field.
+func (m *PositionMarkMutation) ResetNetOutputAmount() {
+	m.net_output_amount = nil
+	delete(m.clearedFields, positionmark.FieldNetOutputAmount)
+}
+
+// SetFeeEstimate sets the "fee_estimate" field.
+func (m *PositionMarkMutation) SetFeeEstimate(i int64) {
+	m.fee_estimate = &i
+	m.addfee_estimate = nil
+}
+
+// FeeEstimate returns the value of the "fee_estimate" field in the mutation.
+func (m *PositionMarkMutation) FeeEstimate() (r int64, exists bool) {
+	v := m.fee_estimate
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFeeEstimate returns the old "fee_estimate" field's value of the PositionMark entity.
+// If the PositionMark object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMarkMutation) OldFeeEstimate(ctx context.Context) (v *int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFeeEstimate is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFeeEstimate requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFeeEstimate: %w", err)
+	}
+	return oldValue.FeeEstimate, nil
+}
+
+// AddFeeEstimate adds i to the "fee_estimate" field.
+func (m *PositionMarkMutation) AddFeeEstimate(i int64) {
+	if m.addfee_estimate != nil {
+		*m.addfee_estimate += i
+	} else {
+		m.addfee_estimate = &i
+	}
+}
+
+// AddedFeeEstimate returns the value that was added to the "fee_estimate" field in this mutation.
+func (m *PositionMarkMutation) AddedFeeEstimate() (r int64, exists bool) {
+	v := m.addfee_estimate
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearFeeEstimate clears the value of the "fee_estimate" field.
+func (m *PositionMarkMutation) ClearFeeEstimate() {
+	m.fee_estimate = nil
+	m.addfee_estimate = nil
+	m.clearedFields[positionmark.FieldFeeEstimate] = struct{}{}
+}
+
+// FeeEstimateCleared returns if the "fee_estimate" field was cleared in this mutation.
+func (m *PositionMarkMutation) FeeEstimateCleared() bool {
+	_, ok := m.clearedFields[positionmark.FieldFeeEstimate]
+	return ok
+}
+
+// ResetFeeEstimate resets all changes to the "fee_estimate" field.
+func (m *PositionMarkMutation) ResetFeeEstimate() {
+	m.fee_estimate = nil
+	m.addfee_estimate = nil
+	delete(m.clearedFields, positionmark.FieldFeeEstimate)
+}
+
+// SetReturnBps sets the "return_bps" field.
+func (m *PositionMarkMutation) SetReturnBps(i int64) {
+	m.return_bps = &i
+	m.addreturn_bps = nil
+}
+
+// ReturnBps returns the value of the "return_bps" field in the mutation.
+func (m *PositionMarkMutation) ReturnBps() (r int64, exists bool) {
+	v := m.return_bps
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReturnBps returns the old "return_bps" field's value of the PositionMark entity.
+// If the PositionMark object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMarkMutation) OldReturnBps(ctx context.Context) (v *int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReturnBps is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReturnBps requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReturnBps: %w", err)
+	}
+	return oldValue.ReturnBps, nil
+}
+
+// AddReturnBps adds i to the "return_bps" field.
+func (m *PositionMarkMutation) AddReturnBps(i int64) {
+	if m.addreturn_bps != nil {
+		*m.addreturn_bps += i
+	} else {
+		m.addreturn_bps = &i
+	}
+}
+
+// AddedReturnBps returns the value that was added to the "return_bps" field in this mutation.
+func (m *PositionMarkMutation) AddedReturnBps() (r int64, exists bool) {
+	v := m.addreturn_bps
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearReturnBps clears the value of the "return_bps" field.
+func (m *PositionMarkMutation) ClearReturnBps() {
+	m.return_bps = nil
+	m.addreturn_bps = nil
+	m.clearedFields[positionmark.FieldReturnBps] = struct{}{}
+}
+
+// ReturnBpsCleared returns if the "return_bps" field was cleared in this mutation.
+func (m *PositionMarkMutation) ReturnBpsCleared() bool {
+	_, ok := m.clearedFields[positionmark.FieldReturnBps]
+	return ok
+}
+
+// ResetReturnBps resets all changes to the "return_bps" field.
+func (m *PositionMarkMutation) ResetReturnBps() {
+	m.return_bps = nil
+	m.addreturn_bps = nil
+	delete(m.clearedFields, positionmark.FieldReturnBps)
+}
+
+// SetQuoteHash sets the "quote_hash" field.
+func (m *PositionMarkMutation) SetQuoteHash(s string) {
+	m.quote_hash = &s
+}
+
+// QuoteHash returns the value of the "quote_hash" field in the mutation.
+func (m *PositionMarkMutation) QuoteHash() (r string, exists bool) {
+	v := m.quote_hash
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQuoteHash returns the old "quote_hash" field's value of the PositionMark entity.
+// If the PositionMark object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMarkMutation) OldQuoteHash(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldQuoteHash is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldQuoteHash requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQuoteHash: %w", err)
+	}
+	return oldValue.QuoteHash, nil
+}
+
+// ClearQuoteHash clears the value of the "quote_hash" field.
+func (m *PositionMarkMutation) ClearQuoteHash() {
+	m.quote_hash = nil
+	m.clearedFields[positionmark.FieldQuoteHash] = struct{}{}
+}
+
+// QuoteHashCleared returns if the "quote_hash" field was cleared in this mutation.
+func (m *PositionMarkMutation) QuoteHashCleared() bool {
+	_, ok := m.clearedFields[positionmark.FieldQuoteHash]
+	return ok
+}
+
+// ResetQuoteHash resets all changes to the "quote_hash" field.
+func (m *PositionMarkMutation) ResetQuoteHash() {
+	m.quote_hash = nil
+	delete(m.clearedFields, positionmark.FieldQuoteHash)
+}
+
+// SetRouteState sets the "route_state" field.
+func (m *PositionMarkMutation) SetRouteState(ps positionmark.RouteState) {
+	m.route_state = &ps
+}
+
+// RouteState returns the value of the "route_state" field in the mutation.
+func (m *PositionMarkMutation) RouteState() (r positionmark.RouteState, exists bool) {
+	v := m.route_state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRouteState returns the old "route_state" field's value of the PositionMark entity.
+// If the PositionMark object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMarkMutation) OldRouteState(ctx context.Context) (v positionmark.RouteState, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRouteState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRouteState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRouteState: %w", err)
+	}
+	return oldValue.RouteState, nil
+}
+
+// ResetRouteState resets all changes to the "route_state" field.
+func (m *PositionMarkMutation) ResetRouteState() {
+	m.route_state = nil
+}
+
+// SetMfeBps sets the "mfe_bps" field.
+func (m *PositionMarkMutation) SetMfeBps(i int64) {
+	m.mfe_bps = &i
+	m.addmfe_bps = nil
+}
+
+// MfeBps returns the value of the "mfe_bps" field in the mutation.
+func (m *PositionMarkMutation) MfeBps() (r int64, exists bool) {
+	v := m.mfe_bps
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMfeBps returns the old "mfe_bps" field's value of the PositionMark entity.
+// If the PositionMark object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMarkMutation) OldMfeBps(ctx context.Context) (v *int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMfeBps is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMfeBps requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMfeBps: %w", err)
+	}
+	return oldValue.MfeBps, nil
+}
+
+// AddMfeBps adds i to the "mfe_bps" field.
+func (m *PositionMarkMutation) AddMfeBps(i int64) {
+	if m.addmfe_bps != nil {
+		*m.addmfe_bps += i
+	} else {
+		m.addmfe_bps = &i
+	}
+}
+
+// AddedMfeBps returns the value that was added to the "mfe_bps" field in this mutation.
+func (m *PositionMarkMutation) AddedMfeBps() (r int64, exists bool) {
+	v := m.addmfe_bps
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearMfeBps clears the value of the "mfe_bps" field.
+func (m *PositionMarkMutation) ClearMfeBps() {
+	m.mfe_bps = nil
+	m.addmfe_bps = nil
+	m.clearedFields[positionmark.FieldMfeBps] = struct{}{}
+}
+
+// MfeBpsCleared returns if the "mfe_bps" field was cleared in this mutation.
+func (m *PositionMarkMutation) MfeBpsCleared() bool {
+	_, ok := m.clearedFields[positionmark.FieldMfeBps]
+	return ok
+}
+
+// ResetMfeBps resets all changes to the "mfe_bps" field.
+func (m *PositionMarkMutation) ResetMfeBps() {
+	m.mfe_bps = nil
+	m.addmfe_bps = nil
+	delete(m.clearedFields, positionmark.FieldMfeBps)
+}
+
+// SetMaeBps sets the "mae_bps" field.
+func (m *PositionMarkMutation) SetMaeBps(i int64) {
+	m.mae_bps = &i
+	m.addmae_bps = nil
+}
+
+// MaeBps returns the value of the "mae_bps" field in the mutation.
+func (m *PositionMarkMutation) MaeBps() (r int64, exists bool) {
+	v := m.mae_bps
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMaeBps returns the old "mae_bps" field's value of the PositionMark entity.
+// If the PositionMark object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMarkMutation) OldMaeBps(ctx context.Context) (v *int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMaeBps is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMaeBps requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMaeBps: %w", err)
+	}
+	return oldValue.MaeBps, nil
+}
+
+// AddMaeBps adds i to the "mae_bps" field.
+func (m *PositionMarkMutation) AddMaeBps(i int64) {
+	if m.addmae_bps != nil {
+		*m.addmae_bps += i
+	} else {
+		m.addmae_bps = &i
+	}
+}
+
+// AddedMaeBps returns the value that was added to the "mae_bps" field in this mutation.
+func (m *PositionMarkMutation) AddedMaeBps() (r int64, exists bool) {
+	v := m.addmae_bps
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearMaeBps clears the value of the "mae_bps" field.
+func (m *PositionMarkMutation) ClearMaeBps() {
+	m.mae_bps = nil
+	m.addmae_bps = nil
+	m.clearedFields[positionmark.FieldMaeBps] = struct{}{}
+}
+
+// MaeBpsCleared returns if the "mae_bps" field was cleared in this mutation.
+func (m *PositionMarkMutation) MaeBpsCleared() bool {
+	_, ok := m.clearedFields[positionmark.FieldMaeBps]
+	return ok
+}
+
+// ResetMaeBps resets all changes to the "mae_bps" field.
+func (m *PositionMarkMutation) ResetMaeBps() {
+	m.mae_bps = nil
+	m.addmae_bps = nil
+	delete(m.clearedFields, positionmark.FieldMaeBps)
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (m *PositionMarkMutation) SetNoRouteCount(i int) {
+	m.no_route_count = &i
+	m.addno_route_count = nil
+}
+
+// NoRouteCount returns the value of the "no_route_count" field in the mutation.
+func (m *PositionMarkMutation) NoRouteCount() (r int, exists bool) {
+	v := m.no_route_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNoRouteCount returns the old "no_route_count" field's value of the PositionMark entity.
+// If the PositionMark object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMarkMutation) OldNoRouteCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNoRouteCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNoRouteCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNoRouteCount: %w", err)
+	}
+	return oldValue.NoRouteCount, nil
+}
+
+// AddNoRouteCount adds i to the "no_route_count" field.
+func (m *PositionMarkMutation) AddNoRouteCount(i int) {
+	if m.addno_route_count != nil {
+		*m.addno_route_count += i
+	} else {
+		m.addno_route_count = &i
+	}
+}
+
+// AddedNoRouteCount returns the value that was added to the "no_route_count" field in this mutation.
+func (m *PositionMarkMutation) AddedNoRouteCount() (r int, exists bool) {
+	v := m.addno_route_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetNoRouteCount resets all changes to the "no_route_count" field.
+func (m *PositionMarkMutation) ResetNoRouteCount() {
+	m.no_route_count = nil
+	m.addno_route_count = nil
 }
 
 // SetObservedAt sets the "observed_at" field.
@@ -5200,9 +6354,33 @@ func (m *PositionMarkMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PositionMarkMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 11)
 	if m.price != nil {
 		fields = append(fields, positionmark.FieldPrice)
+	}
+	if m.net_output_amount != nil {
+		fields = append(fields, positionmark.FieldNetOutputAmount)
+	}
+	if m.fee_estimate != nil {
+		fields = append(fields, positionmark.FieldFeeEstimate)
+	}
+	if m.return_bps != nil {
+		fields = append(fields, positionmark.FieldReturnBps)
+	}
+	if m.quote_hash != nil {
+		fields = append(fields, positionmark.FieldQuoteHash)
+	}
+	if m.route_state != nil {
+		fields = append(fields, positionmark.FieldRouteState)
+	}
+	if m.mfe_bps != nil {
+		fields = append(fields, positionmark.FieldMfeBps)
+	}
+	if m.mae_bps != nil {
+		fields = append(fields, positionmark.FieldMaeBps)
+	}
+	if m.no_route_count != nil {
+		fields = append(fields, positionmark.FieldNoRouteCount)
 	}
 	if m.observed_at != nil {
 		fields = append(fields, positionmark.FieldObservedAt)
@@ -5220,6 +6398,22 @@ func (m *PositionMarkMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case positionmark.FieldPrice:
 		return m.Price()
+	case positionmark.FieldNetOutputAmount:
+		return m.NetOutputAmount()
+	case positionmark.FieldFeeEstimate:
+		return m.FeeEstimate()
+	case positionmark.FieldReturnBps:
+		return m.ReturnBps()
+	case positionmark.FieldQuoteHash:
+		return m.QuoteHash()
+	case positionmark.FieldRouteState:
+		return m.RouteState()
+	case positionmark.FieldMfeBps:
+		return m.MfeBps()
+	case positionmark.FieldMaeBps:
+		return m.MaeBps()
+	case positionmark.FieldNoRouteCount:
+		return m.NoRouteCount()
 	case positionmark.FieldObservedAt:
 		return m.ObservedAt()
 	case positionmark.FieldCreatedAt:
@@ -5235,6 +6429,22 @@ func (m *PositionMarkMutation) OldField(ctx context.Context, name string) (ent.V
 	switch name {
 	case positionmark.FieldPrice:
 		return m.OldPrice(ctx)
+	case positionmark.FieldNetOutputAmount:
+		return m.OldNetOutputAmount(ctx)
+	case positionmark.FieldFeeEstimate:
+		return m.OldFeeEstimate(ctx)
+	case positionmark.FieldReturnBps:
+		return m.OldReturnBps(ctx)
+	case positionmark.FieldQuoteHash:
+		return m.OldQuoteHash(ctx)
+	case positionmark.FieldRouteState:
+		return m.OldRouteState(ctx)
+	case positionmark.FieldMfeBps:
+		return m.OldMfeBps(ctx)
+	case positionmark.FieldMaeBps:
+		return m.OldMaeBps(ctx)
+	case positionmark.FieldNoRouteCount:
+		return m.OldNoRouteCount(ctx)
 	case positionmark.FieldObservedAt:
 		return m.OldObservedAt(ctx)
 	case positionmark.FieldCreatedAt:
@@ -5254,6 +6464,62 @@ func (m *PositionMarkMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPrice(v)
+		return nil
+	case positionmark.FieldNetOutputAmount:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNetOutputAmount(v)
+		return nil
+	case positionmark.FieldFeeEstimate:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFeeEstimate(v)
+		return nil
+	case positionmark.FieldReturnBps:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReturnBps(v)
+		return nil
+	case positionmark.FieldQuoteHash:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQuoteHash(v)
+		return nil
+	case positionmark.FieldRouteState:
+		v, ok := value.(positionmark.RouteState)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRouteState(v)
+		return nil
+	case positionmark.FieldMfeBps:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMfeBps(v)
+		return nil
+	case positionmark.FieldMaeBps:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMaeBps(v)
+		return nil
+	case positionmark.FieldNoRouteCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNoRouteCount(v)
 		return nil
 	case positionmark.FieldObservedAt:
 		v, ok := value.(time.Time)
@@ -5276,13 +6542,41 @@ func (m *PositionMarkMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *PositionMarkMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addfee_estimate != nil {
+		fields = append(fields, positionmark.FieldFeeEstimate)
+	}
+	if m.addreturn_bps != nil {
+		fields = append(fields, positionmark.FieldReturnBps)
+	}
+	if m.addmfe_bps != nil {
+		fields = append(fields, positionmark.FieldMfeBps)
+	}
+	if m.addmae_bps != nil {
+		fields = append(fields, positionmark.FieldMaeBps)
+	}
+	if m.addno_route_count != nil {
+		fields = append(fields, positionmark.FieldNoRouteCount)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *PositionMarkMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case positionmark.FieldFeeEstimate:
+		return m.AddedFeeEstimate()
+	case positionmark.FieldReturnBps:
+		return m.AddedReturnBps()
+	case positionmark.FieldMfeBps:
+		return m.AddedMfeBps()
+	case positionmark.FieldMaeBps:
+		return m.AddedMaeBps()
+	case positionmark.FieldNoRouteCount:
+		return m.AddedNoRouteCount()
+	}
 	return nil, false
 }
 
@@ -5291,6 +6585,41 @@ func (m *PositionMarkMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *PositionMarkMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case positionmark.FieldFeeEstimate:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddFeeEstimate(v)
+		return nil
+	case positionmark.FieldReturnBps:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddReturnBps(v)
+		return nil
+	case positionmark.FieldMfeBps:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMfeBps(v)
+		return nil
+	case positionmark.FieldMaeBps:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMaeBps(v)
+		return nil
+	case positionmark.FieldNoRouteCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddNoRouteCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown PositionMark numeric field %s", name)
 }
@@ -5298,7 +6627,26 @@ func (m *PositionMarkMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *PositionMarkMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(positionmark.FieldNetOutputAmount) {
+		fields = append(fields, positionmark.FieldNetOutputAmount)
+	}
+	if m.FieldCleared(positionmark.FieldFeeEstimate) {
+		fields = append(fields, positionmark.FieldFeeEstimate)
+	}
+	if m.FieldCleared(positionmark.FieldReturnBps) {
+		fields = append(fields, positionmark.FieldReturnBps)
+	}
+	if m.FieldCleared(positionmark.FieldQuoteHash) {
+		fields = append(fields, positionmark.FieldQuoteHash)
+	}
+	if m.FieldCleared(positionmark.FieldMfeBps) {
+		fields = append(fields, positionmark.FieldMfeBps)
+	}
+	if m.FieldCleared(positionmark.FieldMaeBps) {
+		fields = append(fields, positionmark.FieldMaeBps)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -5311,6 +6659,26 @@ func (m *PositionMarkMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *PositionMarkMutation) ClearField(name string) error {
+	switch name {
+	case positionmark.FieldNetOutputAmount:
+		m.ClearNetOutputAmount()
+		return nil
+	case positionmark.FieldFeeEstimate:
+		m.ClearFeeEstimate()
+		return nil
+	case positionmark.FieldReturnBps:
+		m.ClearReturnBps()
+		return nil
+	case positionmark.FieldQuoteHash:
+		m.ClearQuoteHash()
+		return nil
+	case positionmark.FieldMfeBps:
+		m.ClearMfeBps()
+		return nil
+	case positionmark.FieldMaeBps:
+		m.ClearMaeBps()
+		return nil
+	}
 	return fmt.Errorf("unknown PositionMark nullable field %s", name)
 }
 
@@ -5320,6 +6688,30 @@ func (m *PositionMarkMutation) ResetField(name string) error {
 	switch name {
 	case positionmark.FieldPrice:
 		m.ResetPrice()
+		return nil
+	case positionmark.FieldNetOutputAmount:
+		m.ResetNetOutputAmount()
+		return nil
+	case positionmark.FieldFeeEstimate:
+		m.ResetFeeEstimate()
+		return nil
+	case positionmark.FieldReturnBps:
+		m.ResetReturnBps()
+		return nil
+	case positionmark.FieldQuoteHash:
+		m.ResetQuoteHash()
+		return nil
+	case positionmark.FieldRouteState:
+		m.ResetRouteState()
+		return nil
+	case positionmark.FieldMfeBps:
+		m.ResetMfeBps()
+		return nil
+	case positionmark.FieldMaeBps:
+		m.ResetMaeBps()
+		return nil
+	case positionmark.FieldNoRouteCount:
+		m.ResetNoRouteCount()
 		return nil
 	case positionmark.FieldObservedAt:
 		m.ResetObservedAt()
@@ -6009,6 +7401,8 @@ type TradeDecisionMutation struct {
 	clearedFields    map[string]struct{}
 	candidate        *int
 	clearedcandidate bool
+	position         *int
+	clearedposition  bool
 	done             bool
 	oldValue         func(context.Context) (*TradeDecision, error)
 	predicates       []predicate.TradeDecision
@@ -6295,6 +7689,45 @@ func (m *TradeDecisionMutation) ResetCandidate() {
 	m.clearedcandidate = false
 }
 
+// SetPositionID sets the "position" edge to the PaperPosition entity by id.
+func (m *TradeDecisionMutation) SetPositionID(id int) {
+	m.position = &id
+}
+
+// ClearPosition clears the "position" edge to the PaperPosition entity.
+func (m *TradeDecisionMutation) ClearPosition() {
+	m.clearedposition = true
+}
+
+// PositionCleared reports if the "position" edge to the PaperPosition entity was cleared.
+func (m *TradeDecisionMutation) PositionCleared() bool {
+	return m.clearedposition
+}
+
+// PositionID returns the "position" edge ID in the mutation.
+func (m *TradeDecisionMutation) PositionID() (id int, exists bool) {
+	if m.position != nil {
+		return *m.position, true
+	}
+	return
+}
+
+// PositionIDs returns the "position" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// PositionID instead. It exists only for internal usage by the builders.
+func (m *TradeDecisionMutation) PositionIDs() (ids []int) {
+	if id := m.position; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPosition resets all changes to the "position" edge.
+func (m *TradeDecisionMutation) ResetPosition() {
+	m.position = nil
+	m.clearedposition = false
+}
+
 // Where appends a list predicates to the TradeDecisionMutation builder.
 func (m *TradeDecisionMutation) Where(ps ...predicate.TradeDecision) {
 	m.predicates = append(m.predicates, ps...)
@@ -6479,9 +7912,12 @@ func (m *TradeDecisionMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *TradeDecisionMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.candidate != nil {
 		edges = append(edges, tradedecision.EdgeCandidate)
+	}
+	if m.position != nil {
+		edges = append(edges, tradedecision.EdgePosition)
 	}
 	return edges
 }
@@ -6494,13 +7930,17 @@ func (m *TradeDecisionMutation) AddedIDs(name string) []ent.Value {
 		if id := m.candidate; id != nil {
 			return []ent.Value{*id}
 		}
+	case tradedecision.EdgePosition:
+		if id := m.position; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *TradeDecisionMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	return edges
 }
 
@@ -6512,9 +7952,12 @@ func (m *TradeDecisionMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *TradeDecisionMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.clearedcandidate {
 		edges = append(edges, tradedecision.EdgeCandidate)
+	}
+	if m.clearedposition {
+		edges = append(edges, tradedecision.EdgePosition)
 	}
 	return edges
 }
@@ -6525,6 +7968,8 @@ func (m *TradeDecisionMutation) EdgeCleared(name string) bool {
 	switch name {
 	case tradedecision.EdgeCandidate:
 		return m.clearedcandidate
+	case tradedecision.EdgePosition:
+		return m.clearedposition
 	}
 	return false
 }
@@ -6536,6 +7981,9 @@ func (m *TradeDecisionMutation) ClearEdge(name string) error {
 	case tradedecision.EdgeCandidate:
 		m.ClearCandidate()
 		return nil
+	case tradedecision.EdgePosition:
+		m.ClearPosition()
+		return nil
 	}
 	return fmt.Errorf("unknown TradeDecision unique edge %s", name)
 }
@@ -6546,6 +7994,9 @@ func (m *TradeDecisionMutation) ResetEdge(name string) error {
 	switch name {
 	case tradedecision.EdgeCandidate:
 		m.ResetCandidate()
+		return nil
+	case tradedecision.EdgePosition:
+		m.ResetPosition()
 		return nil
 	}
 	return fmt.Errorf("unknown TradeDecision edge %s", name)

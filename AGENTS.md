@@ -28,8 +28,9 @@ go test ./...
 go test -race ./...
 go vet ./...
 pnpm --dir dashboard run verify
-docker compose config
 bash scripts/verify-no-live-trading-deps.sh
+bash tests/verify-compose-topology.sh
+bash tests/verify-compose-topology_test.sh
 git diff --check
 ```
 

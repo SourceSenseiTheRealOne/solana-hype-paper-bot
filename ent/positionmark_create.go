@@ -29,6 +29,118 @@ func (_c *PositionMarkCreate) SetPrice(v string) *PositionMarkCreate {
 	return _c
 }
 
+// SetNetOutputAmount sets the "net_output_amount" field.
+func (_c *PositionMarkCreate) SetNetOutputAmount(v string) *PositionMarkCreate {
+	_c.mutation.SetNetOutputAmount(v)
+	return _c
+}
+
+// SetNillableNetOutputAmount sets the "net_output_amount" field if the given value is not nil.
+func (_c *PositionMarkCreate) SetNillableNetOutputAmount(v *string) *PositionMarkCreate {
+	if v != nil {
+		_c.SetNetOutputAmount(*v)
+	}
+	return _c
+}
+
+// SetFeeEstimate sets the "fee_estimate" field.
+func (_c *PositionMarkCreate) SetFeeEstimate(v int64) *PositionMarkCreate {
+	_c.mutation.SetFeeEstimate(v)
+	return _c
+}
+
+// SetNillableFeeEstimate sets the "fee_estimate" field if the given value is not nil.
+func (_c *PositionMarkCreate) SetNillableFeeEstimate(v *int64) *PositionMarkCreate {
+	if v != nil {
+		_c.SetFeeEstimate(*v)
+	}
+	return _c
+}
+
+// SetReturnBps sets the "return_bps" field.
+func (_c *PositionMarkCreate) SetReturnBps(v int64) *PositionMarkCreate {
+	_c.mutation.SetReturnBps(v)
+	return _c
+}
+
+// SetNillableReturnBps sets the "return_bps" field if the given value is not nil.
+func (_c *PositionMarkCreate) SetNillableReturnBps(v *int64) *PositionMarkCreate {
+	if v != nil {
+		_c.SetReturnBps(*v)
+	}
+	return _c
+}
+
+// SetQuoteHash sets the "quote_hash" field.
+func (_c *PositionMarkCreate) SetQuoteHash(v string) *PositionMarkCreate {
+	_c.mutation.SetQuoteHash(v)
+	return _c
+}
+
+// SetNillableQuoteHash sets the "quote_hash" field if the given value is not nil.
+func (_c *PositionMarkCreate) SetNillableQuoteHash(v *string) *PositionMarkCreate {
+	if v != nil {
+		_c.SetQuoteHash(*v)
+	}
+	return _c
+}
+
+// SetRouteState sets the "route_state" field.
+func (_c *PositionMarkCreate) SetRouteState(v positionmark.RouteState) *PositionMarkCreate {
+	_c.mutation.SetRouteState(v)
+	return _c
+}
+
+// SetNillableRouteState sets the "route_state" field if the given value is not nil.
+func (_c *PositionMarkCreate) SetNillableRouteState(v *positionmark.RouteState) *PositionMarkCreate {
+	if v != nil {
+		_c.SetRouteState(*v)
+	}
+	return _c
+}
+
+// SetMfeBps sets the "mfe_bps" field.
+func (_c *PositionMarkCreate) SetMfeBps(v int64) *PositionMarkCreate {
+	_c.mutation.SetMfeBps(v)
+	return _c
+}
+
+// SetNillableMfeBps sets the "mfe_bps" field if the given value is not nil.
+func (_c *PositionMarkCreate) SetNillableMfeBps(v *int64) *PositionMarkCreate {
+	if v != nil {
+		_c.SetMfeBps(*v)
+	}
+	return _c
+}
+
+// SetMaeBps sets the "mae_bps" field.
+func (_c *PositionMarkCreate) SetMaeBps(v int64) *PositionMarkCreate {
+	_c.mutation.SetMaeBps(v)
+	return _c
+}
+
+// SetNillableMaeBps sets the "mae_bps" field if the given value is not nil.
+func (_c *PositionMarkCreate) SetNillableMaeBps(v *int64) *PositionMarkCreate {
+	if v != nil {
+		_c.SetMaeBps(*v)
+	}
+	return _c
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (_c *PositionMarkCreate) SetNoRouteCount(v int) *PositionMarkCreate {
+	_c.mutation.SetNoRouteCount(v)
+	return _c
+}
+
+// SetNillableNoRouteCount sets the "no_route_count" field if the given value is not nil.
+func (_c *PositionMarkCreate) SetNillableNoRouteCount(v *int) *PositionMarkCreate {
+	if v != nil {
+		_c.SetNoRouteCount(*v)
+	}
+	return _c
+}
+
 // SetObservedAt sets the "observed_at" field.
 func (_c *PositionMarkCreate) SetObservedAt(v time.Time) *PositionMarkCreate {
 	_c.mutation.SetObservedAt(v)
@@ -103,6 +215,14 @@ func (_c *PositionMarkCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *PositionMarkCreate) defaults() {
+	if _, ok := _c.mutation.RouteState(); !ok {
+		v := positionmark.DefaultRouteState
+		_c.mutation.SetRouteState(v)
+	}
+	if _, ok := _c.mutation.NoRouteCount(); !ok {
+		v := positionmark.DefaultNoRouteCount
+		_c.mutation.SetNoRouteCount(v)
+	}
 	if _, ok := _c.mutation.ObservedAt(); !ok {
 		v := positionmark.DefaultObservedAt()
 		_c.mutation.SetObservedAt(v)
@@ -121,6 +241,27 @@ func (_c *PositionMarkCreate) check() error {
 	if v, ok := _c.mutation.Price(); ok {
 		if err := positionmark.PriceValidator(v); err != nil {
 			return &ValidationError{Name: "price", err: fmt.Errorf(`ent: validator failed for field "PositionMark.price": %w`, err)}
+		}
+	}
+	if v, ok := _c.mutation.FeeEstimate(); ok {
+		if err := positionmark.FeeEstimateValidator(v); err != nil {
+			return &ValidationError{Name: "fee_estimate", err: fmt.Errorf(`ent: validator failed for field "PositionMark.fee_estimate": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.RouteState(); !ok {
+		return &ValidationError{Name: "route_state", err: errors.New(`ent: missing required field "PositionMark.route_state"`)}
+	}
+	if v, ok := _c.mutation.RouteState(); ok {
+		if err := positionmark.RouteStateValidator(v); err != nil {
+			return &ValidationError{Name: "route_state", err: fmt.Errorf(`ent: validator failed for field "PositionMark.route_state": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.NoRouteCount(); !ok {
+		return &ValidationError{Name: "no_route_count", err: errors.New(`ent: missing required field "PositionMark.no_route_count"`)}
+	}
+	if v, ok := _c.mutation.NoRouteCount(); ok {
+		if err := positionmark.NoRouteCountValidator(v); err != nil {
+			return &ValidationError{Name: "no_route_count", err: fmt.Errorf(`ent: validator failed for field "PositionMark.no_route_count": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.ObservedAt(); !ok {
@@ -162,6 +303,38 @@ func (_c *PositionMarkCreate) createSpec() (*PositionMark, *sqlgraph.CreateSpec)
 	if value, ok := _c.mutation.Price(); ok {
 		_spec.SetField(positionmark.FieldPrice, field.TypeString, value)
 		_node.Price = value
+	}
+	if value, ok := _c.mutation.NetOutputAmount(); ok {
+		_spec.SetField(positionmark.FieldNetOutputAmount, field.TypeString, value)
+		_node.NetOutputAmount = &value
+	}
+	if value, ok := _c.mutation.FeeEstimate(); ok {
+		_spec.SetField(positionmark.FieldFeeEstimate, field.TypeInt64, value)
+		_node.FeeEstimate = &value
+	}
+	if value, ok := _c.mutation.ReturnBps(); ok {
+		_spec.SetField(positionmark.FieldReturnBps, field.TypeInt64, value)
+		_node.ReturnBps = &value
+	}
+	if value, ok := _c.mutation.QuoteHash(); ok {
+		_spec.SetField(positionmark.FieldQuoteHash, field.TypeString, value)
+		_node.QuoteHash = &value
+	}
+	if value, ok := _c.mutation.RouteState(); ok {
+		_spec.SetField(positionmark.FieldRouteState, field.TypeEnum, value)
+		_node.RouteState = value
+	}
+	if value, ok := _c.mutation.MfeBps(); ok {
+		_spec.SetField(positionmark.FieldMfeBps, field.TypeInt64, value)
+		_node.MfeBps = &value
+	}
+	if value, ok := _c.mutation.MaeBps(); ok {
+		_spec.SetField(positionmark.FieldMaeBps, field.TypeInt64, value)
+		_node.MaeBps = &value
+	}
+	if value, ok := _c.mutation.NoRouteCount(); ok {
+		_spec.SetField(positionmark.FieldNoRouteCount, field.TypeInt, value)
+		_node.NoRouteCount = value
 	}
 	if value, ok := _c.mutation.ObservedAt(); ok {
 		_spec.SetField(positionmark.FieldObservedAt, field.TypeTime, value)
@@ -252,6 +425,168 @@ func (u *PositionMarkUpsert) UpdatePrice() *PositionMarkUpsert {
 	return u
 }
 
+// SetNetOutputAmount sets the "net_output_amount" field.
+func (u *PositionMarkUpsert) SetNetOutputAmount(v string) *PositionMarkUpsert {
+	u.Set(positionmark.FieldNetOutputAmount, v)
+	return u
+}
+
+// UpdateNetOutputAmount sets the "net_output_amount" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateNetOutputAmount() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldNetOutputAmount)
+	return u
+}
+
+// ClearNetOutputAmount clears the value of the "net_output_amount" field.
+func (u *PositionMarkUpsert) ClearNetOutputAmount() *PositionMarkUpsert {
+	u.SetNull(positionmark.FieldNetOutputAmount)
+	return u
+}
+
+// SetFeeEstimate sets the "fee_estimate" field.
+func (u *PositionMarkUpsert) SetFeeEstimate(v int64) *PositionMarkUpsert {
+	u.Set(positionmark.FieldFeeEstimate, v)
+	return u
+}
+
+// UpdateFeeEstimate sets the "fee_estimate" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateFeeEstimate() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldFeeEstimate)
+	return u
+}
+
+// AddFeeEstimate adds v to the "fee_estimate" field.
+func (u *PositionMarkUpsert) AddFeeEstimate(v int64) *PositionMarkUpsert {
+	u.Add(positionmark.FieldFeeEstimate, v)
+	return u
+}
+
+// ClearFeeEstimate clears the value of the "fee_estimate" field.
+func (u *PositionMarkUpsert) ClearFeeEstimate() *PositionMarkUpsert {
+	u.SetNull(positionmark.FieldFeeEstimate)
+	return u
+}
+
+// SetReturnBps sets the "return_bps" field.
+func (u *PositionMarkUpsert) SetReturnBps(v int64) *PositionMarkUpsert {
+	u.Set(positionmark.FieldReturnBps, v)
+	return u
+}
+
+// UpdateReturnBps sets the "return_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateReturnBps() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldReturnBps)
+	return u
+}
+
+// AddReturnBps adds v to the "return_bps" field.
+func (u *PositionMarkUpsert) AddReturnBps(v int64) *PositionMarkUpsert {
+	u.Add(positionmark.FieldReturnBps, v)
+	return u
+}
+
+// ClearReturnBps clears the value of the "return_bps" field.
+func (u *PositionMarkUpsert) ClearReturnBps() *PositionMarkUpsert {
+	u.SetNull(positionmark.FieldReturnBps)
+	return u
+}
+
+// SetQuoteHash sets the "quote_hash" field.
+func (u *PositionMarkUpsert) SetQuoteHash(v string) *PositionMarkUpsert {
+	u.Set(positionmark.FieldQuoteHash, v)
+	return u
+}
+
+// UpdateQuoteHash sets the "quote_hash" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateQuoteHash() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldQuoteHash)
+	return u
+}
+
+// ClearQuoteHash clears the value of the "quote_hash" field.
+func (u *PositionMarkUpsert) ClearQuoteHash() *PositionMarkUpsert {
+	u.SetNull(positionmark.FieldQuoteHash)
+	return u
+}
+
+// SetRouteState sets the "route_state" field.
+func (u *PositionMarkUpsert) SetRouteState(v positionmark.RouteState) *PositionMarkUpsert {
+	u.Set(positionmark.FieldRouteState, v)
+	return u
+}
+
+// UpdateRouteState sets the "route_state" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateRouteState() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldRouteState)
+	return u
+}
+
+// SetMfeBps sets the "mfe_bps" field.
+func (u *PositionMarkUpsert) SetMfeBps(v int64) *PositionMarkUpsert {
+	u.Set(positionmark.FieldMfeBps, v)
+	return u
+}
+
+// UpdateMfeBps sets the "mfe_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateMfeBps() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldMfeBps)
+	return u
+}
+
+// AddMfeBps adds v to the "mfe_bps" field.
+func (u *PositionMarkUpsert) AddMfeBps(v int64) *PositionMarkUpsert {
+	u.Add(positionmark.FieldMfeBps, v)
+	return u
+}
+
+// ClearMfeBps clears the value of the "mfe_bps" field.
+func (u *PositionMarkUpsert) ClearMfeBps() *PositionMarkUpsert {
+	u.SetNull(positionmark.FieldMfeBps)
+	return u
+}
+
+// SetMaeBps sets the "mae_bps" field.
+func (u *PositionMarkUpsert) SetMaeBps(v int64) *PositionMarkUpsert {
+	u.Set(positionmark.FieldMaeBps, v)
+	return u
+}
+
+// UpdateMaeBps sets the "mae_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateMaeBps() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldMaeBps)
+	return u
+}
+
+// AddMaeBps adds v to the "mae_bps" field.
+func (u *PositionMarkUpsert) AddMaeBps(v int64) *PositionMarkUpsert {
+	u.Add(positionmark.FieldMaeBps, v)
+	return u
+}
+
+// ClearMaeBps clears the value of the "mae_bps" field.
+func (u *PositionMarkUpsert) ClearMaeBps() *PositionMarkUpsert {
+	u.SetNull(positionmark.FieldMaeBps)
+	return u
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (u *PositionMarkUpsert) SetNoRouteCount(v int) *PositionMarkUpsert {
+	u.Set(positionmark.FieldNoRouteCount, v)
+	return u
+}
+
+// UpdateNoRouteCount sets the "no_route_count" field to the value that was provided on create.
+func (u *PositionMarkUpsert) UpdateNoRouteCount() *PositionMarkUpsert {
+	u.SetExcluded(positionmark.FieldNoRouteCount)
+	return u
+}
+
+// AddNoRouteCount adds v to the "no_route_count" field.
+func (u *PositionMarkUpsert) AddNoRouteCount(v int) *PositionMarkUpsert {
+	u.Add(positionmark.FieldNoRouteCount, v)
+	return u
+}
+
 // SetObservedAt sets the "observed_at" field.
 func (u *PositionMarkUpsert) SetObservedAt(v time.Time) *PositionMarkUpsert {
 	u.Set(positionmark.FieldObservedAt, v)
@@ -320,6 +655,195 @@ func (u *PositionMarkUpsertOne) SetPrice(v string) *PositionMarkUpsertOne {
 func (u *PositionMarkUpsertOne) UpdatePrice() *PositionMarkUpsertOne {
 	return u.Update(func(s *PositionMarkUpsert) {
 		s.UpdatePrice()
+	})
+}
+
+// SetNetOutputAmount sets the "net_output_amount" field.
+func (u *PositionMarkUpsertOne) SetNetOutputAmount(v string) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetNetOutputAmount(v)
+	})
+}
+
+// UpdateNetOutputAmount sets the "net_output_amount" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateNetOutputAmount() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateNetOutputAmount()
+	})
+}
+
+// ClearNetOutputAmount clears the value of the "net_output_amount" field.
+func (u *PositionMarkUpsertOne) ClearNetOutputAmount() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearNetOutputAmount()
+	})
+}
+
+// SetFeeEstimate sets the "fee_estimate" field.
+func (u *PositionMarkUpsertOne) SetFeeEstimate(v int64) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetFeeEstimate(v)
+	})
+}
+
+// AddFeeEstimate adds v to the "fee_estimate" field.
+func (u *PositionMarkUpsertOne) AddFeeEstimate(v int64) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddFeeEstimate(v)
+	})
+}
+
+// UpdateFeeEstimate sets the "fee_estimate" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateFeeEstimate() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateFeeEstimate()
+	})
+}
+
+// ClearFeeEstimate clears the value of the "fee_estimate" field.
+func (u *PositionMarkUpsertOne) ClearFeeEstimate() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearFeeEstimate()
+	})
+}
+
+// SetReturnBps sets the "return_bps" field.
+func (u *PositionMarkUpsertOne) SetReturnBps(v int64) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetReturnBps(v)
+	})
+}
+
+// AddReturnBps adds v to the "return_bps" field.
+func (u *PositionMarkUpsertOne) AddReturnBps(v int64) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddReturnBps(v)
+	})
+}
+
+// UpdateReturnBps sets the "return_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateReturnBps() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateReturnBps()
+	})
+}
+
+// ClearReturnBps clears the value of the "return_bps" field.
+func (u *PositionMarkUpsertOne) ClearReturnBps() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearReturnBps()
+	})
+}
+
+// SetQuoteHash sets the "quote_hash" field.
+func (u *PositionMarkUpsertOne) SetQuoteHash(v string) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetQuoteHash(v)
+	})
+}
+
+// UpdateQuoteHash sets the "quote_hash" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateQuoteHash() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateQuoteHash()
+	})
+}
+
+// ClearQuoteHash clears the value of the "quote_hash" field.
+func (u *PositionMarkUpsertOne) ClearQuoteHash() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearQuoteHash()
+	})
+}
+
+// SetRouteState sets the "route_state" field.
+func (u *PositionMarkUpsertOne) SetRouteState(v positionmark.RouteState) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetRouteState(v)
+	})
+}
+
+// UpdateRouteState sets the "route_state" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateRouteState() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateRouteState()
+	})
+}
+
+// SetMfeBps sets the "mfe_bps" field.
+func (u *PositionMarkUpsertOne) SetMfeBps(v int64) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetMfeBps(v)
+	})
+}
+
+// AddMfeBps adds v to the "mfe_bps" field.
+func (u *PositionMarkUpsertOne) AddMfeBps(v int64) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddMfeBps(v)
+	})
+}
+
+// UpdateMfeBps sets the "mfe_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateMfeBps() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateMfeBps()
+	})
+}
+
+// ClearMfeBps clears the value of the "mfe_bps" field.
+func (u *PositionMarkUpsertOne) ClearMfeBps() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearMfeBps()
+	})
+}
+
+// SetMaeBps sets the "mae_bps" field.
+func (u *PositionMarkUpsertOne) SetMaeBps(v int64) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetMaeBps(v)
+	})
+}
+
+// AddMaeBps adds v to the "mae_bps" field.
+func (u *PositionMarkUpsertOne) AddMaeBps(v int64) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddMaeBps(v)
+	})
+}
+
+// UpdateMaeBps sets the "mae_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateMaeBps() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateMaeBps()
+	})
+}
+
+// ClearMaeBps clears the value of the "mae_bps" field.
+func (u *PositionMarkUpsertOne) ClearMaeBps() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearMaeBps()
+	})
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (u *PositionMarkUpsertOne) SetNoRouteCount(v int) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetNoRouteCount(v)
+	})
+}
+
+// AddNoRouteCount adds v to the "no_route_count" field.
+func (u *PositionMarkUpsertOne) AddNoRouteCount(v int) *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddNoRouteCount(v)
+	})
+}
+
+// UpdateNoRouteCount sets the "no_route_count" field to the value that was provided on create.
+func (u *PositionMarkUpsertOne) UpdateNoRouteCount() *PositionMarkUpsertOne {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateNoRouteCount()
 	})
 }
 
@@ -559,6 +1083,195 @@ func (u *PositionMarkUpsertBulk) SetPrice(v string) *PositionMarkUpsertBulk {
 func (u *PositionMarkUpsertBulk) UpdatePrice() *PositionMarkUpsertBulk {
 	return u.Update(func(s *PositionMarkUpsert) {
 		s.UpdatePrice()
+	})
+}
+
+// SetNetOutputAmount sets the "net_output_amount" field.
+func (u *PositionMarkUpsertBulk) SetNetOutputAmount(v string) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetNetOutputAmount(v)
+	})
+}
+
+// UpdateNetOutputAmount sets the "net_output_amount" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateNetOutputAmount() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateNetOutputAmount()
+	})
+}
+
+// ClearNetOutputAmount clears the value of the "net_output_amount" field.
+func (u *PositionMarkUpsertBulk) ClearNetOutputAmount() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearNetOutputAmount()
+	})
+}
+
+// SetFeeEstimate sets the "fee_estimate" field.
+func (u *PositionMarkUpsertBulk) SetFeeEstimate(v int64) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetFeeEstimate(v)
+	})
+}
+
+// AddFeeEstimate adds v to the "fee_estimate" field.
+func (u *PositionMarkUpsertBulk) AddFeeEstimate(v int64) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddFeeEstimate(v)
+	})
+}
+
+// UpdateFeeEstimate sets the "fee_estimate" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateFeeEstimate() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateFeeEstimate()
+	})
+}
+
+// ClearFeeEstimate clears the value of the "fee_estimate" field.
+func (u *PositionMarkUpsertBulk) ClearFeeEstimate() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearFeeEstimate()
+	})
+}
+
+// SetReturnBps sets the "return_bps" field.
+func (u *PositionMarkUpsertBulk) SetReturnBps(v int64) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetReturnBps(v)
+	})
+}
+
+// AddReturnBps adds v to the "return_bps" field.
+func (u *PositionMarkUpsertBulk) AddReturnBps(v int64) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddReturnBps(v)
+	})
+}
+
+// UpdateReturnBps sets the "return_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateReturnBps() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateReturnBps()
+	})
+}
+
+// ClearReturnBps clears the value of the "return_bps" field.
+func (u *PositionMarkUpsertBulk) ClearReturnBps() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearReturnBps()
+	})
+}
+
+// SetQuoteHash sets the "quote_hash" field.
+func (u *PositionMarkUpsertBulk) SetQuoteHash(v string) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetQuoteHash(v)
+	})
+}
+
+// UpdateQuoteHash sets the "quote_hash" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateQuoteHash() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateQuoteHash()
+	})
+}
+
+// ClearQuoteHash clears the value of the "quote_hash" field.
+func (u *PositionMarkUpsertBulk) ClearQuoteHash() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearQuoteHash()
+	})
+}
+
+// SetRouteState sets the "route_state" field.
+func (u *PositionMarkUpsertBulk) SetRouteState(v positionmark.RouteState) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetRouteState(v)
+	})
+}
+
+// UpdateRouteState sets the "route_state" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateRouteState() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateRouteState()
+	})
+}
+
+// SetMfeBps sets the "mfe_bps" field.
+func (u *PositionMarkUpsertBulk) SetMfeBps(v int64) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetMfeBps(v)
+	})
+}
+
+// AddMfeBps adds v to the "mfe_bps" field.
+func (u *PositionMarkUpsertBulk) AddMfeBps(v int64) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddMfeBps(v)
+	})
+}
+
+// UpdateMfeBps sets the "mfe_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateMfeBps() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateMfeBps()
+	})
+}
+
+// ClearMfeBps clears the value of the "mfe_bps" field.
+func (u *PositionMarkUpsertBulk) ClearMfeBps() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearMfeBps()
+	})
+}
+
+// SetMaeBps sets the "mae_bps" field.
+func (u *PositionMarkUpsertBulk) SetMaeBps(v int64) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetMaeBps(v)
+	})
+}
+
+// AddMaeBps adds v to the "mae_bps" field.
+func (u *PositionMarkUpsertBulk) AddMaeBps(v int64) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddMaeBps(v)
+	})
+}
+
+// UpdateMaeBps sets the "mae_bps" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateMaeBps() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateMaeBps()
+	})
+}
+
+// ClearMaeBps clears the value of the "mae_bps" field.
+func (u *PositionMarkUpsertBulk) ClearMaeBps() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.ClearMaeBps()
+	})
+}
+
+// SetNoRouteCount sets the "no_route_count" field.
+func (u *PositionMarkUpsertBulk) SetNoRouteCount(v int) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.SetNoRouteCount(v)
+	})
+}
+
+// AddNoRouteCount adds v to the "no_route_count" field.
+func (u *PositionMarkUpsertBulk) AddNoRouteCount(v int) *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.AddNoRouteCount(v)
+	})
+}
+
+// UpdateNoRouteCount sets the "no_route_count" field to the value that was provided on create.
+func (u *PositionMarkUpsertBulk) UpdateNoRouteCount() *PositionMarkUpsertBulk {
+	return u.Update(func(s *PositionMarkUpsert) {
+		s.UpdateNoRouteCount()
 	})
 }
 

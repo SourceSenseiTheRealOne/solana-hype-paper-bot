@@ -74,6 +74,20 @@ func (u USD) ReturnBPS(cost USD) (int64, error) {
 	return profit.Int64(), nil
 }
 
+// RealizedPNLMicros converts a terminal fixed-point return into paper P&L.
+func RealizedPNLMicros(notionalMicros, returnBPS int64) (int64, error) {
+	if notionalMicros <= 0 {
+		return 0, errors.New("paper notional must be positive")
+	}
+	pnl := big.NewInt(notionalMicros)
+	pnl.Mul(pnl, big.NewInt(returnBPS))
+	pnl.Quo(pnl, big.NewInt(10_000))
+	if !pnl.IsInt64() {
+		return 0, errors.New("realized paper P&L is out of range")
+	}
+	return pnl.Int64(), nil
+}
+
 func isDigits(value string) bool {
 	if value == "" {
 		return false

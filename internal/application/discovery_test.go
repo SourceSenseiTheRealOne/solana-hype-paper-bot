@@ -3,6 +3,7 @@ package application_test
 import (
 	"context"
 	"errors"
+	"reflect"
 	"testing"
 	"time"
 
@@ -31,6 +32,14 @@ func TestDiscoveryPersistsThroughWatermarkOverlapThenAdvances(t *testing.T) {
 	}
 	if got, want := repository.persistedPools, []string{"pool-newest", "pool-middle", "pool-oldest"}; !sameStrings(got, want) {
 		t.Fatalf("persisted pools = %v, want %v", got, want)
+	}
+	pools := reflect.ValueOf(result).FieldByName("Pools")
+	if !pools.IsValid() {
+		t.Fatal("Run() result does not expose bounded newly observed pools")
+	}
+	observed, ok := pools.Interface().([]domain.DiscoveredPool)
+	if !ok || len(observed) != 3 || observed[0].PoolAddress != "pool-newest" || observed[1].PoolAddress != "pool-middle" || observed[2].PoolAddress != "pool-oldest" {
+		t.Fatalf("Run() pools = %#v, want the persisted bounded pools in provider order", pools.Interface())
 	}
 	if got, want := repository.saved, (domain.Watermark{CreatedAt: time.Date(2026, 8, 19, 12, 0, 0, 0, time.UTC), PoolAddress: "pool-newest"}); got != want {
 		t.Fatalf("saved watermark = %#v, want %#v", got, want)

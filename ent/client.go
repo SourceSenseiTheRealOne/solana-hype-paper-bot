@@ -1174,6 +1174,22 @@ func (c *PaperPositionClient) QueryCandidate(_m *PaperPosition) *CandidateQuery 
 	return query
 }
 
+// QueryDecision queries the decision edge of a PaperPosition.
+func (c *PaperPositionClient) QueryDecision(_m *PaperPosition) *TradeDecisionQuery {
+	query := (&TradeDecisionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(paperposition.Table, paperposition.FieldID, id),
+			sqlgraph.To(tradedecision.Table, tradedecision.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, true, paperposition.DecisionTable, paperposition.DecisionColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryMarks queries the marks edge of a PaperPosition.
 func (c *PaperPositionClient) QueryMarks(_m *PaperPosition) *PositionMarkQuery {
 	query := (&PositionMarkClient{config: c.config}).Query()
@@ -1795,6 +1811,22 @@ func (c *TradeDecisionClient) QueryCandidate(_m *TradeDecision) *CandidateQuery 
 			sqlgraph.From(tradedecision.Table, tradedecision.FieldID, id),
 			sqlgraph.To(candidate.Table, candidate.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, tradedecision.CandidateTable, tradedecision.CandidateColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPosition queries the position edge of a TradeDecision.
+func (c *TradeDecisionClient) QueryPosition(_m *TradeDecision) *PaperPositionQuery {
+	query := (&PaperPositionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tradedecision.Table, tradedecision.FieldID, id),
+			sqlgraph.To(paperposition.Table, paperposition.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, tradedecision.PositionTable, tradedecision.PositionColumn),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil

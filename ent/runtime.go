@@ -145,20 +145,24 @@ func init() {
 	paperpositionDescNotionalMicros := paperpositionFields[1].Descriptor()
 	// paperposition.NotionalMicrosValidator is a validator for the "notional_micros" field. It is called by the builders before save.
 	paperposition.NotionalMicrosValidator = paperpositionDescNotionalMicros.Validators[0].(func(int64) error)
-	// paperpositionDescEntryPrice is the schema descriptor for entry_price field.
-	paperpositionDescEntryPrice := paperpositionFields[2].Descriptor()
-	// paperposition.EntryPriceValidator is a validator for the "entry_price" field. It is called by the builders before save.
-	paperposition.EntryPriceValidator = paperpositionDescEntryPrice.Validators[0].(func(string) error)
-	// paperpositionDescTokenQuantity is the schema descriptor for token_quantity field.
-	paperpositionDescTokenQuantity := paperpositionFields[3].Descriptor()
-	// paperposition.TokenQuantityValidator is a validator for the "token_quantity" field. It is called by the builders before save.
-	paperposition.TokenQuantityValidator = paperpositionDescTokenQuantity.Validators[0].(func(string) error)
+	// paperpositionDescStrategyVersion is the schema descriptor for strategy_version field.
+	paperpositionDescStrategyVersion := paperpositionFields[2].Descriptor()
+	// paperposition.DefaultStrategyVersion holds the default value on creation for the strategy_version field.
+	paperposition.DefaultStrategyVersion = paperpositionDescStrategyVersion.Default.(string)
+	// paperposition.StrategyVersionValidator is a validator for the "strategy_version" field. It is called by the builders before save.
+	paperposition.StrategyVersionValidator = paperpositionDescStrategyVersion.Validators[0].(func(string) error)
+	// paperpositionDescNoRouteCount is the schema descriptor for no_route_count field.
+	paperpositionDescNoRouteCount := paperpositionFields[3].Descriptor()
+	// paperposition.DefaultNoRouteCount holds the default value on creation for the no_route_count field.
+	paperposition.DefaultNoRouteCount = paperpositionDescNoRouteCount.Default.(int)
+	// paperposition.NoRouteCountValidator is a validator for the "no_route_count" field. It is called by the builders before save.
+	paperposition.NoRouteCountValidator = paperpositionDescNoRouteCount.Validators[0].(func(int) error)
 	// paperpositionDescCreatedAt is the schema descriptor for created_at field.
-	paperpositionDescCreatedAt := paperpositionFields[6].Descriptor()
+	paperpositionDescCreatedAt := paperpositionFields[13].Descriptor()
 	// paperposition.DefaultCreatedAt holds the default value on creation for the created_at field.
 	paperposition.DefaultCreatedAt = paperpositionDescCreatedAt.Default.(func() time.Time)
 	// paperpositionDescUpdatedAt is the schema descriptor for updated_at field.
-	paperpositionDescUpdatedAt := paperpositionFields[7].Descriptor()
+	paperpositionDescUpdatedAt := paperpositionFields[14].Descriptor()
 	// paperposition.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	paperposition.DefaultUpdatedAt = paperpositionDescUpdatedAt.Default.(func() time.Time)
 	// paperposition.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
@@ -179,12 +183,22 @@ func init() {
 	positionmarkDescPrice := positionmarkFields[0].Descriptor()
 	// positionmark.PriceValidator is a validator for the "price" field. It is called by the builders before save.
 	positionmark.PriceValidator = positionmarkDescPrice.Validators[0].(func(string) error)
+	// positionmarkDescFeeEstimate is the schema descriptor for fee_estimate field.
+	positionmarkDescFeeEstimate := positionmarkFields[2].Descriptor()
+	// positionmark.FeeEstimateValidator is a validator for the "fee_estimate" field. It is called by the builders before save.
+	positionmark.FeeEstimateValidator = positionmarkDescFeeEstimate.Validators[0].(func(int64) error)
+	// positionmarkDescNoRouteCount is the schema descriptor for no_route_count field.
+	positionmarkDescNoRouteCount := positionmarkFields[8].Descriptor()
+	// positionmark.DefaultNoRouteCount holds the default value on creation for the no_route_count field.
+	positionmark.DefaultNoRouteCount = positionmarkDescNoRouteCount.Default.(int)
+	// positionmark.NoRouteCountValidator is a validator for the "no_route_count" field. It is called by the builders before save.
+	positionmark.NoRouteCountValidator = positionmarkDescNoRouteCount.Validators[0].(func(int) error)
 	// positionmarkDescObservedAt is the schema descriptor for observed_at field.
-	positionmarkDescObservedAt := positionmarkFields[1].Descriptor()
+	positionmarkDescObservedAt := positionmarkFields[9].Descriptor()
 	// positionmark.DefaultObservedAt holds the default value on creation for the observed_at field.
 	positionmark.DefaultObservedAt = positionmarkDescObservedAt.Default.(func() time.Time)
 	// positionmarkDescCreatedAt is the schema descriptor for created_at field.
-	positionmarkDescCreatedAt := positionmarkFields[2].Descriptor()
+	positionmarkDescCreatedAt := positionmarkFields[10].Descriptor()
 	// positionmark.DefaultCreatedAt holds the default value on creation for the created_at field.
 	positionmark.DefaultCreatedAt = positionmarkDescCreatedAt.Default.(func() time.Time)
 	socialsnapshotFields := schema.SocialSnapshot{}.Fields()

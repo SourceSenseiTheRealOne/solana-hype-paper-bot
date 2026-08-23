@@ -31,12 +31,9 @@ func (provider *GeckoTerminal) FetchNewPools(ctx context.Context, page int) (por
 		return ports.PoolPage{}, fmt.Errorf("fetch GeckoTerminal new pools: %w", err)
 	}
 
-	tokens := make(map[string]string, len(response.Included))
-	for _, token := range response.Included {
-		if token.Type != "token" || strings.TrimSpace(token.ID) == "" || strings.TrimSpace(token.Attributes.Address) == "" {
-			continue
-		}
-		tokens[token.ID] = token.Attributes.Address
+	tokens, err := geckoTokenAddresses(response)
+	if err != nil {
+		return ports.PoolPage{}, err
 	}
 
 	seen := make(map[string]struct{}, len(response.Data))
@@ -64,6 +61,84 @@ func (provider *GeckoTerminal) FetchNewPools(ctx context.Context, page int) (por
 		return ports.PoolPage{}, err
 	}
 	return ports.PoolPage{Pools: pools, NextPage: nextPage}, nil
+}
+
+// Fetch returns bounded market evidence for a GeckoTerminal-discovered pool.
+func (provider *GeckoTerminal) Fetch(ctx context.Context, pool domain.DiscoveredPool) (domain.MarketSnapshot, error) {
+	if provider == nil || provider.client == nil {
+		return domain.MarketSnapshot{}, errors.New("GeckoTerminal market provider is not configured")
+	}
+	if err := pool.Validate(); err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("validate GeckoTerminal pool: %w", err)
+	}
+	if pool.Source != domain.SourceGeckoTerminal || pool.Network != domain.NetworkSolana {
+		return domain.MarketSnapshot{}, errors.New("GeckoTerminal market provider only supports GeckoTerminal Solana pools")
+	}
+
+	var response geckoPoolResponse
+	path := "/api/v2/networks/" + domain.NetworkSolana + "/pools/" + url.PathEscape(pool.PoolAddress)
+	if err := provider.client.GetJSON(ctx, path, nil, &response); err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("fetch GeckoTerminal pool: %w", err)
+	}
+	if response.Data.Type != "pool" || response.Data.Attributes.Address != pool.PoolAddress {
+		return domain.MarketSnapshot{}, errors.New("GeckoTerminal response did not contain the requested pool")
+	}
+	liquidity, err := domain.ParseUSD(response.Data.Attributes.ReserveInUSD)
+	if err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("parse GeckoTerminal liquidity: %w", err)
+	}
+	transactions := response.Data.Attributes.Transactions.M5
+	if transactions.Buys == nil || transactions.Sells == nil {
+		return domain.MarketSnapshot{}, errors.New("GeckoTerminal pool is missing five-minute transaction counts")
+	}
+	if *transactions.Buys < 0 || *transactions.Sells < 0 {
+		return domain.MarketSnapshot{}, errors.New("GeckoTerminal pool has negative transaction counts")
+	}
+	volume, err := domain.ParseUSD(response.Data.Attributes.VolumeUSD.M5)
+	if err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("parse GeckoTerminal five-minute volume: %w", err)
+	}
+	priceChangeBPS, err := domain.ParsePercentageBPS(response.Data.Attributes.PriceChangePercentage.M5)
+	if err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("parse GeckoTerminal five-minute price change: %w", err)
+	}
+	return domain.MarketSnapshot{
+		ObservedAt: time.Now().UTC(), LiquidityUSD: liquidity,
+		FiveMinuteTransactions: *transactions.Buys + *transactions.Sells,
+		FiveMinuteBuys:         *transactions.Buys, FiveMinuteSells: *transactions.Sells,
+		FiveMinuteVolumeUSD: volume, FiveMinutePriceChangeBPS: priceChangeBPS,
+	}, nil
+}
+
+func geckoTokenAddresses(response geckoPoolsResponse) (map[string]string, error) {
+	tokens := make(map[string]string, len(response.Included))
+	for _, token := range response.Included {
+		if token.Type != "token" || strings.TrimSpace(token.ID) == "" || strings.TrimSpace(token.Attributes.Address) == "" {
+			continue
+		}
+		tokens[token.ID] = token.Attributes.Address
+	}
+	if len(response.Included) > 0 {
+		return tokens, nil
+	}
+
+	for _, pool := range response.Data {
+		relationshipID := pool.Relationships.BaseToken.Data.ID
+		mint, err := geckoRelationshipMint(relationshipID)
+		if err != nil {
+			return nil, err
+		}
+		tokens[relationshipID] = mint
+	}
+	return tokens, nil
+}
+
+func geckoRelationshipMint(relationshipID string) (string, error) {
+	network, mint, ok := strings.Cut(strings.TrimSpace(relationshipID), "_")
+	if !ok || network != domain.NetworkSolana || strings.TrimSpace(mint) == "" || strings.Contains(mint, "_") {
+		return "", errors.New("GeckoTerminal pool base-token relationship is not a canonical Solana token ID")
+	}
+	return mint, nil
 }
 
 func parseGeckoPool(item geckoPool, tokens map[string]string) (domain.DiscoveredPool, error) {
@@ -111,6 +186,19 @@ type geckoPool struct {
 	Attributes struct {
 		Address       string `json:"address"`
 		PoolCreatedAt string `json:"pool_created_at"`
+		ReserveInUSD  string `json:"reserve_in_usd"`
+		Transactions  struct {
+			M5 struct {
+				Buys  *int `json:"buys"`
+				Sells *int `json:"sells"`
+			} `json:"m5"`
+		} `json:"transactions"`
+		VolumeUSD struct {
+			M5 string `json:"m5"`
+		} `json:"volume_usd"`
+		PriceChangePercentage struct {
+			M5 string `json:"m5"`
+		} `json:"price_change_percentage"`
 	} `json:"attributes"`
 	Relationships struct {
 		BaseToken struct {
@@ -119,6 +207,10 @@ type geckoPool struct {
 			} `json:"data"`
 		} `json:"base_token"`
 	} `json:"relationships"`
+}
+
+type geckoPoolResponse struct {
+	Data geckoPool `json:"data"`
 }
 
 type geckoToken struct {

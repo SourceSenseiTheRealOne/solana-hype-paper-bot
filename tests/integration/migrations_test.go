@@ -45,6 +45,7 @@ func TestMigrationContract(t *testing.T) {
 
 	assertUniqueIndexWithColumns(t, ctx, pool, "candidates", "network", "mint_address", "pool_address")
 	assertUniqueIndexWithColumns(t, ctx, pool, "trade_decisions", "idempotency_key")
+	assertUniqueIndexWithColumns(t, ctx, pool, "paper_positions", "trade_decision_position")
 	assertUniqueIndexWithColumns(t, ctx, pool, "daily_results", "utc_date", "strategy_version")
 	assertCheckContains(t, ctx, pool, "daily_results", "daily_admitted_count", ">=", "0")
 	assertCheckContains(t, ctx, pool, "daily_results", "daily_admitted_count", "<=", "30")

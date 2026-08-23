@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/paperposition"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/predicate"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/tradedecision"
 )
@@ -73,6 +74,25 @@ func (_u *TradeDecisionUpdate) SetCandidate(v *Candidate) *TradeDecisionUpdate {
 	return _u.SetCandidateID(v.ID)
 }
 
+// SetPositionID sets the "position" edge to the PaperPosition entity by ID.
+func (_u *TradeDecisionUpdate) SetPositionID(id int) *TradeDecisionUpdate {
+	_u.mutation.SetPositionID(id)
+	return _u
+}
+
+// SetNillablePositionID sets the "position" edge to the PaperPosition entity by ID if the given value is not nil.
+func (_u *TradeDecisionUpdate) SetNillablePositionID(id *int) *TradeDecisionUpdate {
+	if id != nil {
+		_u = _u.SetPositionID(*id)
+	}
+	return _u
+}
+
+// SetPosition sets the "position" edge to the PaperPosition entity.
+func (_u *TradeDecisionUpdate) SetPosition(v *PaperPosition) *TradeDecisionUpdate {
+	return _u.SetPositionID(v.ID)
+}
+
 // Mutation returns the TradeDecisionMutation object of the builder.
 func (_u *TradeDecisionUpdate) Mutation() *TradeDecisionMutation {
 	return _u.mutation
@@ -81,6 +101,12 @@ func (_u *TradeDecisionUpdate) Mutation() *TradeDecisionMutation {
 // ClearCandidate clears the "candidate" edge to the Candidate entity.
 func (_u *TradeDecisionUpdate) ClearCandidate() *TradeDecisionUpdate {
 	_u.mutation.ClearCandidate()
+	return _u
+}
+
+// ClearPosition clears the "position" edge to the PaperPosition entity.
+func (_u *TradeDecisionUpdate) ClearPosition() *TradeDecisionUpdate {
+	_u.mutation.ClearPosition()
 	return _u
 }
 
@@ -179,6 +205,35 @@ func (_u *TradeDecisionUpdate) sqlSave(ctx context.Context) (_node int, err erro
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.PositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   tradedecision.PositionTable,
+			Columns: []string{tradedecision.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(paperposition.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.PositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   tradedecision.PositionTable,
+			Columns: []string{tradedecision.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(paperposition.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{tradedecision.Label}
@@ -244,6 +299,25 @@ func (_u *TradeDecisionUpdateOne) SetCandidate(v *Candidate) *TradeDecisionUpdat
 	return _u.SetCandidateID(v.ID)
 }
 
+// SetPositionID sets the "position" edge to the PaperPosition entity by ID.
+func (_u *TradeDecisionUpdateOne) SetPositionID(id int) *TradeDecisionUpdateOne {
+	_u.mutation.SetPositionID(id)
+	return _u
+}
+
+// SetNillablePositionID sets the "position" edge to the PaperPosition entity by ID if the given value is not nil.
+func (_u *TradeDecisionUpdateOne) SetNillablePositionID(id *int) *TradeDecisionUpdateOne {
+	if id != nil {
+		_u = _u.SetPositionID(*id)
+	}
+	return _u
+}
+
+// SetPosition sets the "position" edge to the PaperPosition entity.
+func (_u *TradeDecisionUpdateOne) SetPosition(v *PaperPosition) *TradeDecisionUpdateOne {
+	return _u.SetPositionID(v.ID)
+}
+
 // Mutation returns the TradeDecisionMutation object of the builder.
 func (_u *TradeDecisionUpdateOne) Mutation() *TradeDecisionMutation {
 	return _u.mutation
@@ -252,6 +326,12 @@ func (_u *TradeDecisionUpdateOne) Mutation() *TradeDecisionMutation {
 // ClearCandidate clears the "candidate" edge to the Candidate entity.
 func (_u *TradeDecisionUpdateOne) ClearCandidate() *TradeDecisionUpdateOne {
 	_u.mutation.ClearCandidate()
+	return _u
+}
+
+// ClearPosition clears the "position" edge to the PaperPosition entity.
+func (_u *TradeDecisionUpdateOne) ClearPosition() *TradeDecisionUpdateOne {
+	_u.mutation.ClearPosition()
 	return _u
 }
 
@@ -373,6 +453,35 @@ func (_u *TradeDecisionUpdateOne) sqlSave(ctx context.Context) (_node *TradeDeci
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(candidate.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.PositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   tradedecision.PositionTable,
+			Columns: []string{tradedecision.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(paperposition.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.PositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   tradedecision.PositionTable,
+			Columns: []string{tradedecision.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(paperposition.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

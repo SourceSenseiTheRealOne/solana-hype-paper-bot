@@ -20,3 +20,12 @@ type PoolDiscovery interface {
 type TokenHintDiscovery interface {
 	FetchLatestSolanaTokenHints(ctx context.Context) ([]domain.TokenHint, error)
 }
+
+type QuoteProvider interface {
+	Quote(ctx context.Context, inMint, outMint string, amount uint64) (domain.ExecutableQuote, error)
+	Health(ctx context.Context) error
+}
+
+type TokenInspector interface {
+	Inspect(ctx context.Context, mint string) (domain.TokenRiskSnapshot, error)
+}

@@ -60,6 +60,41 @@ func Price(v string) predicate.PositionMark {
 	return predicate.PositionMark(sql.FieldEQ(FieldPrice, v))
 }
 
+// NetOutputAmount applies equality check predicate on the "net_output_amount" field. It's identical to NetOutputAmountEQ.
+func NetOutputAmount(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldNetOutputAmount, v))
+}
+
+// FeeEstimate applies equality check predicate on the "fee_estimate" field. It's identical to FeeEstimateEQ.
+func FeeEstimate(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldFeeEstimate, v))
+}
+
+// ReturnBps applies equality check predicate on the "return_bps" field. It's identical to ReturnBpsEQ.
+func ReturnBps(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldReturnBps, v))
+}
+
+// QuoteHash applies equality check predicate on the "quote_hash" field. It's identical to QuoteHashEQ.
+func QuoteHash(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldQuoteHash, v))
+}
+
+// MfeBps applies equality check predicate on the "mfe_bps" field. It's identical to MfeBpsEQ.
+func MfeBps(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldMfeBps, v))
+}
+
+// MaeBps applies equality check predicate on the "mae_bps" field. It's identical to MaeBpsEQ.
+func MaeBps(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldMaeBps, v))
+}
+
+// NoRouteCount applies equality check predicate on the "no_route_count" field. It's identical to NoRouteCountEQ.
+func NoRouteCount(v int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldNoRouteCount, v))
+}
+
 // ObservedAt applies equality check predicate on the "observed_at" field. It's identical to ObservedAtEQ.
 func ObservedAt(v time.Time) predicate.PositionMark {
 	return predicate.PositionMark(sql.FieldEQ(FieldObservedAt, v))
@@ -133,6 +168,416 @@ func PriceEqualFold(v string) predicate.PositionMark {
 // PriceContainsFold applies the ContainsFold predicate on the "price" field.
 func PriceContainsFold(v string) predicate.PositionMark {
 	return predicate.PositionMark(sql.FieldContainsFold(FieldPrice, v))
+}
+
+// NetOutputAmountEQ applies the EQ predicate on the "net_output_amount" field.
+func NetOutputAmountEQ(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountNEQ applies the NEQ predicate on the "net_output_amount" field.
+func NetOutputAmountNEQ(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNEQ(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountIn applies the In predicate on the "net_output_amount" field.
+func NetOutputAmountIn(vs ...string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIn(FieldNetOutputAmount, vs...))
+}
+
+// NetOutputAmountNotIn applies the NotIn predicate on the "net_output_amount" field.
+func NetOutputAmountNotIn(vs ...string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotIn(FieldNetOutputAmount, vs...))
+}
+
+// NetOutputAmountGT applies the GT predicate on the "net_output_amount" field.
+func NetOutputAmountGT(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGT(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountGTE applies the GTE predicate on the "net_output_amount" field.
+func NetOutputAmountGTE(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGTE(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountLT applies the LT predicate on the "net_output_amount" field.
+func NetOutputAmountLT(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLT(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountLTE applies the LTE predicate on the "net_output_amount" field.
+func NetOutputAmountLTE(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLTE(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountContains applies the Contains predicate on the "net_output_amount" field.
+func NetOutputAmountContains(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldContains(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountHasPrefix applies the HasPrefix predicate on the "net_output_amount" field.
+func NetOutputAmountHasPrefix(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldHasPrefix(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountHasSuffix applies the HasSuffix predicate on the "net_output_amount" field.
+func NetOutputAmountHasSuffix(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldHasSuffix(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountIsNil applies the IsNil predicate on the "net_output_amount" field.
+func NetOutputAmountIsNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIsNull(FieldNetOutputAmount))
+}
+
+// NetOutputAmountNotNil applies the NotNil predicate on the "net_output_amount" field.
+func NetOutputAmountNotNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotNull(FieldNetOutputAmount))
+}
+
+// NetOutputAmountEqualFold applies the EqualFold predicate on the "net_output_amount" field.
+func NetOutputAmountEqualFold(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEqualFold(FieldNetOutputAmount, v))
+}
+
+// NetOutputAmountContainsFold applies the ContainsFold predicate on the "net_output_amount" field.
+func NetOutputAmountContainsFold(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldContainsFold(FieldNetOutputAmount, v))
+}
+
+// FeeEstimateEQ applies the EQ predicate on the "fee_estimate" field.
+func FeeEstimateEQ(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldFeeEstimate, v))
+}
+
+// FeeEstimateNEQ applies the NEQ predicate on the "fee_estimate" field.
+func FeeEstimateNEQ(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNEQ(FieldFeeEstimate, v))
+}
+
+// FeeEstimateIn applies the In predicate on the "fee_estimate" field.
+func FeeEstimateIn(vs ...int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIn(FieldFeeEstimate, vs...))
+}
+
+// FeeEstimateNotIn applies the NotIn predicate on the "fee_estimate" field.
+func FeeEstimateNotIn(vs ...int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotIn(FieldFeeEstimate, vs...))
+}
+
+// FeeEstimateGT applies the GT predicate on the "fee_estimate" field.
+func FeeEstimateGT(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGT(FieldFeeEstimate, v))
+}
+
+// FeeEstimateGTE applies the GTE predicate on the "fee_estimate" field.
+func FeeEstimateGTE(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGTE(FieldFeeEstimate, v))
+}
+
+// FeeEstimateLT applies the LT predicate on the "fee_estimate" field.
+func FeeEstimateLT(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLT(FieldFeeEstimate, v))
+}
+
+// FeeEstimateLTE applies the LTE predicate on the "fee_estimate" field.
+func FeeEstimateLTE(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLTE(FieldFeeEstimate, v))
+}
+
+// FeeEstimateIsNil applies the IsNil predicate on the "fee_estimate" field.
+func FeeEstimateIsNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIsNull(FieldFeeEstimate))
+}
+
+// FeeEstimateNotNil applies the NotNil predicate on the "fee_estimate" field.
+func FeeEstimateNotNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotNull(FieldFeeEstimate))
+}
+
+// ReturnBpsEQ applies the EQ predicate on the "return_bps" field.
+func ReturnBpsEQ(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldReturnBps, v))
+}
+
+// ReturnBpsNEQ applies the NEQ predicate on the "return_bps" field.
+func ReturnBpsNEQ(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNEQ(FieldReturnBps, v))
+}
+
+// ReturnBpsIn applies the In predicate on the "return_bps" field.
+func ReturnBpsIn(vs ...int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIn(FieldReturnBps, vs...))
+}
+
+// ReturnBpsNotIn applies the NotIn predicate on the "return_bps" field.
+func ReturnBpsNotIn(vs ...int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotIn(FieldReturnBps, vs...))
+}
+
+// ReturnBpsGT applies the GT predicate on the "return_bps" field.
+func ReturnBpsGT(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGT(FieldReturnBps, v))
+}
+
+// ReturnBpsGTE applies the GTE predicate on the "return_bps" field.
+func ReturnBpsGTE(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGTE(FieldReturnBps, v))
+}
+
+// ReturnBpsLT applies the LT predicate on the "return_bps" field.
+func ReturnBpsLT(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLT(FieldReturnBps, v))
+}
+
+// ReturnBpsLTE applies the LTE predicate on the "return_bps" field.
+func ReturnBpsLTE(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLTE(FieldReturnBps, v))
+}
+
+// ReturnBpsIsNil applies the IsNil predicate on the "return_bps" field.
+func ReturnBpsIsNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIsNull(FieldReturnBps))
+}
+
+// ReturnBpsNotNil applies the NotNil predicate on the "return_bps" field.
+func ReturnBpsNotNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotNull(FieldReturnBps))
+}
+
+// QuoteHashEQ applies the EQ predicate on the "quote_hash" field.
+func QuoteHashEQ(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldQuoteHash, v))
+}
+
+// QuoteHashNEQ applies the NEQ predicate on the "quote_hash" field.
+func QuoteHashNEQ(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNEQ(FieldQuoteHash, v))
+}
+
+// QuoteHashIn applies the In predicate on the "quote_hash" field.
+func QuoteHashIn(vs ...string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIn(FieldQuoteHash, vs...))
+}
+
+// QuoteHashNotIn applies the NotIn predicate on the "quote_hash" field.
+func QuoteHashNotIn(vs ...string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotIn(FieldQuoteHash, vs...))
+}
+
+// QuoteHashGT applies the GT predicate on the "quote_hash" field.
+func QuoteHashGT(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGT(FieldQuoteHash, v))
+}
+
+// QuoteHashGTE applies the GTE predicate on the "quote_hash" field.
+func QuoteHashGTE(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGTE(FieldQuoteHash, v))
+}
+
+// QuoteHashLT applies the LT predicate on the "quote_hash" field.
+func QuoteHashLT(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLT(FieldQuoteHash, v))
+}
+
+// QuoteHashLTE applies the LTE predicate on the "quote_hash" field.
+func QuoteHashLTE(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLTE(FieldQuoteHash, v))
+}
+
+// QuoteHashContains applies the Contains predicate on the "quote_hash" field.
+func QuoteHashContains(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldContains(FieldQuoteHash, v))
+}
+
+// QuoteHashHasPrefix applies the HasPrefix predicate on the "quote_hash" field.
+func QuoteHashHasPrefix(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldHasPrefix(FieldQuoteHash, v))
+}
+
+// QuoteHashHasSuffix applies the HasSuffix predicate on the "quote_hash" field.
+func QuoteHashHasSuffix(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldHasSuffix(FieldQuoteHash, v))
+}
+
+// QuoteHashIsNil applies the IsNil predicate on the "quote_hash" field.
+func QuoteHashIsNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIsNull(FieldQuoteHash))
+}
+
+// QuoteHashNotNil applies the NotNil predicate on the "quote_hash" field.
+func QuoteHashNotNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotNull(FieldQuoteHash))
+}
+
+// QuoteHashEqualFold applies the EqualFold predicate on the "quote_hash" field.
+func QuoteHashEqualFold(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEqualFold(FieldQuoteHash, v))
+}
+
+// QuoteHashContainsFold applies the ContainsFold predicate on the "quote_hash" field.
+func QuoteHashContainsFold(v string) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldContainsFold(FieldQuoteHash, v))
+}
+
+// RouteStateEQ applies the EQ predicate on the "route_state" field.
+func RouteStateEQ(v RouteState) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldRouteState, v))
+}
+
+// RouteStateNEQ applies the NEQ predicate on the "route_state" field.
+func RouteStateNEQ(v RouteState) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNEQ(FieldRouteState, v))
+}
+
+// RouteStateIn applies the In predicate on the "route_state" field.
+func RouteStateIn(vs ...RouteState) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIn(FieldRouteState, vs...))
+}
+
+// RouteStateNotIn applies the NotIn predicate on the "route_state" field.
+func RouteStateNotIn(vs ...RouteState) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotIn(FieldRouteState, vs...))
+}
+
+// MfeBpsEQ applies the EQ predicate on the "mfe_bps" field.
+func MfeBpsEQ(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldMfeBps, v))
+}
+
+// MfeBpsNEQ applies the NEQ predicate on the "mfe_bps" field.
+func MfeBpsNEQ(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNEQ(FieldMfeBps, v))
+}
+
+// MfeBpsIn applies the In predicate on the "mfe_bps" field.
+func MfeBpsIn(vs ...int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIn(FieldMfeBps, vs...))
+}
+
+// MfeBpsNotIn applies the NotIn predicate on the "mfe_bps" field.
+func MfeBpsNotIn(vs ...int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotIn(FieldMfeBps, vs...))
+}
+
+// MfeBpsGT applies the GT predicate on the "mfe_bps" field.
+func MfeBpsGT(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGT(FieldMfeBps, v))
+}
+
+// MfeBpsGTE applies the GTE predicate on the "mfe_bps" field.
+func MfeBpsGTE(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGTE(FieldMfeBps, v))
+}
+
+// MfeBpsLT applies the LT predicate on the "mfe_bps" field.
+func MfeBpsLT(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLT(FieldMfeBps, v))
+}
+
+// MfeBpsLTE applies the LTE predicate on the "mfe_bps" field.
+func MfeBpsLTE(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLTE(FieldMfeBps, v))
+}
+
+// MfeBpsIsNil applies the IsNil predicate on the "mfe_bps" field.
+func MfeBpsIsNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIsNull(FieldMfeBps))
+}
+
+// MfeBpsNotNil applies the NotNil predicate on the "mfe_bps" field.
+func MfeBpsNotNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotNull(FieldMfeBps))
+}
+
+// MaeBpsEQ applies the EQ predicate on the "mae_bps" field.
+func MaeBpsEQ(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldMaeBps, v))
+}
+
+// MaeBpsNEQ applies the NEQ predicate on the "mae_bps" field.
+func MaeBpsNEQ(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNEQ(FieldMaeBps, v))
+}
+
+// MaeBpsIn applies the In predicate on the "mae_bps" field.
+func MaeBpsIn(vs ...int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIn(FieldMaeBps, vs...))
+}
+
+// MaeBpsNotIn applies the NotIn predicate on the "mae_bps" field.
+func MaeBpsNotIn(vs ...int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotIn(FieldMaeBps, vs...))
+}
+
+// MaeBpsGT applies the GT predicate on the "mae_bps" field.
+func MaeBpsGT(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGT(FieldMaeBps, v))
+}
+
+// MaeBpsGTE applies the GTE predicate on the "mae_bps" field.
+func MaeBpsGTE(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGTE(FieldMaeBps, v))
+}
+
+// MaeBpsLT applies the LT predicate on the "mae_bps" field.
+func MaeBpsLT(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLT(FieldMaeBps, v))
+}
+
+// MaeBpsLTE applies the LTE predicate on the "mae_bps" field.
+func MaeBpsLTE(v int64) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLTE(FieldMaeBps, v))
+}
+
+// MaeBpsIsNil applies the IsNil predicate on the "mae_bps" field.
+func MaeBpsIsNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIsNull(FieldMaeBps))
+}
+
+// MaeBpsNotNil applies the NotNil predicate on the "mae_bps" field.
+func MaeBpsNotNil() predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotNull(FieldMaeBps))
+}
+
+// NoRouteCountEQ applies the EQ predicate on the "no_route_count" field.
+func NoRouteCountEQ(v int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldEQ(FieldNoRouteCount, v))
+}
+
+// NoRouteCountNEQ applies the NEQ predicate on the "no_route_count" field.
+func NoRouteCountNEQ(v int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNEQ(FieldNoRouteCount, v))
+}
+
+// NoRouteCountIn applies the In predicate on the "no_route_count" field.
+func NoRouteCountIn(vs ...int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldIn(FieldNoRouteCount, vs...))
+}
+
+// NoRouteCountNotIn applies the NotIn predicate on the "no_route_count" field.
+func NoRouteCountNotIn(vs ...int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldNotIn(FieldNoRouteCount, vs...))
+}
+
+// NoRouteCountGT applies the GT predicate on the "no_route_count" field.
+func NoRouteCountGT(v int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGT(FieldNoRouteCount, v))
+}
+
+// NoRouteCountGTE applies the GTE predicate on the "no_route_count" field.
+func NoRouteCountGTE(v int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldGTE(FieldNoRouteCount, v))
+}
+
+// NoRouteCountLT applies the LT predicate on the "no_route_count" field.
+func NoRouteCountLT(v int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLT(FieldNoRouteCount, v))
+}
+
+// NoRouteCountLTE applies the LTE predicate on the "no_route_count" field.
+func NoRouteCountLTE(v int) predicate.PositionMark {
+	return predicate.PositionMark(sql.FieldLTE(FieldNoRouteCount, v))
 }
 
 // ObservedAtEQ applies the EQ predicate on the "observed_at" field.

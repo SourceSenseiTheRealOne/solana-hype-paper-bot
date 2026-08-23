@@ -8,7 +8,7 @@
 
 ## Quality gates
 
-Run focused RED/GREEN tests for each behavior, then `go test ./...`, `go test -race ./...`, `go vet ./...`, `pnpm --dir dashboard run verify`, `docker compose config`, `bash scripts/verify-no-live-trading-deps.sh`, and `git diff --check`. On this Windows Git-Bash host, invoke `pnpm.cmd` for the dashboard gate.
+Run focused RED/GREEN tests for each behavior, then `go test ./...`, `go test -race ./...`, `go vet ./...`, `pnpm.cmd --dir dashboard run verify`, `bash scripts/verify-no-live-trading-deps.sh`, `bash tests/verify-compose-topology.sh`, `bash tests/verify-compose-topology_test.sh`, and `git diff --check`. Never run `docker compose config` in a credential-bearing checkout because dotenv interpolation can expose ignored values. CI and normal non-Git-Bash shells use `pnpm`.
 
 ## Local runtime and recovery
 

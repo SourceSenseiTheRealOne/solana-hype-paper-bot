@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/paperposition"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/tradedecision"
 )
 
@@ -38,9 +39,11 @@ type TradeDecision struct {
 type TradeDecisionEdges struct {
 	// Candidate holds the value of the candidate edge.
 	Candidate *Candidate `json:"candidate,omitempty"`
+	// Position holds the value of the position edge.
+	Position *PaperPosition `json:"position,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // CandidateOrErr returns the Candidate value or an error if the edge
@@ -52,6 +55,17 @@ func (e TradeDecisionEdges) CandidateOrErr() (*Candidate, error) {
 		return nil, &NotFoundError{label: candidate.Label}
 	}
 	return nil, &NotLoadedError{edge: "candidate"}
+}
+
+// PositionOrErr returns the Position value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e TradeDecisionEdges) PositionOrErr() (*PaperPosition, error) {
+	if e.Position != nil {
+		return e.Position, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: paperposition.Label}
+	}
+	return nil, &NotLoadedError{edge: "position"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -139,6 +153,11 @@ func (_m *TradeDecision) Value(name string) (ent.Value, error) {
 // QueryCandidate queries the "candidate" edge of the TradeDecision entity.
 func (_m *TradeDecision) QueryCandidate() *CandidateQuery {
 	return NewTradeDecisionClient(_m.config).QueryCandidate(_m)
+}
+
+// QueryPosition queries the "position" edge of the TradeDecision entity.
+func (_m *TradeDecision) QueryPosition() *PaperPositionQuery {
+	return NewTradeDecisionClient(_m.config).QueryPosition(_m)
 }
 
 // Update returns a builder for updating this TradeDecision.

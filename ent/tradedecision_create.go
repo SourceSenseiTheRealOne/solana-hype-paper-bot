@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/paperposition"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/tradedecision"
 )
 
@@ -64,6 +65,25 @@ func (_c *TradeDecisionCreate) SetCandidateID(id int) *TradeDecisionCreate {
 // SetCandidate sets the "candidate" edge to the Candidate entity.
 func (_c *TradeDecisionCreate) SetCandidate(v *Candidate) *TradeDecisionCreate {
 	return _c.SetCandidateID(v.ID)
+}
+
+// SetPositionID sets the "position" edge to the PaperPosition entity by ID.
+func (_c *TradeDecisionCreate) SetPositionID(id int) *TradeDecisionCreate {
+	_c.mutation.SetPositionID(id)
+	return _c
+}
+
+// SetNillablePositionID sets the "position" edge to the PaperPosition entity by ID if the given value is not nil.
+func (_c *TradeDecisionCreate) SetNillablePositionID(id *int) *TradeDecisionCreate {
+	if id != nil {
+		_c = _c.SetPositionID(*id)
+	}
+	return _c
+}
+
+// SetPosition sets the "position" edge to the PaperPosition entity.
+func (_c *TradeDecisionCreate) SetPosition(v *PaperPosition) *TradeDecisionCreate {
+	return _c.SetPositionID(v.ID)
 }
 
 // Mutation returns the TradeDecisionMutation object of the builder.
@@ -192,6 +212,22 @@ func (_c *TradeDecisionCreate) createSpec() (*TradeDecision, *sqlgraph.CreateSpe
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.candidate_decisions = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.PositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   tradedecision.PositionTable,
+			Columns: []string{tradedecision.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(paperposition.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

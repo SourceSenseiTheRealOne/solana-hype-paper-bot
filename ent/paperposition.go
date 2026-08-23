@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/paperposition"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/tradedecision"
 )
 
 // PaperPosition is the model entity for the PaperPosition schema.
@@ -22,10 +23,24 @@ type PaperPosition struct {
 	State paperposition.State `json:"state,omitempty"`
 	// NotionalMicros holds the value of the "notional_micros" field.
 	NotionalMicros int64 `json:"notional_micros,omitempty"`
+	// StrategyVersion holds the value of the "strategy_version" field.
+	StrategyVersion string `json:"strategy_version,omitempty"`
+	// NoRouteCount holds the value of the "no_route_count" field.
+	NoRouteCount int `json:"no_route_count,omitempty"`
+	// QuoteMint holds the value of the "quote_mint" field.
+	QuoteMint *string `json:"quote_mint,omitempty"`
+	// MintAddress holds the value of the "mint_address" field.
+	MintAddress *string `json:"mint_address,omitempty"`
 	// EntryPrice holds the value of the "entry_price" field.
-	EntryPrice string `json:"entry_price,omitempty"`
+	EntryPrice *string `json:"entry_price,omitempty"`
+	// EntryInputAmount holds the value of the "entry_input_amount" field.
+	EntryInputAmount *string `json:"entry_input_amount,omitempty"`
+	// EntryNetworkFeeMicros holds the value of the "entry_network_fee_micros" field.
+	EntryNetworkFeeMicros *int64 `json:"entry_network_fee_micros,omitempty"`
+	// EntryPriorityFeeMicros holds the value of the "entry_priority_fee_micros" field.
+	EntryPriorityFeeMicros *int64 `json:"entry_priority_fee_micros,omitempty"`
 	// TokenQuantity holds the value of the "token_quantity" field.
-	TokenQuantity string `json:"token_quantity,omitempty"`
+	TokenQuantity *string `json:"token_quantity,omitempty"`
 	// OpenedAt holds the value of the "opened_at" field.
 	OpenedAt *time.Time `json:"opened_at,omitempty"`
 	// ClosedAt holds the value of the "closed_at" field.
@@ -36,22 +51,25 @@ type PaperPosition struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PaperPositionQuery when eager-loading is set.
-	Edges               PaperPositionEdges `json:"edges"`
-	candidate_positions *int
-	selectValues        sql.SelectValues
+	Edges                   PaperPositionEdges `json:"edges"`
+	candidate_positions     *int
+	trade_decision_position *int
+	selectValues            sql.SelectValues
 }
 
 // PaperPositionEdges holds the relations/edges for other nodes in the graph.
 type PaperPositionEdges struct {
 	// Candidate holds the value of the candidate edge.
 	Candidate *Candidate `json:"candidate,omitempty"`
+	// Decision holds the value of the decision edge.
+	Decision *TradeDecision `json:"decision,omitempty"`
 	// Marks holds the value of the marks edge.
 	Marks []*PositionMark `json:"marks,omitempty"`
 	// Events holds the value of the events edge.
 	Events []*PositionEvent `json:"events,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
 }
 
 // CandidateOrErr returns the Candidate value or an error if the edge
@@ -65,10 +83,21 @@ func (e PaperPositionEdges) CandidateOrErr() (*Candidate, error) {
 	return nil, &NotLoadedError{edge: "candidate"}
 }
 
+// DecisionOrErr returns the Decision value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e PaperPositionEdges) DecisionOrErr() (*TradeDecision, error) {
+	if e.Decision != nil {
+		return e.Decision, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: tradedecision.Label}
+	}
+	return nil, &NotLoadedError{edge: "decision"}
+}
+
 // MarksOrErr returns the Marks value or an error if the edge
 // was not loaded in eager-loading.
 func (e PaperPositionEdges) MarksOrErr() ([]*PositionMark, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.Marks, nil
 	}
 	return nil, &NotLoadedError{edge: "marks"}
@@ -77,7 +106,7 @@ func (e PaperPositionEdges) MarksOrErr() ([]*PositionMark, error) {
 // EventsOrErr returns the Events value or an error if the edge
 // was not loaded in eager-loading.
 func (e PaperPositionEdges) EventsOrErr() ([]*PositionEvent, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.Events, nil
 	}
 	return nil, &NotLoadedError{edge: "events"}
@@ -88,13 +117,15 @@ func (*PaperPosition) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case paperposition.FieldID, paperposition.FieldNotionalMicros:
+		case paperposition.FieldID, paperposition.FieldNotionalMicros, paperposition.FieldNoRouteCount, paperposition.FieldEntryNetworkFeeMicros, paperposition.FieldEntryPriorityFeeMicros:
 			values[i] = new(sql.NullInt64)
-		case paperposition.FieldState, paperposition.FieldEntryPrice, paperposition.FieldTokenQuantity:
+		case paperposition.FieldState, paperposition.FieldStrategyVersion, paperposition.FieldQuoteMint, paperposition.FieldMintAddress, paperposition.FieldEntryPrice, paperposition.FieldEntryInputAmount, paperposition.FieldTokenQuantity:
 			values[i] = new(sql.NullString)
 		case paperposition.FieldOpenedAt, paperposition.FieldClosedAt, paperposition.FieldCreatedAt, paperposition.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		case paperposition.ForeignKeys[0]: // candidate_positions
+			values[i] = new(sql.NullInt64)
+		case paperposition.ForeignKeys[1]: // trade_decision_position
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -129,17 +160,66 @@ func (_m *PaperPosition) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.NotionalMicros = value.Int64
 			}
+		case paperposition.FieldStrategyVersion:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field strategy_version", values[i])
+			} else if value.Valid {
+				_m.StrategyVersion = value.String
+			}
+		case paperposition.FieldNoRouteCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field no_route_count", values[i])
+			} else if value.Valid {
+				_m.NoRouteCount = int(value.Int64)
+			}
+		case paperposition.FieldQuoteMint:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field quote_mint", values[i])
+			} else if value.Valid {
+				_m.QuoteMint = new(string)
+				*_m.QuoteMint = value.String
+			}
+		case paperposition.FieldMintAddress:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field mint_address", values[i])
+			} else if value.Valid {
+				_m.MintAddress = new(string)
+				*_m.MintAddress = value.String
+			}
 		case paperposition.FieldEntryPrice:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field entry_price", values[i])
 			} else if value.Valid {
-				_m.EntryPrice = value.String
+				_m.EntryPrice = new(string)
+				*_m.EntryPrice = value.String
+			}
+		case paperposition.FieldEntryInputAmount:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field entry_input_amount", values[i])
+			} else if value.Valid {
+				_m.EntryInputAmount = new(string)
+				*_m.EntryInputAmount = value.String
+			}
+		case paperposition.FieldEntryNetworkFeeMicros:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field entry_network_fee_micros", values[i])
+			} else if value.Valid {
+				_m.EntryNetworkFeeMicros = new(int64)
+				*_m.EntryNetworkFeeMicros = value.Int64
+			}
+		case paperposition.FieldEntryPriorityFeeMicros:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field entry_priority_fee_micros", values[i])
+			} else if value.Valid {
+				_m.EntryPriorityFeeMicros = new(int64)
+				*_m.EntryPriorityFeeMicros = value.Int64
 			}
 		case paperposition.FieldTokenQuantity:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field token_quantity", values[i])
 			} else if value.Valid {
-				_m.TokenQuantity = value.String
+				_m.TokenQuantity = new(string)
+				*_m.TokenQuantity = value.String
 			}
 		case paperposition.FieldOpenedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -174,6 +254,13 @@ func (_m *PaperPosition) assignValues(columns []string, values []any) error {
 				_m.candidate_positions = new(int)
 				*_m.candidate_positions = int(value.Int64)
 			}
+		case paperposition.ForeignKeys[1]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field trade_decision_position", value)
+			} else if value.Valid {
+				_m.trade_decision_position = new(int)
+				*_m.trade_decision_position = int(value.Int64)
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -190,6 +277,11 @@ func (_m *PaperPosition) Value(name string) (ent.Value, error) {
 // QueryCandidate queries the "candidate" edge of the PaperPosition entity.
 func (_m *PaperPosition) QueryCandidate() *CandidateQuery {
 	return NewPaperPositionClient(_m.config).QueryCandidate(_m)
+}
+
+// QueryDecision queries the "decision" edge of the PaperPosition entity.
+func (_m *PaperPosition) QueryDecision() *TradeDecisionQuery {
+	return NewPaperPositionClient(_m.config).QueryDecision(_m)
 }
 
 // QueryMarks queries the "marks" edge of the PaperPosition entity.
@@ -231,11 +323,46 @@ func (_m *PaperPosition) String() string {
 	builder.WriteString("notional_micros=")
 	builder.WriteString(fmt.Sprintf("%v", _m.NotionalMicros))
 	builder.WriteString(", ")
-	builder.WriteString("entry_price=")
-	builder.WriteString(_m.EntryPrice)
+	builder.WriteString("strategy_version=")
+	builder.WriteString(_m.StrategyVersion)
 	builder.WriteString(", ")
-	builder.WriteString("token_quantity=")
-	builder.WriteString(_m.TokenQuantity)
+	builder.WriteString("no_route_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.NoRouteCount))
+	builder.WriteString(", ")
+	if v := _m.QuoteMint; v != nil {
+		builder.WriteString("quote_mint=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.MintAddress; v != nil {
+		builder.WriteString("mint_address=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.EntryPrice; v != nil {
+		builder.WriteString("entry_price=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.EntryInputAmount; v != nil {
+		builder.WriteString("entry_input_amount=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := _m.EntryNetworkFeeMicros; v != nil {
+		builder.WriteString("entry_network_fee_micros=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.EntryPriorityFeeMicros; v != nil {
+		builder.WriteString("entry_priority_fee_micros=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := _m.TokenQuantity; v != nil {
+		builder.WriteString("token_quantity=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	if v := _m.OpenedAt; v != nil {
 		builder.WriteString("opened_at=")

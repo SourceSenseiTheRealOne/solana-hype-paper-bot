@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
@@ -12,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/candidate"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/paperposition"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/predicate"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/ent/tradedecision"
 )
@@ -24,6 +26,7 @@ type TradeDecisionQuery struct {
 	inters        []Interceptor
 	predicates    []predicate.TradeDecision
 	withCandidate *CandidateQuery
+	withPosition  *PaperPositionQuery
 	withFKs       bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -76,6 +79,28 @@ func (_q *TradeDecisionQuery) QueryCandidate() *CandidateQuery {
 			sqlgraph.From(tradedecision.Table, tradedecision.FieldID, selector),
 			sqlgraph.To(candidate.Table, candidate.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, tradedecision.CandidateTable, tradedecision.CandidateColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPosition chains the current query on the "position" edge.
+func (_q *TradeDecisionQuery) QueryPosition() *PaperPositionQuery {
+	query := (&PaperPositionClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tradedecision.Table, tradedecision.FieldID, selector),
+			sqlgraph.To(paperposition.Table, paperposition.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, tradedecision.PositionTable, tradedecision.PositionColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -276,6 +301,7 @@ func (_q *TradeDecisionQuery) Clone() *TradeDecisionQuery {
 		inters:        append([]Interceptor{}, _q.inters...),
 		predicates:    append([]predicate.TradeDecision{}, _q.predicates...),
 		withCandidate: _q.withCandidate.Clone(),
+		withPosition:  _q.withPosition.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
@@ -290,6 +316,17 @@ func (_q *TradeDecisionQuery) WithCandidate(opts ...func(*CandidateQuery)) *Trad
 		opt(query)
 	}
 	_q.withCandidate = query
+	return _q
+}
+
+// WithPosition tells the query-builder to eager-load the nodes that are connected to
+// the "position" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *TradeDecisionQuery) WithPosition(opts ...func(*PaperPositionQuery)) *TradeDecisionQuery {
+	query := (&PaperPositionClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withPosition = query
 	return _q
 }
 
@@ -372,8 +409,9 @@ func (_q *TradeDecisionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 		nodes       = []*TradeDecision{}
 		withFKs     = _q.withFKs
 		_spec       = _q.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			_q.withCandidate != nil,
+			_q.withPosition != nil,
 		}
 	)
 	if _q.withCandidate != nil {
@@ -403,6 +441,12 @@ func (_q *TradeDecisionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 	if query := _q.withCandidate; query != nil {
 		if err := _q.loadCandidate(ctx, query, nodes, nil,
 			func(n *TradeDecision, e *Candidate) { n.Edges.Candidate = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withPosition; query != nil {
+		if err := _q.loadPosition(ctx, query, nodes, nil,
+			func(n *TradeDecision, e *PaperPosition) { n.Edges.Position = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -438,6 +482,34 @@ func (_q *TradeDecisionQuery) loadCandidate(ctx context.Context, query *Candidat
 		for i := range nodes {
 			assign(nodes[i], n)
 		}
+	}
+	return nil
+}
+func (_q *TradeDecisionQuery) loadPosition(ctx context.Context, query *PaperPositionQuery, nodes []*TradeDecision, init func(*TradeDecision), assign func(*TradeDecision, *PaperPosition)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*TradeDecision)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+	}
+	query.withFKs = true
+	query.Where(predicate.PaperPosition(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(tradedecision.PositionColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.trade_decision_position
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "trade_decision_position" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "trade_decision_position" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
 	}
 	return nil
 }

@@ -3,6 +3,7 @@
 package positionmark
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -16,6 +17,22 @@ const (
 	FieldID = "id"
 	// FieldPrice holds the string denoting the price field in the database.
 	FieldPrice = "price"
+	// FieldNetOutputAmount holds the string denoting the net_output_amount field in the database.
+	FieldNetOutputAmount = "net_output_amount"
+	// FieldFeeEstimate holds the string denoting the fee_estimate field in the database.
+	FieldFeeEstimate = "fee_estimate"
+	// FieldReturnBps holds the string denoting the return_bps field in the database.
+	FieldReturnBps = "return_bps"
+	// FieldQuoteHash holds the string denoting the quote_hash field in the database.
+	FieldQuoteHash = "quote_hash"
+	// FieldRouteState holds the string denoting the route_state field in the database.
+	FieldRouteState = "route_state"
+	// FieldMfeBps holds the string denoting the mfe_bps field in the database.
+	FieldMfeBps = "mfe_bps"
+	// FieldMaeBps holds the string denoting the mae_bps field in the database.
+	FieldMaeBps = "mae_bps"
+	// FieldNoRouteCount holds the string denoting the no_route_count field in the database.
+	FieldNoRouteCount = "no_route_count"
 	// FieldObservedAt holds the string denoting the observed_at field in the database.
 	FieldObservedAt = "observed_at"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
@@ -37,6 +54,14 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldPrice,
+	FieldNetOutputAmount,
+	FieldFeeEstimate,
+	FieldReturnBps,
+	FieldQuoteHash,
+	FieldRouteState,
+	FieldMfeBps,
+	FieldMaeBps,
+	FieldNoRouteCount,
 	FieldObservedAt,
 	FieldCreatedAt,
 }
@@ -65,11 +90,43 @@ func ValidColumn(column string) bool {
 var (
 	// PriceValidator is a validator for the "price" field. It is called by the builders before save.
 	PriceValidator func(string) error
+	// FeeEstimateValidator is a validator for the "fee_estimate" field. It is called by the builders before save.
+	FeeEstimateValidator func(int64) error
+	// DefaultNoRouteCount holds the default value on creation for the "no_route_count" field.
+	DefaultNoRouteCount int
+	// NoRouteCountValidator is a validator for the "no_route_count" field. It is called by the builders before save.
+	NoRouteCountValidator func(int) error
 	// DefaultObservedAt holds the default value on creation for the "observed_at" field.
 	DefaultObservedAt func() time.Time
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 )
+
+// RouteState defines the type for the "route_state" enum field.
+type RouteState string
+
+// RouteStateEXECUTABLE is the default value of the RouteState enum.
+const DefaultRouteState = RouteStateEXECUTABLE
+
+// RouteState values.
+const (
+	RouteStateEXECUTABLE RouteState = "EXECUTABLE"
+	RouteStateNO_ROUTE   RouteState = "NO_ROUTE"
+)
+
+func (rs RouteState) String() string {
+	return string(rs)
+}
+
+// RouteStateValidator is a validator for the "route_state" field enum values. It is called by the builders before save.
+func RouteStateValidator(rs RouteState) error {
+	switch rs {
+	case RouteStateEXECUTABLE, RouteStateNO_ROUTE:
+		return nil
+	default:
+		return fmt.Errorf("positionmark: invalid enum value for route_state field: %q", rs)
+	}
+}
 
 // OrderOption defines the ordering options for the PositionMark queries.
 type OrderOption func(*sql.Selector)
@@ -82,6 +139,46 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByPrice orders the results by the price field.
 func ByPrice(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPrice, opts...).ToFunc()
+}
+
+// ByNetOutputAmount orders the results by the net_output_amount field.
+func ByNetOutputAmount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNetOutputAmount, opts...).ToFunc()
+}
+
+// ByFeeEstimate orders the results by the fee_estimate field.
+func ByFeeEstimate(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeeEstimate, opts...).ToFunc()
+}
+
+// ByReturnBps orders the results by the return_bps field.
+func ByReturnBps(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldReturnBps, opts...).ToFunc()
+}
+
+// ByQuoteHash orders the results by the quote_hash field.
+func ByQuoteHash(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldQuoteHash, opts...).ToFunc()
+}
+
+// ByRouteState orders the results by the route_state field.
+func ByRouteState(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRouteState, opts...).ToFunc()
+}
+
+// ByMfeBps orders the results by the mfe_bps field.
+func ByMfeBps(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMfeBps, opts...).ToFunc()
+}
+
+// ByMaeBps orders the results by the mae_bps field.
+func ByMaeBps(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMaeBps, opts...).ToFunc()
+}
+
+// ByNoRouteCount orders the results by the no_route_count field.
+func ByNoRouteCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNoRouteCount, opts...).ToFunc()
 }
 
 // ByObservedAt orders the results by the observed_at field.

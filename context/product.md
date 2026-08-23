@@ -14,8 +14,9 @@ A single local operator needs a reproducible way to research new Solana token po
 ## In scope
 
 - Discover and paginate public Solana pools; persist candidate evidence and deterministic decisions.
-- Open at most three virtual positions concurrently and at most 30 new $10 paper positions per UTC day.
-- Apply +30% take-profit, -15% stop-loss, and a 60-minute timeout.
+- Open at most three virtual positions concurrently and at most 30 new $100 paper positions per UTC day.
+- Run the versioned `bold-momentum-v2` cohort: pools at most 90 minutes old, at least $5,000 liquidity, 20 five-minute transactions, 65% buy share, 15% volume/liquidity turnover, and +2% to +60% five-minute price momentum.
+- Apply +50% take-profit, -20% stop-loss, and a 45-minute timeout while retaining the $100 virtual notional and 10% maximum quoted entry impact.
 - Persist decisions, marks, closures, daily results, and retained local reports through Ent and project-owned local Supabase/Postgres.
 - Serve a small loopback-only, read-only React/Vite dashboard through a bounded Go HTTP API.
 - Request a restricted Hermes verdict as evidence only; it must never receive secrets or raw provider payloads.

@@ -2,12 +2,21 @@ package httpclient
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"net/url"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/domain"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/ports"
+)
+
+const (
+	maxDexScreenerTokenHints    = 20
+	maxDexScreenerResolvedPools = 5
 )
 
 type DexScreener struct {
@@ -25,8 +34,11 @@ func (provider *DexScreener) FetchLatestSolanaTokenHints(ctx context.Context) ([
 	}
 
 	seen := make(map[string]struct{}, len(profiles))
-	hints := make([]domain.TokenHint, 0, len(profiles))
+	hints := make([]domain.TokenHint, 0, min(len(profiles), maxDexScreenerTokenHints))
 	for _, profile := range profiles {
+		if len(hints) == maxDexScreenerTokenHints {
+			break
+		}
 		if profile.ChainID != domain.NetworkSolana {
 			continue
 		}
@@ -40,8 +52,121 @@ func (provider *DexScreener) FetchLatestSolanaTokenHints(ctx context.Context) ([
 		seen[hint.MintAddress] = struct{}{}
 		hints = append(hints, hint)
 	}
-	sort.Slice(hints, func(left, right int) bool { return hints[left].MintAddress < hints[right].MintAddress })
 	return hints, nil
+}
+
+// FetchNewPools resolves at most five latest DexScreener Solana profiles into
+// validated pool identities. DexScreener provides no page cursor for profile
+// resolution, so pages after the first are intentionally empty.
+func (provider *DexScreener) FetchNewPools(ctx context.Context, page int) (ports.PoolPage, error) {
+	if provider == nil || provider.client == nil || page < 1 {
+		return ports.PoolPage{}, errors.New("DexScreener pool discovery is not completely configured")
+	}
+	if page > 1 {
+		return ports.PoolPage{}, nil
+	}
+	hints, err := provider.FetchLatestSolanaTokenHints(ctx)
+	if err != nil {
+		return ports.PoolPage{}, err
+	}
+	pools := make([]domain.DiscoveredPool, 0, min(len(hints), maxDexScreenerResolvedPools))
+	for _, hint := range hints {
+		if len(pools) == maxDexScreenerResolvedPools {
+			break
+		}
+		pool, found, err := provider.newestSolanaPoolForHint(ctx, hint)
+		if err != nil {
+			return ports.PoolPage{}, err
+		}
+		if found {
+			pools = append(pools, pool)
+		}
+	}
+	sort.Slice(pools, func(left, right int) bool {
+		if pools[left].CreatedAt.Equal(pools[right].CreatedAt) {
+			return pools[left].PoolAddress < pools[right].PoolAddress
+		}
+		return pools[left].CreatedAt.After(pools[right].CreatedAt)
+	})
+	return ports.PoolPage{Pools: pools}, nil
+}
+
+func (provider *DexScreener) newestSolanaPoolForHint(ctx context.Context, hint domain.TokenHint) (domain.DiscoveredPool, bool, error) {
+	if err := hint.Validate(); err != nil || hint.Source != domain.SourceDexScreener || hint.Network != domain.NetworkSolana {
+		return domain.DiscoveredPool{}, false, errors.New("DexScreener token hint is invalid")
+	}
+	var pairs []dexScreenerPair
+	path := "/token-pairs/v1/" + domain.NetworkSolana + "/" + url.PathEscape(hint.MintAddress)
+	if err := provider.client.GetJSON(ctx, path, nil, &pairs); err != nil {
+		return domain.DiscoveredPool{}, false, fmt.Errorf("fetch DexScreener token pairs: %w", err)
+	}
+	var newest domain.DiscoveredPool
+	for _, pair := range pairs {
+		if !isSolana(pair.ChainID) || strings.TrimSpace(pair.PairAddress) == "" || pair.PairCreatedAt <= 0 {
+			continue
+		}
+		candidate := domain.DiscoveredPool{
+			Source:      domain.SourceDexScreener,
+			Network:     domain.NetworkSolana,
+			MintAddress: hint.MintAddress,
+			PoolAddress: pair.PairAddress,
+			CreatedAt:   time.UnixMilli(pair.PairCreatedAt).UTC(),
+		}
+		if err := candidate.Validate(); err != nil {
+			continue
+		}
+		if newest.CreatedAt.IsZero() || candidate.CreatedAt.After(newest.CreatedAt) || (candidate.CreatedAt.Equal(newest.CreatedAt) && candidate.PoolAddress < newest.PoolAddress) {
+			newest = candidate
+		}
+	}
+	return newest, !newest.CreatedAt.IsZero(), nil
+}
+
+func (provider *DexScreener) Fetch(ctx context.Context, pool domain.DiscoveredPool) (domain.MarketSnapshot, error) {
+	if provider.client == nil {
+		return domain.MarketSnapshot{}, errors.New("DexScreener market provider is not configured")
+	}
+	if err := pool.Validate(); err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("validate DexScreener pool: %w", err)
+	}
+	if !isSolana(pool.Network) {
+		return domain.MarketSnapshot{}, errors.New("DexScreener market provider only supports Solana pools")
+	}
+	var response dexScreenerPairsResponse
+	path := "/latest/dex/pairs/" + domain.NetworkSolana + "/" + url.PathEscape(pool.PoolAddress)
+	if err := provider.client.GetJSON(ctx, path, nil, &response); err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("fetch DexScreener pair: %w", err)
+	}
+	for _, pair := range response.Pairs {
+		if !isSolana(pair.ChainID) || pair.PairAddress != pool.PoolAddress {
+			continue
+		}
+		liquidity, err := domain.ParseUSD(pair.Liquidity.USD.String())
+		if err != nil {
+			return domain.MarketSnapshot{}, fmt.Errorf("parse DexScreener liquidity: %w", err)
+		}
+		if pair.Transactions.M5.Buys == nil || pair.Transactions.M5.Sells == nil {
+			return domain.MarketSnapshot{}, errors.New("DexScreener pair is missing five-minute transaction counts")
+		}
+		if *pair.Transactions.M5.Buys < 0 || *pair.Transactions.M5.Sells < 0 {
+			return domain.MarketSnapshot{}, errors.New("DexScreener pair has negative transaction counts")
+		}
+		volume, err := domain.ParseUSD(pair.Volume.M5.String())
+		if err != nil {
+			return domain.MarketSnapshot{}, fmt.Errorf("parse DexScreener five-minute volume: %w", err)
+		}
+		priceChangeBPS, err := domain.ParsePercentageBPS(pair.PriceChange.M5.String())
+		if err != nil {
+			return domain.MarketSnapshot{}, fmt.Errorf("parse DexScreener five-minute price change: %w", err)
+		}
+		return domain.MarketSnapshot{
+			ObservedAt: time.Now().UTC(), LiquidityUSD: liquidity,
+			FiveMinuteTransactions: *pair.Transactions.M5.Buys + *pair.Transactions.M5.Sells,
+			FiveMinuteBuys:         *pair.Transactions.M5.Buys, FiveMinuteSells: *pair.Transactions.M5.Sells,
+			FiveMinuteVolumeUSD: volume, FiveMinutePriceChangeBPS: priceChangeBPS,
+		}, nil
+	}
+	return domain.MarketSnapshot{}, errors.New("DexScreener response did not contain the requested Solana pool")
 }
 
 type dexScreenerTokenProfile struct {
@@ -50,7 +175,33 @@ type dexScreenerTokenProfile struct {
 	URL          string `json:"url"`
 }
 
+type dexScreenerPairsResponse struct {
+	Pairs []dexScreenerPair `json:"pairs"`
+}
+
+type dexScreenerPair struct {
+	ChainID       string `json:"chainId"`
+	PairAddress   string `json:"pairAddress"`
+	PairCreatedAt int64  `json:"pairCreatedAt"`
+	Liquidity     struct {
+		USD json.Number `json:"usd"`
+	} `json:"liquidity"`
+	Transactions struct {
+		M5 struct {
+			Buys  *int `json:"buys"`
+			Sells *int `json:"sells"`
+		} `json:"m5"`
+	} `json:"txns"`
+	Volume struct {
+		M5 json.Number `json:"m5"`
+	} `json:"volume"`
+	PriceChange struct {
+		M5 json.Number `json:"m5"`
+	} `json:"priceChange"`
+}
+
 var _ ports.TokenHintDiscovery = (*DexScreener)(nil)
+var _ ports.PoolDiscovery = (*DexScreener)(nil)
 
 func isSolana(chainID string) bool {
 	return strings.EqualFold(strings.TrimSpace(chainID), domain.NetworkSolana)

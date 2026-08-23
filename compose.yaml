@@ -1,0 +1,36 @@
+name: solana-hype-paper-bot
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - path: .env.local
+        required: false
+    environment:
+      APP_ENV: container
+      HTTP_ADDR: 0.0.0.0:8080
+      LOG_DIR: /app/var/log
+      REPORT_DIR: /app/var/reports
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 127.0.0.1:8080:8080
+    read_only: true
+    tmpfs:
+      - /tmp
+    volumes:
+      - runtime-data:/app/var
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    depends_on:
+      - api
+    ports:
+      - 127.0.0.1:4173:8080
+
+volumes:
+  runtime-data:

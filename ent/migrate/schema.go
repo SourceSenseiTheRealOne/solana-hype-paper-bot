@@ -118,13 +118,21 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "state", Type: field.TypeEnum, Enums: []string{"PENDING", "OPEN", "CLOSING", "CLOSED", "UNSELLABLE"}},
 		{Name: "notional_micros", Type: field.TypeInt64},
-		{Name: "entry_price", Type: field.TypeString},
-		{Name: "token_quantity", Type: field.TypeString},
+		{Name: "strategy_version", Type: field.TypeString, Default: "legacy-unattributed"},
+		{Name: "no_route_count", Type: field.TypeInt, Default: 0},
+		{Name: "quote_mint", Type: field.TypeString, Nullable: true},
+		{Name: "mint_address", Type: field.TypeString, Nullable: true},
+		{Name: "entry_price", Type: field.TypeString, Nullable: true},
+		{Name: "entry_input_amount", Type: field.TypeString, Nullable: true},
+		{Name: "entry_network_fee_micros", Type: field.TypeInt64, Nullable: true},
+		{Name: "entry_priority_fee_micros", Type: field.TypeInt64, Nullable: true},
+		{Name: "token_quantity", Type: field.TypeString, Nullable: true},
 		{Name: "opened_at", Type: field.TypeTime, Nullable: true},
 		{Name: "closed_at", Type: field.TypeTime, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "candidate_positions", Type: field.TypeInt},
+		{Name: "trade_decision_position", Type: field.TypeInt, Unique: true},
 	}
 	// PaperPositionsTable holds the schema information for the "paper_positions" table.
 	PaperPositionsTable = &schema.Table{
@@ -134,8 +142,14 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "paper_positions_candidates_positions",
-				Columns:    []*schema.Column{PaperPositionsColumns[9]},
+				Columns:    []*schema.Column{PaperPositionsColumns[16]},
 				RefColumns: []*schema.Column{CandidatesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "paper_positions_trade_decisions_position",
+				Columns:    []*schema.Column{PaperPositionsColumns[17]},
+				RefColumns: []*schema.Column{TradeDecisionsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
@@ -166,6 +180,14 @@ var (
 	PositionMarksColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "price", Type: field.TypeString},
+		{Name: "net_output_amount", Type: field.TypeString, Nullable: true},
+		{Name: "fee_estimate", Type: field.TypeInt64, Nullable: true},
+		{Name: "return_bps", Type: field.TypeInt64, Nullable: true},
+		{Name: "quote_hash", Type: field.TypeString, Nullable: true},
+		{Name: "route_state", Type: field.TypeEnum, Enums: []string{"EXECUTABLE", "NO_ROUTE"}, Default: "EXECUTABLE"},
+		{Name: "mfe_bps", Type: field.TypeInt64, Nullable: true},
+		{Name: "mae_bps", Type: field.TypeInt64, Nullable: true},
+		{Name: "no_route_count", Type: field.TypeInt, Default: 0},
 		{Name: "observed_at", Type: field.TypeTime},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "paper_position_marks", Type: field.TypeInt},
@@ -178,7 +200,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "position_marks_paper_positions_marks",
-				Columns:    []*schema.Column{PositionMarksColumns[4]},
+				Columns:    []*schema.Column{PositionMarksColumns[12]},
 				RefColumns: []*schema.Column{PaperPositionsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -280,6 +302,7 @@ var (
 func init() {
 	CandidateSnapshotsTable.ForeignKeys[0].RefTable = CandidatesTable
 	PaperPositionsTable.ForeignKeys[0].RefTable = CandidatesTable
+	PaperPositionsTable.ForeignKeys[1].RefTable = TradeDecisionsTable
 	PositionEventsTable.ForeignKeys[0].RefTable = PaperPositionsTable
 	PositionMarksTable.ForeignKeys[0].RefTable = PaperPositionsTable
 	SocialSnapshotsTable.ForeignKeys[0].RefTable = CandidatesTable

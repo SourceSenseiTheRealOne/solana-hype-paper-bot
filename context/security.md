@@ -14,7 +14,7 @@ No auth is implemented because the dashboard is read-only and binds only to loop
 
 ## Threat controls
 
-Provider adapters enforce allowlisted base URLs, context deadlines, response-size/page bounds, input validation, and redacted errors. Persistent idempotency and transactional admission enforce quota safety. HTTP exposes only allowlisted read DTOs. Structured logs exclude authorization, keys, headers, query strings, request bodies, raw payloads, and provider secrets. Dependency checks reject wallet, signing, swap-execution, and send-transaction packages.
+Provider adapters enforce allowlisted base URLs, context deadlines, response-size/page bounds, input validation, and redacted errors. TwitterAPI.io social searches are exact-mint and time-window bounded. Birdeye discovery reads at most 20 Solana listings and does not persist raw security-report payloads. Persistent idempotency and transactional admission enforce quota safety. HTTP exposes only allowlisted read DTOs. Structured logs exclude authorization, keys, headers, query strings, request bodies, raw payloads, and provider secrets. Dependency checks reject wallet, signing, swap-execution, and send-transaction packages.
 
 ## Secrets and signing material
 

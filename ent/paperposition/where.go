@@ -60,9 +60,44 @@ func NotionalMicros(v int64) predicate.PaperPosition {
 	return predicate.PaperPosition(sql.FieldEQ(FieldNotionalMicros, v))
 }
 
+// StrategyVersion applies equality check predicate on the "strategy_version" field. It's identical to StrategyVersionEQ.
+func StrategyVersion(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldStrategyVersion, v))
+}
+
+// NoRouteCount applies equality check predicate on the "no_route_count" field. It's identical to NoRouteCountEQ.
+func NoRouteCount(v int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldNoRouteCount, v))
+}
+
+// QuoteMint applies equality check predicate on the "quote_mint" field. It's identical to QuoteMintEQ.
+func QuoteMint(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldQuoteMint, v))
+}
+
+// MintAddress applies equality check predicate on the "mint_address" field. It's identical to MintAddressEQ.
+func MintAddress(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldMintAddress, v))
+}
+
 // EntryPrice applies equality check predicate on the "entry_price" field. It's identical to EntryPriceEQ.
 func EntryPrice(v string) predicate.PaperPosition {
 	return predicate.PaperPosition(sql.FieldEQ(FieldEntryPrice, v))
+}
+
+// EntryInputAmount applies equality check predicate on the "entry_input_amount" field. It's identical to EntryInputAmountEQ.
+func EntryInputAmount(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldEntryInputAmount, v))
+}
+
+// EntryNetworkFeeMicros applies equality check predicate on the "entry_network_fee_micros" field. It's identical to EntryNetworkFeeMicrosEQ.
+func EntryNetworkFeeMicros(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldEntryNetworkFeeMicros, v))
+}
+
+// EntryPriorityFeeMicros applies equality check predicate on the "entry_priority_fee_micros" field. It's identical to EntryPriorityFeeMicrosEQ.
+func EntryPriorityFeeMicros(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldEntryPriorityFeeMicros, v))
 }
 
 // TokenQuantity applies equality check predicate on the "token_quantity" field. It's identical to TokenQuantityEQ.
@@ -150,6 +185,261 @@ func NotionalMicrosLTE(v int64) predicate.PaperPosition {
 	return predicate.PaperPosition(sql.FieldLTE(FieldNotionalMicros, v))
 }
 
+// StrategyVersionEQ applies the EQ predicate on the "strategy_version" field.
+func StrategyVersionEQ(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldStrategyVersion, v))
+}
+
+// StrategyVersionNEQ applies the NEQ predicate on the "strategy_version" field.
+func StrategyVersionNEQ(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNEQ(FieldStrategyVersion, v))
+}
+
+// StrategyVersionIn applies the In predicate on the "strategy_version" field.
+func StrategyVersionIn(vs ...string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIn(FieldStrategyVersion, vs...))
+}
+
+// StrategyVersionNotIn applies the NotIn predicate on the "strategy_version" field.
+func StrategyVersionNotIn(vs ...string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotIn(FieldStrategyVersion, vs...))
+}
+
+// StrategyVersionGT applies the GT predicate on the "strategy_version" field.
+func StrategyVersionGT(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGT(FieldStrategyVersion, v))
+}
+
+// StrategyVersionGTE applies the GTE predicate on the "strategy_version" field.
+func StrategyVersionGTE(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGTE(FieldStrategyVersion, v))
+}
+
+// StrategyVersionLT applies the LT predicate on the "strategy_version" field.
+func StrategyVersionLT(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLT(FieldStrategyVersion, v))
+}
+
+// StrategyVersionLTE applies the LTE predicate on the "strategy_version" field.
+func StrategyVersionLTE(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLTE(FieldStrategyVersion, v))
+}
+
+// StrategyVersionContains applies the Contains predicate on the "strategy_version" field.
+func StrategyVersionContains(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldContains(FieldStrategyVersion, v))
+}
+
+// StrategyVersionHasPrefix applies the HasPrefix predicate on the "strategy_version" field.
+func StrategyVersionHasPrefix(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldHasPrefix(FieldStrategyVersion, v))
+}
+
+// StrategyVersionHasSuffix applies the HasSuffix predicate on the "strategy_version" field.
+func StrategyVersionHasSuffix(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldHasSuffix(FieldStrategyVersion, v))
+}
+
+// StrategyVersionEqualFold applies the EqualFold predicate on the "strategy_version" field.
+func StrategyVersionEqualFold(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEqualFold(FieldStrategyVersion, v))
+}
+
+// StrategyVersionContainsFold applies the ContainsFold predicate on the "strategy_version" field.
+func StrategyVersionContainsFold(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldContainsFold(FieldStrategyVersion, v))
+}
+
+// NoRouteCountEQ applies the EQ predicate on the "no_route_count" field.
+func NoRouteCountEQ(v int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldNoRouteCount, v))
+}
+
+// NoRouteCountNEQ applies the NEQ predicate on the "no_route_count" field.
+func NoRouteCountNEQ(v int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNEQ(FieldNoRouteCount, v))
+}
+
+// NoRouteCountIn applies the In predicate on the "no_route_count" field.
+func NoRouteCountIn(vs ...int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIn(FieldNoRouteCount, vs...))
+}
+
+// NoRouteCountNotIn applies the NotIn predicate on the "no_route_count" field.
+func NoRouteCountNotIn(vs ...int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotIn(FieldNoRouteCount, vs...))
+}
+
+// NoRouteCountGT applies the GT predicate on the "no_route_count" field.
+func NoRouteCountGT(v int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGT(FieldNoRouteCount, v))
+}
+
+// NoRouteCountGTE applies the GTE predicate on the "no_route_count" field.
+func NoRouteCountGTE(v int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGTE(FieldNoRouteCount, v))
+}
+
+// NoRouteCountLT applies the LT predicate on the "no_route_count" field.
+func NoRouteCountLT(v int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLT(FieldNoRouteCount, v))
+}
+
+// NoRouteCountLTE applies the LTE predicate on the "no_route_count" field.
+func NoRouteCountLTE(v int) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLTE(FieldNoRouteCount, v))
+}
+
+// QuoteMintEQ applies the EQ predicate on the "quote_mint" field.
+func QuoteMintEQ(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldQuoteMint, v))
+}
+
+// QuoteMintNEQ applies the NEQ predicate on the "quote_mint" field.
+func QuoteMintNEQ(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNEQ(FieldQuoteMint, v))
+}
+
+// QuoteMintIn applies the In predicate on the "quote_mint" field.
+func QuoteMintIn(vs ...string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIn(FieldQuoteMint, vs...))
+}
+
+// QuoteMintNotIn applies the NotIn predicate on the "quote_mint" field.
+func QuoteMintNotIn(vs ...string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotIn(FieldQuoteMint, vs...))
+}
+
+// QuoteMintGT applies the GT predicate on the "quote_mint" field.
+func QuoteMintGT(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGT(FieldQuoteMint, v))
+}
+
+// QuoteMintGTE applies the GTE predicate on the "quote_mint" field.
+func QuoteMintGTE(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGTE(FieldQuoteMint, v))
+}
+
+// QuoteMintLT applies the LT predicate on the "quote_mint" field.
+func QuoteMintLT(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLT(FieldQuoteMint, v))
+}
+
+// QuoteMintLTE applies the LTE predicate on the "quote_mint" field.
+func QuoteMintLTE(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLTE(FieldQuoteMint, v))
+}
+
+// QuoteMintContains applies the Contains predicate on the "quote_mint" field.
+func QuoteMintContains(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldContains(FieldQuoteMint, v))
+}
+
+// QuoteMintHasPrefix applies the HasPrefix predicate on the "quote_mint" field.
+func QuoteMintHasPrefix(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldHasPrefix(FieldQuoteMint, v))
+}
+
+// QuoteMintHasSuffix applies the HasSuffix predicate on the "quote_mint" field.
+func QuoteMintHasSuffix(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldHasSuffix(FieldQuoteMint, v))
+}
+
+// QuoteMintIsNil applies the IsNil predicate on the "quote_mint" field.
+func QuoteMintIsNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIsNull(FieldQuoteMint))
+}
+
+// QuoteMintNotNil applies the NotNil predicate on the "quote_mint" field.
+func QuoteMintNotNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotNull(FieldQuoteMint))
+}
+
+// QuoteMintEqualFold applies the EqualFold predicate on the "quote_mint" field.
+func QuoteMintEqualFold(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEqualFold(FieldQuoteMint, v))
+}
+
+// QuoteMintContainsFold applies the ContainsFold predicate on the "quote_mint" field.
+func QuoteMintContainsFold(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldContainsFold(FieldQuoteMint, v))
+}
+
+// MintAddressEQ applies the EQ predicate on the "mint_address" field.
+func MintAddressEQ(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldMintAddress, v))
+}
+
+// MintAddressNEQ applies the NEQ predicate on the "mint_address" field.
+func MintAddressNEQ(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNEQ(FieldMintAddress, v))
+}
+
+// MintAddressIn applies the In predicate on the "mint_address" field.
+func MintAddressIn(vs ...string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIn(FieldMintAddress, vs...))
+}
+
+// MintAddressNotIn applies the NotIn predicate on the "mint_address" field.
+func MintAddressNotIn(vs ...string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotIn(FieldMintAddress, vs...))
+}
+
+// MintAddressGT applies the GT predicate on the "mint_address" field.
+func MintAddressGT(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGT(FieldMintAddress, v))
+}
+
+// MintAddressGTE applies the GTE predicate on the "mint_address" field.
+func MintAddressGTE(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGTE(FieldMintAddress, v))
+}
+
+// MintAddressLT applies the LT predicate on the "mint_address" field.
+func MintAddressLT(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLT(FieldMintAddress, v))
+}
+
+// MintAddressLTE applies the LTE predicate on the "mint_address" field.
+func MintAddressLTE(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLTE(FieldMintAddress, v))
+}
+
+// MintAddressContains applies the Contains predicate on the "mint_address" field.
+func MintAddressContains(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldContains(FieldMintAddress, v))
+}
+
+// MintAddressHasPrefix applies the HasPrefix predicate on the "mint_address" field.
+func MintAddressHasPrefix(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldHasPrefix(FieldMintAddress, v))
+}
+
+// MintAddressHasSuffix applies the HasSuffix predicate on the "mint_address" field.
+func MintAddressHasSuffix(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldHasSuffix(FieldMintAddress, v))
+}
+
+// MintAddressIsNil applies the IsNil predicate on the "mint_address" field.
+func MintAddressIsNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIsNull(FieldMintAddress))
+}
+
+// MintAddressNotNil applies the NotNil predicate on the "mint_address" field.
+func MintAddressNotNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotNull(FieldMintAddress))
+}
+
+// MintAddressEqualFold applies the EqualFold predicate on the "mint_address" field.
+func MintAddressEqualFold(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEqualFold(FieldMintAddress, v))
+}
+
+// MintAddressContainsFold applies the ContainsFold predicate on the "mint_address" field.
+func MintAddressContainsFold(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldContainsFold(FieldMintAddress, v))
+}
+
 // EntryPriceEQ applies the EQ predicate on the "entry_price" field.
 func EntryPriceEQ(v string) predicate.PaperPosition {
 	return predicate.PaperPosition(sql.FieldEQ(FieldEntryPrice, v))
@@ -205,6 +495,16 @@ func EntryPriceHasSuffix(v string) predicate.PaperPosition {
 	return predicate.PaperPosition(sql.FieldHasSuffix(FieldEntryPrice, v))
 }
 
+// EntryPriceIsNil applies the IsNil predicate on the "entry_price" field.
+func EntryPriceIsNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIsNull(FieldEntryPrice))
+}
+
+// EntryPriceNotNil applies the NotNil predicate on the "entry_price" field.
+func EntryPriceNotNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotNull(FieldEntryPrice))
+}
+
 // EntryPriceEqualFold applies the EqualFold predicate on the "entry_price" field.
 func EntryPriceEqualFold(v string) predicate.PaperPosition {
 	return predicate.PaperPosition(sql.FieldEqualFold(FieldEntryPrice, v))
@@ -213,6 +513,181 @@ func EntryPriceEqualFold(v string) predicate.PaperPosition {
 // EntryPriceContainsFold applies the ContainsFold predicate on the "entry_price" field.
 func EntryPriceContainsFold(v string) predicate.PaperPosition {
 	return predicate.PaperPosition(sql.FieldContainsFold(FieldEntryPrice, v))
+}
+
+// EntryInputAmountEQ applies the EQ predicate on the "entry_input_amount" field.
+func EntryInputAmountEQ(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountNEQ applies the NEQ predicate on the "entry_input_amount" field.
+func EntryInputAmountNEQ(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNEQ(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountIn applies the In predicate on the "entry_input_amount" field.
+func EntryInputAmountIn(vs ...string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIn(FieldEntryInputAmount, vs...))
+}
+
+// EntryInputAmountNotIn applies the NotIn predicate on the "entry_input_amount" field.
+func EntryInputAmountNotIn(vs ...string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotIn(FieldEntryInputAmount, vs...))
+}
+
+// EntryInputAmountGT applies the GT predicate on the "entry_input_amount" field.
+func EntryInputAmountGT(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGT(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountGTE applies the GTE predicate on the "entry_input_amount" field.
+func EntryInputAmountGTE(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGTE(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountLT applies the LT predicate on the "entry_input_amount" field.
+func EntryInputAmountLT(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLT(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountLTE applies the LTE predicate on the "entry_input_amount" field.
+func EntryInputAmountLTE(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLTE(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountContains applies the Contains predicate on the "entry_input_amount" field.
+func EntryInputAmountContains(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldContains(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountHasPrefix applies the HasPrefix predicate on the "entry_input_amount" field.
+func EntryInputAmountHasPrefix(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldHasPrefix(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountHasSuffix applies the HasSuffix predicate on the "entry_input_amount" field.
+func EntryInputAmountHasSuffix(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldHasSuffix(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountIsNil applies the IsNil predicate on the "entry_input_amount" field.
+func EntryInputAmountIsNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIsNull(FieldEntryInputAmount))
+}
+
+// EntryInputAmountNotNil applies the NotNil predicate on the "entry_input_amount" field.
+func EntryInputAmountNotNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotNull(FieldEntryInputAmount))
+}
+
+// EntryInputAmountEqualFold applies the EqualFold predicate on the "entry_input_amount" field.
+func EntryInputAmountEqualFold(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEqualFold(FieldEntryInputAmount, v))
+}
+
+// EntryInputAmountContainsFold applies the ContainsFold predicate on the "entry_input_amount" field.
+func EntryInputAmountContainsFold(v string) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldContainsFold(FieldEntryInputAmount, v))
+}
+
+// EntryNetworkFeeMicrosEQ applies the EQ predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosEQ(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldEntryNetworkFeeMicros, v))
+}
+
+// EntryNetworkFeeMicrosNEQ applies the NEQ predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosNEQ(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNEQ(FieldEntryNetworkFeeMicros, v))
+}
+
+// EntryNetworkFeeMicrosIn applies the In predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosIn(vs ...int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIn(FieldEntryNetworkFeeMicros, vs...))
+}
+
+// EntryNetworkFeeMicrosNotIn applies the NotIn predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosNotIn(vs ...int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotIn(FieldEntryNetworkFeeMicros, vs...))
+}
+
+// EntryNetworkFeeMicrosGT applies the GT predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosGT(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGT(FieldEntryNetworkFeeMicros, v))
+}
+
+// EntryNetworkFeeMicrosGTE applies the GTE predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosGTE(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGTE(FieldEntryNetworkFeeMicros, v))
+}
+
+// EntryNetworkFeeMicrosLT applies the LT predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosLT(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLT(FieldEntryNetworkFeeMicros, v))
+}
+
+// EntryNetworkFeeMicrosLTE applies the LTE predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosLTE(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLTE(FieldEntryNetworkFeeMicros, v))
+}
+
+// EntryNetworkFeeMicrosIsNil applies the IsNil predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosIsNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIsNull(FieldEntryNetworkFeeMicros))
+}
+
+// EntryNetworkFeeMicrosNotNil applies the NotNil predicate on the "entry_network_fee_micros" field.
+func EntryNetworkFeeMicrosNotNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotNull(FieldEntryNetworkFeeMicros))
+}
+
+// EntryPriorityFeeMicrosEQ applies the EQ predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosEQ(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldEQ(FieldEntryPriorityFeeMicros, v))
+}
+
+// EntryPriorityFeeMicrosNEQ applies the NEQ predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosNEQ(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNEQ(FieldEntryPriorityFeeMicros, v))
+}
+
+// EntryPriorityFeeMicrosIn applies the In predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosIn(vs ...int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIn(FieldEntryPriorityFeeMicros, vs...))
+}
+
+// EntryPriorityFeeMicrosNotIn applies the NotIn predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosNotIn(vs ...int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotIn(FieldEntryPriorityFeeMicros, vs...))
+}
+
+// EntryPriorityFeeMicrosGT applies the GT predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosGT(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGT(FieldEntryPriorityFeeMicros, v))
+}
+
+// EntryPriorityFeeMicrosGTE applies the GTE predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosGTE(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldGTE(FieldEntryPriorityFeeMicros, v))
+}
+
+// EntryPriorityFeeMicrosLT applies the LT predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosLT(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLT(FieldEntryPriorityFeeMicros, v))
+}
+
+// EntryPriorityFeeMicrosLTE applies the LTE predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosLTE(v int64) predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldLTE(FieldEntryPriorityFeeMicros, v))
+}
+
+// EntryPriorityFeeMicrosIsNil applies the IsNil predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosIsNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIsNull(FieldEntryPriorityFeeMicros))
+}
+
+// EntryPriorityFeeMicrosNotNil applies the NotNil predicate on the "entry_priority_fee_micros" field.
+func EntryPriorityFeeMicrosNotNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotNull(FieldEntryPriorityFeeMicros))
 }
 
 // TokenQuantityEQ applies the EQ predicate on the "token_quantity" field.
@@ -268,6 +743,16 @@ func TokenQuantityHasPrefix(v string) predicate.PaperPosition {
 // TokenQuantityHasSuffix applies the HasSuffix predicate on the "token_quantity" field.
 func TokenQuantityHasSuffix(v string) predicate.PaperPosition {
 	return predicate.PaperPosition(sql.FieldHasSuffix(FieldTokenQuantity, v))
+}
+
+// TokenQuantityIsNil applies the IsNil predicate on the "token_quantity" field.
+func TokenQuantityIsNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldIsNull(FieldTokenQuantity))
+}
+
+// TokenQuantityNotNil applies the NotNil predicate on the "token_quantity" field.
+func TokenQuantityNotNil() predicate.PaperPosition {
+	return predicate.PaperPosition(sql.FieldNotNull(FieldTokenQuantity))
 }
 
 // TokenQuantityEqualFold applies the EqualFold predicate on the "token_quantity" field.
@@ -475,6 +960,29 @@ func HasCandidate() predicate.PaperPosition {
 func HasCandidateWith(preds ...predicate.Candidate) predicate.PaperPosition {
 	return predicate.PaperPosition(func(s *sql.Selector) {
 		step := newCandidateStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasDecision applies the HasEdge predicate on the "decision" edge.
+func HasDecision() predicate.PaperPosition {
+	return predicate.PaperPosition(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, true, DecisionTable, DecisionColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDecisionWith applies the HasEdge predicate on the "decision" edge with a given conditions (other predicates).
+func HasDecisionWith(preds ...predicate.TradeDecision) predicate.PaperPosition {
+	return predicate.PaperPosition(func(s *sql.Selector) {
+		step := newDecisionStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
