@@ -3,8 +3,10 @@ set -euo pipefail
 
 repo_root="$(git rev-parse --show-toplevel)"
 guard="$repo_root/scripts/verify-no-live-trading-deps.sh"
-temporary_root="$(cygpath -m "$LOCALAPPDATA")/Temp/verify-no-live-trading-deps-test-$$"
-mkdir -p "$temporary_root"
+temporary_root="$(mktemp -d)"
+if command -v cygpath >/dev/null 2>&1; then
+  temporary_root="$(cygpath -m "$temporary_root")"
+fi
 trap 'rm -rf "$temporary_root"' EXIT
 
 run_guard() {

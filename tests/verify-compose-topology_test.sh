@@ -3,7 +3,7 @@ set -euo pipefail
 
 repo_root="$(git rev-parse --show-toplevel)"
 guard="$repo_root/tests/verify-compose-topology.sh"
-temporary_root="$(cygpath -u "$LOCALAPPDATA")/Temp/verify-compose-topology-test-$$"
+temporary_root="$(mktemp -d)"
 mkdir -p "$temporary_root/tests" "$temporary_root/bin"
 trap 'rm -rf "$temporary_root"' EXIT
 
