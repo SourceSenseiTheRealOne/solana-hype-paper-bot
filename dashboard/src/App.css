@@ -1,0 +1,32 @@
+.dashboard-shell { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+.page-header, .status-panel { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
+.page-header { padding-bottom: 1.5rem; border-bottom: 1px solid #30363d; }
+.eyebrow, .metric-card span { color: #8b949e; font-size: .875rem; }
+.eyebrow { margin: 0 0 .35rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin-bottom: 0; font-size: clamp(1.9rem, 4vw, 2.75rem); }
+h2 { font-size: 1.1rem; }
+.safety-label { margin: 0; padding: .45rem .7rem; border: 1px solid #3fb950; border-radius: 999px; color: #7ee787; font-weight: 700; white-space: nowrap; }
+.state-panel, .status-panel, .metric-card, .table-scroll, .empty-state { margin-top: 1.5rem; padding: 1.25rem; border: 1px solid #30363d; border-radius: .6rem; background: #161b22; }
+.state-panel p, .status-panel p { margin-bottom: 0; }
+.state-panel-error { border-color: #f85149; }
+.section-heading { margin: 2rem 0 .75rem; }
+.status-panel { align-items: center; }
+.status-dot { display: inline-block; width: .65rem; height: .65rem; margin-right: .4rem; border-radius: 50%; background: #3fb950; }
+.metric-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.metric-card { margin-top: 0; }
+.metric-card h3 { margin-bottom: .5rem; color: #8b949e; font-size: .875rem; font-weight: 600; }
+.metric-card p { margin-bottom: .4rem; font-size: 1.65rem; font-weight: 750; }
+.table-scroll { padding: 0; overflow-x: auto; }
+table { width: 100%; min-width: 720px; border-collapse: collapse; text-align: left; }
+caption { padding: 1rem 1.25rem; color: #8b949e; text-align: left; }
+th, td { padding: .85rem 1.25rem; border-top: 1px solid #30363d; vertical-align: top; }
+th { color: #8b949e; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; }
+.mint-address { max-width: 22rem; overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.empty-state { color: #8b949e; }
+@media (max-width: 700px) {
+  .dashboard-shell { padding: 1rem; }
+  .page-header, .status-panel { align-items: stretch; flex-direction: column; }
+  .safety-label { align-self: start; white-space: normal; }
+  .metric-grid { grid-template-columns: 1fr; }
+}
