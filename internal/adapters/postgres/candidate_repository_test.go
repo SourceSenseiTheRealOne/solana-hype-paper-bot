@@ -3,7 +3,7 @@ package postgres_test
 import (
 	"context"
 	"fmt"
-	"os"
+
 	"strings"
 	"testing"
 	"time"
@@ -20,6 +20,7 @@ import (
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/adapters/postgres"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/application"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/domain"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/testsupport"
 )
 
 func TestCandidateRepositoryPersistsIdempotentlyAndRoundTripsDiscoveryState(t *testing.T) {
@@ -302,10 +303,7 @@ func TestVerdictRepositoryPersistsSanitizedAuditMetadata(t *testing.T) {
 func openTestEntClient(t *testing.T) *ent.Client {
 	t.Helper()
 
-	databaseURL := os.Getenv("TEST_DATABASE_URL")
-	if databaseURL == "" {
-		t.Skip("TEST_DATABASE_URL is not set; run this contract against a reset local Supabase database")
-	}
+	databaseURL := testsupport.DatabaseURL(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

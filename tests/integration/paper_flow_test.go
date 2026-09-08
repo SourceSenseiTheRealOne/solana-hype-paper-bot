@@ -18,6 +18,7 @@ import (
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/application"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/domain"
 	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/ports"
+	"github.com/SourceSenseiTheRealOne/solana-hype-paper-bot/internal/testsupport"
 )
 
 func TestPaperFlowSurvivesRestartAndProducesBoundedDailyDashboardSnapshot(t *testing.T) {
@@ -242,10 +243,7 @@ func TestPaperFlowSurvivesRestartAndProducesBoundedDailyDashboardSnapshot(t *tes
 
 func openPaperFlowEntClient(t *testing.T) *ent.Client {
 	t.Helper()
-	databaseURL := os.Getenv("TEST_DATABASE_URL")
-	if databaseURL == "" {
-		t.Skip("TEST_DATABASE_URL is not set; run this contract against a reset disposable PostgreSQL database")
-	}
+	databaseURL := testsupport.DatabaseURL(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := postgres.OpenEnt(ctx, databaseURL)
