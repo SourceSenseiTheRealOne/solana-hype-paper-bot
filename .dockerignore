@@ -1,0 +1,14 @@
+.git
+.codegraph
+.hermes
+.env
+.env.*
+**/.env
+**/.env.*
+context/private
+context/inbox
+var
+coverage
+node_modules
+dashboard/node_modules
+dashboard/dist

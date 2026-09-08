@@ -1,0 +1,1 @@
+-- Intentionally empty: production-like paper-trading evidence is never seeded.
