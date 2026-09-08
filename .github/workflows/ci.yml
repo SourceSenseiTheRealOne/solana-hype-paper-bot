@@ -63,6 +63,7 @@ jobs:
       - name: Install dashboard dependencies
         run: |
           corepack enable
+          corepack prepare pnpm@10.30.1 --activate
           pnpm --dir dashboard install --frozen-lockfile
 
       - name: Run Go unit tests
