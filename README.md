@@ -8,10 +8,13 @@ This repository must never contain wallet support, seed phrases, private keys, s
 
 ## Policy defaults
 
-- Paper notional: **$10**
+- Active strategy: **`bold-momentum-v3`**
+- Paper notional: **$100**
 - Concurrent virtual positions: **3 maximum**
 - New virtual positions: **30 maximum per UTC day**
 - Minimum market activity: **20 combined buys and sells per five minutes**
+- Minimum five-minute buy share: **60%**
+- Transient market-evidence retry: **one candidate every 30 seconds**, maximum **5**, expiring after **10 minutes**
 - Exit policy: **+50% take profit**, **-20% stop loss**, or **45-minute timeout**
 - Timestamps and quota buckets: **UTC**
 
@@ -53,7 +56,7 @@ docker compose up --build
 
 The API container receives `APP_ENV=container` and listens on its private container interface; Compose publishes application ports only through `127.0.0.1`. Its ignored logs and retained reports live in the named `runtime-data` volume at `/app/var`. Provider credentials remain server-side in `.env.local`; the browser receives none.
 
-When paper automation is enabled, the Go process scans every 5 minutes and monitors open virtual positions every 30 seconds. Each scan uses DexScreener token hints first, then the GeckoTerminal new-pool page, evaluates at most five matched fresh pools, calls TwitterAPI.io only after deterministic eligibility, stores the Hermes verdict, and can only admit/open local virtual paper positions.
+When paper automation is enabled, the Go process scans every 5 minutes and monitors open virtual positions every 30 seconds. Each scan uses DexScreener token hints first, then the GeckoTerminal new-pool page, and evaluates at most five matched fresh pools. A candidate whose market payload is temporarily incomplete enters a durable five-slot retry queue; after each position-monitor tick, at most one due candidate is retried through the complete policy for up to 10 minutes. A zero-liquidity Pump.fun pair can resolve its mint once to a strictly newer migrated DexScreener pool, but no pre-graduation fill is simulated and reciprocal Jupiter routes remain mandatory. TwitterAPI.io is called only after deterministic eligibility, the restricted Hermes verdict remains mandatory, and the process can only admit/open local virtual paper positions.
 
 ## Verification
 

@@ -132,18 +132,53 @@ func (provider *DexScreener) Fetch(ctx context.Context, pool domain.DiscoveredPo
 	if !isSolana(pool.Network) {
 		return domain.MarketSnapshot{}, errors.New("DexScreener market provider only supports Solana pools")
 	}
-	var response dexScreenerPairsResponse
-	path := "/latest/dex/pairs/" + domain.NetworkSolana + "/" + url.PathEscape(pool.PoolAddress)
-	if err := provider.client.GetJSON(ctx, path, nil, &response); err != nil {
-		return domain.MarketSnapshot{}, fmt.Errorf("fetch DexScreener pair: %w", err)
+	response, err := provider.fetchPairResponse(ctx, pool.PoolAddress)
+	if err != nil {
+		return domain.MarketSnapshot{}, err
 	}
+	snapshot, marketErr := dexScreenerMarketSnapshot(response, pool.PoolAddress)
+	if marketErr == nil {
+		return snapshot, nil
+	}
+	hint := domain.TokenHint{Source: domain.SourceDexScreener, Network: domain.NetworkSolana, MintAddress: pool.MintAddress}
+	resolved, found, err := provider.newestSolanaPoolForHint(ctx, hint)
+	if err != nil {
+		return domain.MarketSnapshot{}, errors.Join(marketErr, fmt.Errorf("resolve newest DexScreener pool after unavailable evidence: %w", err))
+	}
+	if !found || resolved.PoolAddress == pool.PoolAddress || !resolved.CreatedAt.After(pool.CreatedAt) {
+		return domain.MarketSnapshot{}, marketErr
+	}
+	response, err = provider.fetchPairResponse(ctx, resolved.PoolAddress)
+	if err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("fetch resolved DexScreener pair: %w", err)
+	}
+	snapshot, err = dexScreenerMarketSnapshot(response, resolved.PoolAddress)
+	if err != nil {
+		return domain.MarketSnapshot{}, fmt.Errorf("normalize resolved DexScreener pair: %w", err)
+	}
+	return snapshot, nil
+}
+
+func (provider *DexScreener) fetchPairResponse(ctx context.Context, poolAddress string) (dexScreenerPairsResponse, error) {
+	var response dexScreenerPairsResponse
+	path := "/latest/dex/pairs/" + domain.NetworkSolana + "/" + url.PathEscape(poolAddress)
+	if err := provider.client.GetJSON(ctx, path, nil, &response); err != nil {
+		return dexScreenerPairsResponse{}, fmt.Errorf("fetch DexScreener pair: %w", err)
+	}
+	return response, nil
+}
+
+func dexScreenerMarketSnapshot(response dexScreenerPairsResponse, poolAddress string) (domain.MarketSnapshot, error) {
 	for _, pair := range response.Pairs {
-		if !isSolana(pair.ChainID) || pair.PairAddress != pool.PoolAddress {
+		if !isSolana(pair.ChainID) || pair.PairAddress != poolAddress {
 			continue
 		}
 		liquidity, err := domain.ParseUSD(pair.Liquidity.USD.String())
 		if err != nil {
 			return domain.MarketSnapshot{}, fmt.Errorf("parse DexScreener liquidity: %w", err)
+		}
+		if strings.EqualFold(pair.DexID, "pumpfun") && liquidity.Micros == 0 {
+			return domain.MarketSnapshot{}, errors.New("DexScreener Pump.fun curve has no migrated pool liquidity")
 		}
 		if pair.Transactions.M5.Buys == nil || pair.Transactions.M5.Sells == nil {
 			return domain.MarketSnapshot{}, errors.New("DexScreener pair is missing five-minute transaction counts")
@@ -181,6 +216,7 @@ type dexScreenerPairsResponse struct {
 
 type dexScreenerPair struct {
 	ChainID       string `json:"chainId"`
+	DexID         string `json:"dexId"`
 	PairAddress   string `json:"pairAddress"`
 	PairCreatedAt int64  `json:"pairCreatedAt"`
 	Liquidity     struct {

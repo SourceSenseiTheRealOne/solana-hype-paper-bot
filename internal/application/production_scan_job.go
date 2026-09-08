@@ -84,6 +84,7 @@ type ProductionScanJobOptions struct {
 	VerdictStore     ProductionVerdictStore
 	Candidates       CandidateIdentityLookup
 	FutureWatches    FuturePoolWatchStore
+	MarketRetries    MarketRetryStore
 	Reviewed         ProductionReviewRecorder
 	Activity         AutomationActivityStore
 	Quotes           QuoteProvider
@@ -151,9 +152,22 @@ func (job *ProductionScanJob) evaluateAndMaybeOpen(ctx context.Context, pool dom
 	if err != nil {
 		if isMarketEvidenceUnavailable(err) {
 			job.recordNonAdmission(ctx, pool, domain.ReviewReasonMarketEvidenceUnavailable)
+			nextAttemptAt := job.options.Now.UTC().Add(MarketRetryInterval)
+			expiresAt := earlierTime(
+				job.options.Now.UTC().Add(MarketRetryTTL),
+				pool.CreatedAt.UTC().Add(job.options.MaxPoolAge),
+			)
+			if expiresAt.After(nextAttemptAt) {
+				if err := job.options.MarketRetries.Schedule(ctx, pool, nextAttemptAt, expiresAt); err != nil {
+					return fmt.Errorf("schedule market evidence retry %s: %w", pool.Identity(), err)
+				}
+			}
 			return nil
 		}
 		return fmt.Errorf("evaluate deterministic candidate %s: %w", pool.Identity(), err)
+	}
+	if err := job.options.MarketRetries.Complete(ctx, pool); err != nil {
+		return fmt.Errorf("complete market evidence retry %s: %w", pool.Identity(), err)
 	}
 	if !evaluation.Eligible {
 		job.recordNonAdmission(ctx, pool, reviewedReasonForEvaluation(evaluation))
@@ -280,7 +294,7 @@ func (job *ProductionScanJob) recordActivity(ctx context.Context, outcome domain
 }
 
 func validateProductionScanJobOptions(job *ProductionScanJob) error {
-	if job == nil || job.options.Now.IsZero() || job.options.MaxPoolAge <= 0 || job.options.Discovery == nil || job.options.Evaluator == nil || job.options.Social == nil || job.options.Verdicts == nil || job.options.VerdictStore == nil || job.options.Candidates == nil || job.options.Quotes == nil || job.options.Admissions == nil || job.options.Broker == nil {
+	if job == nil || job.options.Now.IsZero() || job.options.MaxPoolAge <= 0 || job.options.Discovery == nil || job.options.Evaluator == nil || job.options.Social == nil || job.options.Verdicts == nil || job.options.VerdictStore == nil || job.options.Candidates == nil || job.options.MarketRetries == nil || job.options.Quotes == nil || job.options.Admissions == nil || job.options.Broker == nil {
 		return errors.New("production scan job is not completely configured")
 	}
 	if job.options.SocialPolicy.Validate() != nil || job.options.VerdictPolicy.Validate() != nil {
@@ -290,6 +304,13 @@ func validateProductionScanJobOptions(job *ProductionScanJob) error {
 		return errors.New("production scan job paper sizing is invalid")
 	}
 	return nil
+}
+
+func earlierTime(left, right time.Time) time.Time {
+	if left.Before(right) {
+		return left
+	}
+	return right
 }
 
 func firstProductionCandidates(pools []domain.DiscoveredPool) []domain.DiscoveredPool {

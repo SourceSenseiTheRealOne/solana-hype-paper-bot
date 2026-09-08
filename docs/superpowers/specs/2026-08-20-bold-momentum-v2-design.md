@@ -4,6 +4,8 @@
 **Date:** 2026-08-20
 **Strategy version:** `bold-momentum-v2`
 
+> Historical cohort: new admissions are superseded by [`bold-momentum-v3`](./2026-08-31-fast-transient-candidate-retry-design.md). This document retains the exact v2 policy for comparison.
+
 ## 1. Purpose
 
 The existing `production-v1` paper strategy admits no current positions because liquidity is the dominant rejection boundary: nine of the latest ten safely projected reviews failed the `$10,000` liquidity floor and one lacked market evidence. Lowering liquidity alone would increase low-quality candidates, route failures, and manipulation exposure without defining an edge.

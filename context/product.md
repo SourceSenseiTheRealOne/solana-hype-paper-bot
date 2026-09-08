@@ -15,7 +15,9 @@ A single local operator needs a reproducible way to research new Solana token po
 
 - Discover and paginate public Solana pools; persist candidate evidence and deterministic decisions.
 - Open at most three virtual positions concurrently and at most 30 new $100 paper positions per UTC day.
-- Run the versioned `bold-momentum-v2` cohort: pools at most 90 minutes old, at least $5,000 liquidity, 20 five-minute transactions, 65% buy share, 15% volume/liquidity turnover, and +2% to +60% five-minute price momentum.
+- Run the versioned `bold-momentum-v3` cohort: pools at most 90 minutes old, at least $5,000 liquidity, 20 five-minute transactions, 60% buy share, 15% volume/liquidity turnover, and +2% to +60% five-minute price momentum.
+- Retain at most five candidates with transiently unavailable market evidence; retry at most one after each 30-second monitor tick and expire each retry after 10 minutes without bypassing any downstream gate.
+- Re-resolve a retained zero-liquidity Pump.fun candidate to at most one strictly newer same-mint DexScreener pool; never model a pre-graduation fill, and admit only after reciprocal Jupiter routes exist.
 - Apply +50% take-profit, -20% stop-loss, and a 45-minute timeout while retaining the $100 virtual notional and 10% maximum quoted entry impact.
 - Persist decisions, marks, closures, daily results, and retained local reports through Ent and project-owned local Supabase/Postgres.
 - Serve a small loopback-only, read-only React/Vite dashboard through a bounded Go HTTP API.

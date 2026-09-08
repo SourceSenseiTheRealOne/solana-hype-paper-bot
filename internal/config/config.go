@@ -52,7 +52,7 @@ type Config struct {
 	MaxPoolAge                  time.Duration `env:"MAX_POOL_AGE" envDefault:"90m"`
 	MinLiquidityUSD             domain.USD    `env:"MIN_LIQUIDITY_USD" envDefault:"5000"`
 	MinFiveMinuteTransactions   int           `env:"MIN_FIVE_MINUTE_TRANSACTIONS" envDefault:"20"`
-	MinFiveMinuteBuyShareBPS    int64         `env:"MIN_FIVE_MINUTE_BUY_SHARE_BPS" envDefault:"6500"`
+	MinFiveMinuteBuyShareBPS    int64         `env:"MIN_FIVE_MINUTE_BUY_SHARE_BPS" envDefault:"6000"`
 	MinFiveMinuteTurnoverBPS    int64         `env:"MIN_FIVE_MINUTE_TURNOVER_BPS" envDefault:"1500"`
 	MinFiveMinutePriceChangeBPS int64         `env:"MIN_FIVE_MINUTE_PRICE_CHANGE_BPS" envDefault:"200"`
 	MaxFiveMinutePriceChangeBPS int64         `env:"MAX_FIVE_MINUTE_PRICE_CHANGE_BPS" envDefault:"6000"`
@@ -69,7 +69,7 @@ type Config struct {
 	TakeProfitBPS               int64         `env:"TAKE_PROFIT_BPS" envDefault:"5000"`
 	StopLossBPS                 int64         `env:"STOP_LOSS_BPS" envDefault:"2000"`
 	MaxHoldDuration             time.Duration `env:"MAX_HOLD_DURATION" envDefault:"45m"`
-	StrategyVersion             string        `env:"STRATEGY_VERSION" envDefault:"bold-momentum-v2"`
+	StrategyVersion             string        `env:"STRATEGY_VERSION" envDefault:"bold-momentum-v3"`
 	LogDir                      string        `env:"LOG_DIR" envDefault:"var/log"`
 	ReportDir                   string        `env:"REPORT_DIR" envDefault:"var/reports"`
 }

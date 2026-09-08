@@ -166,6 +166,7 @@ func validProductionScanOptions(now time.Time, discovery *productionDiscovery, e
 		StrategyVersion:  "bold-momentum-v2",
 		VerdictStore:     &productionVerdictStore{},
 		Candidates:       productionCandidateIDs{},
+		MarketRetries:    &marketRetryStoreFake{},
 		Quotes:           quotes,
 		Admissions:       &productionAdmissions{result: application.AdmissionResult{Admitted: true}},
 		Broker:           &productionBroker{},

@@ -52,9 +52,17 @@ func TestAutomationHTTPClientSpecsUseHeliusMainnetAndDisableRetries(t *testing.T
 }
 
 func TestProductionCadenceUsesExactBoundedIntervals(t *testing.T) {
-	options := productionCadenceOptions(noopScheduledJob{}, noopScheduledJob{})
-	if options.ScanInterval != 5*time.Minute || options.ScanTimeout != 5*time.Minute || options.MonitorInterval != 30*time.Second || options.MonitorTimeout != 30*time.Second {
-		t.Fatalf("cadence = scan %s/%s monitor %s/%s, want 5m scan and 30s monitor", options.ScanInterval, options.ScanTimeout, options.MonitorInterval, options.MonitorTimeout)
+	scan := &recordingScheduledJob{}
+	monitor := &recordingScheduledJob{}
+	retry := &recordingScheduledJob{}
+	options := productionCadenceOptions(scan, monitor, retry)
+	if options.Scan != scan || options.Monitor != monitor || options.Retry != retry {
+		t.Fatal("production cadence did not preserve distinct scan, monitor, and retry jobs")
+	}
+	if options.ScanInterval != 5*time.Minute || options.ScanTimeout != 5*time.Minute ||
+		options.MonitorInterval != 30*time.Second || options.MonitorTimeout != 30*time.Second ||
+		options.RetryTimeout != 45*time.Second {
+		t.Fatalf("cadence = scan %s/%s monitor %s/%s retry %s, want 5m, 30s, and 45s bounds", options.ScanInterval, options.ScanTimeout, options.MonitorInterval, options.MonitorTimeout, options.RetryTimeout)
 	}
 }
 

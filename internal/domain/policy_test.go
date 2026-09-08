@@ -27,7 +27,12 @@ func TestCandidatePolicyEvaluatesEveryRequiredGate(t *testing.T) {
 			e.FiveMinuteBuys = 0
 			e.FiveMinuteSells = 0
 		}, domain.RuleFiveMinuteBuyShare},
-		{"rejects buy share below sixty-five percent", func(e *domain.CandidateEvidence) { e.FiveMinuteBuys = 12; e.FiveMinuteSells = 8 }, domain.RuleFiveMinuteBuyShare},
+		{"rejects buy share below sixty percent", func(e *domain.CandidateEvidence) { e.FiveMinuteBuys = 11; e.FiveMinuteSells = 9 }, domain.RuleFiveMinuteBuyShare},
+		{"rejects buy share at five thousand nine hundred ninety-nine bps", func(e *domain.CandidateEvidence) {
+			e.FiveMinuteTransactions = 10_000
+			e.FiveMinuteBuys = 5_999
+			e.FiveMinuteSells = 4_001
+		}, domain.RuleFiveMinuteBuyShare},
 		{"rejects zero liquidity without dividing", func(e *domain.CandidateEvidence) { e.LiquidityUSD = domain.USD{} }, domain.RuleFiveMinuteTurnover},
 		{"rejects turnover below fifteen percent", func(e *domain.CandidateEvidence) { e.FiveMinuteVolumeUSD = domain.USD{Micros: 749_999_999} }, domain.RuleFiveMinuteTurnover},
 		{"rejects momentum below two percent", func(e *domain.CandidateEvidence) { e.FiveMinutePriceChangeBPS = 199 }, domain.RuleFiveMinutePriceChange},
@@ -120,7 +125,7 @@ func validCandidatePolicy() domain.CandidatePolicy {
 		MaxPoolAge:                  90 * time.Minute,
 		MinLiquidityUSD:             domain.USD{Micros: 5_000_000_000},
 		MinFiveMinuteTransactions:   20,
-		MinFiveMinuteBuyShareBPS:    6_500,
+		MinFiveMinuteBuyShareBPS:    6_000,
 		MinFiveMinuteTurnoverBPS:    1_500,
 		MinFiveMinutePriceChangeBPS: 200,
 		MaxFiveMinutePriceChangeBPS: 6_000,
@@ -137,8 +142,8 @@ func validCandidateEvidence(now time.Time) domain.CandidateEvidence {
 		MarketObservedAt:         now.Add(-90 * time.Second),
 		LiquidityUSD:             domain.USD{Micros: 5_000_000_000},
 		FiveMinuteTransactions:   20,
-		FiveMinuteBuys:           13,
-		FiveMinuteSells:          7,
+		FiveMinuteBuys:           12,
+		FiveMinuteSells:          8,
 		FiveMinuteVolumeUSD:      domain.USD{Micros: 750_000_000},
 		FiveMinutePriceChangeBPS: 200,
 		EntryInputAmount:         10_000_000,

@@ -85,11 +85,11 @@ func TestLoadDefaultsPaperAutomationDisabled(t *testing.T) {
 		t.Fatalf("PAPER_QUOTE_MINT default = %q, want canonical Solana Mainnet USDC mint %q", got, want)
 	}
 	if cfg.MaxPoolAge != 90*time.Minute || cfg.MinLiquidityUSD.Micros != 5_000_000_000 ||
-		cfg.MinFiveMinuteTransactions != 20 || cfg.MinFiveMinuteBuyShareBPS != 6_500 ||
+		cfg.MinFiveMinuteTransactions != 20 || cfg.MinFiveMinuteBuyShareBPS != 6_000 ||
 		cfg.MinFiveMinuteTurnoverBPS != 1_500 || cfg.MinFiveMinutePriceChangeBPS != 200 ||
 		cfg.MaxFiveMinutePriceChangeBPS != 6_000 || cfg.TakeProfitBPS != 5_000 ||
 		cfg.StopLossBPS != 2_000 || cfg.MaxHoldDuration != 45*time.Minute ||
-		cfg.StrategyVersion != "bold-momentum-v2" || cfg.MinSocialScore != 30 ||
+		cfg.StrategyVersion != "bold-momentum-v3" || cfg.MinSocialScore != 30 ||
 		cfg.MinSocialUniqueAuthors != 3 || cfg.MinSocialOriginalPosts != 2 ||
 		cfg.MinSocialExactMintMentions != 2 || cfg.MaxSocialWarningPosts != 1 ||
 		cfg.MinHermesHypeQuality != 60 || cfg.MaxHermesManipulationRisk != 35 {

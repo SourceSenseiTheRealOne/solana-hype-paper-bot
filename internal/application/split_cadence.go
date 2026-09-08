@@ -15,10 +15,12 @@ type ScheduledJob interface {
 type SplitCadenceOptions struct {
 	Scan            ScheduledJob
 	Monitor         ScheduledJob
+	Retry           ScheduledJob
 	ScanInterval    time.Duration
 	MonitorInterval time.Duration
 	ScanTimeout     time.Duration
 	MonitorTimeout  time.Duration
+	RetryTimeout    time.Duration
 	OnError         func(error)
 }
 
@@ -32,7 +34,7 @@ func NewSplitCadence(options SplitCadenceOptions) *SplitCadence {
 }
 
 func (cadence *SplitCadence) Run(ctx context.Context) error {
-	if cadence == nil || cadence.options.Scan == nil || cadence.options.Monitor == nil || cadence.options.ScanInterval <= 0 || cadence.options.MonitorInterval <= 0 || cadence.options.ScanTimeout <= 0 || cadence.options.MonitorTimeout <= 0 {
+	if cadence == nil || cadence.options.Scan == nil || cadence.options.Monitor == nil || cadence.options.Retry == nil || cadence.options.ScanInterval <= 0 || cadence.options.MonitorInterval <= 0 || cadence.options.ScanTimeout <= 0 || cadence.options.MonitorTimeout <= 0 || cadence.options.RetryTimeout <= 0 {
 		return errors.New("split cadence is not completely configured")
 	}
 	if ctx == nil {
@@ -41,6 +43,7 @@ func (cadence *SplitCadence) Run(ctx context.Context) error {
 
 	cadence.run(ctx, cadence.options.Scan, cadence.options.ScanTimeout)
 	cadence.run(ctx, cadence.options.Monitor, cadence.options.MonitorTimeout)
+	cadence.run(ctx, cadence.options.Retry, cadence.options.RetryTimeout)
 
 	scanTicker := time.NewTicker(cadence.options.ScanInterval)
 	defer scanTicker.Stop()
@@ -54,6 +57,7 @@ func (cadence *SplitCadence) Run(ctx context.Context) error {
 			cadence.run(ctx, cadence.options.Scan, cadence.options.ScanTimeout)
 		case <-monitorTicker.C:
 			cadence.run(ctx, cadence.options.Monitor, cadence.options.MonitorTimeout)
+			cadence.run(ctx, cadence.options.Retry, cadence.options.RetryTimeout)
 		}
 	}
 }

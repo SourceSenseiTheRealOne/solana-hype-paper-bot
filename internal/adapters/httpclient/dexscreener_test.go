@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -128,6 +129,44 @@ func TestDexScreenerFetchesNormalizedSolanaPoolMarketEvidence(t *testing.T) {
 	}
 	if snapshot.ObservedAt.IsZero() {
 		t.Fatal("observed at is zero")
+	}
+}
+
+func TestDexScreenerFetchReResolvesMintToNewestPoolWhenOriginalEvidenceUnavailable(t *testing.T) {
+	paths := make([]string, 0, 3)
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		paths = append(paths, request.URL.Path)
+		switch request.URL.Path {
+		case "/latest/dex/pairs/solana/curve-pool":
+			_, _ = writer.Write([]byte(`{"pairs":[{"chainId":"solana","dexId":"pumpfun","pairAddress":"curve-pool","liquidity":{"usd":0},"txns":{"m5":{"buys":920,"sells":600}},"volume":{"m5":71719.13},"priceChange":{"m5":92.88}}]}`))
+		case "/token-pairs/v1/solana/mint-address":
+			_, _ = writer.Write([]byte(`[
+				{"chainId":"solana","pairAddress":"curve-pool","pairCreatedAt":1788176728000},
+				{"chainId":"solana","pairAddress":"migrated-pool","pairCreatedAt":1788177328000}
+			]`))
+		case "/latest/dex/pairs/solana/migrated-pool":
+			_, _ = writer.Write([]byte(`{"pairs":[{"chainId":"solana","pairAddress":"migrated-pool","liquidity":{"usd":20000},"txns":{"m5":{"buys":12,"sells":8}},"volume":{"m5":4000},"priceChange":{"m5":5}}]}`))
+		default:
+			t.Errorf("unexpected path %q", request.URL.Path)
+		}
+	}))
+	defer server.Close()
+	pool := domain.DiscoveredPool{Source: domain.SourceDexScreener, Network: domain.NetworkSolana, MintAddress: "mint-address", PoolAddress: "curve-pool", CreatedAt: time.UnixMilli(1788176728000).UTC()}
+
+	snapshot, err := httpclient.NewDexScreener(newBoundedClient(t, server.URL)).Fetch(context.Background(), pool)
+	if err != nil {
+		t.Fatalf("Fetch() error = %v", err)
+	}
+	if snapshot.LiquidityUSD.Micros != 20_000_000_000 || snapshot.FiveMinuteBuys != 12 || snapshot.FiveMinuteSells != 8 || snapshot.FiveMinutePriceChangeBPS != 500 {
+		t.Fatalf("resolved market snapshot = %#v", snapshot)
+	}
+	wantPaths := []string{
+		"/latest/dex/pairs/solana/curve-pool",
+		"/token-pairs/v1/solana/mint-address",
+		"/latest/dex/pairs/solana/migrated-pool",
+	}
+	if !slices.Equal(paths, wantPaths) {
+		t.Fatalf("request paths = %v, want bounded migration resolution %v", paths, wantPaths)
 	}
 }
 

@@ -27,6 +27,7 @@ const (
 	discoverySource           = "dexscreener-geckoterminal"
 	productionScanTimeout     = 5 * time.Minute
 	productionMonitorTimeout  = 30 * time.Second
+	productionRetryTimeout    = 45 * time.Second
 	automationPersistTimeout  = 5 * time.Second
 	providerMaxBodyBytes      = 1 << 20
 	providerSmallMaxBodyBytes = 512 << 10
@@ -75,6 +76,7 @@ func startAutomation(ctx context.Context, cfg config.Config, client *ent.Client,
 	cadence := application.NewSplitCadence(productionCadenceOptions(
 		dynamicProductionScanJob{dependencies: dependencies},
 		dynamicPositionMonitorJob{dependencies: dependencies},
+		dynamicMarketRetryJob{dependencies: dependencies},
 	))
 	automationContext, cancel := context.WithCancel(ctx)
 	errors := launchAutomation(automationContext, true, cadence)
@@ -167,14 +169,16 @@ func dailyReportFailureStage(message string) string {
 	}
 }
 
-func productionCadenceOptions(scan, monitor application.ScheduledJob) application.SplitCadenceOptions {
+func productionCadenceOptions(scan, monitor, retry application.ScheduledJob) application.SplitCadenceOptions {
 	return application.SplitCadenceOptions{
 		Scan:            scan,
 		Monitor:         monitor,
+		Retry:           retry,
 		ScanInterval:    productionScanTimeout,
 		MonitorInterval: productionMonitorTimeout,
 		ScanTimeout:     productionScanTimeout,
 		MonitorTimeout:  productionMonitorTimeout,
+		RetryTimeout:    productionRetryTimeout,
 		OnError: func(err error) {
 			slog.Warn("paper automation job failed", "category", automationErrorCategory(err), "stage", automationFailureStage(err))
 		},
@@ -296,9 +300,36 @@ type dynamicProductionScanJob struct {
 func (job dynamicProductionScanJob) RunOnce(ctx context.Context) error {
 	deps := job.dependencies
 	now := deps.now().UTC()
-	socialPolicy, verdictPolicy := productionScanPolicies(deps.cfg)
 	freshPools := application.NewTwoSourcePoolDiscovery(deps.dex, deps.gecko)
 	discovery := application.NewDiscovery(freshPools, deps.candidates, application.DiscoveryOptions{Source: discoverySource, MaxPages: 1})
+	scan := buildProductionScanJob(deps, now, discovery, deps.candidates, deps.reviewed)
+	return runScanAndReport(ctx, scan, deps.reporter, now)
+}
+
+type dynamicMarketRetryJob struct {
+	dependencies automationDependencies
+}
+
+func (job dynamicMarketRetryJob) RunOnce(ctx context.Context) error {
+	deps := job.dependencies
+	now := deps.now().UTC()
+	discovery := application.NewMarketRetryDiscovery(application.MarketRetryDiscoveryOptions{
+		Store:      deps.candidates,
+		Now:        now,
+		LeaseUntil: now.Add(application.MarketRetryInterval),
+		Limit:      1,
+	})
+	return buildProductionScanJob(deps, now, discovery, nil, nil).RunOnce(ctx)
+}
+
+func buildProductionScanJob(
+	deps automationDependencies,
+	now time.Time,
+	discovery application.ProductionDiscovery,
+	futureWatches application.FuturePoolWatchStore,
+	activity application.AutomationActivityStore,
+) *application.ProductionScanJob {
+	socialPolicy, verdictPolicy := productionScanPolicies(deps.cfg)
 	evaluator := application.NewEvaluator(application.EvaluatorOptions{
 		Now:              now,
 		Policy:           productionCandidatePolicy(deps.cfg),
@@ -324,7 +355,7 @@ func (job dynamicProductionScanJob) RunOnce(ctx context.Context) error {
 		MaxEntryPriceImpactBPS: deps.cfg.MaxEntryPriceImpactBPS,
 		Repository:             deps.admissions,
 	})
-	scan := application.NewProductionScanJob(application.ProductionScanJobOptions{
+	return application.NewProductionScanJob(application.ProductionScanJobOptions{
 		Now:              now,
 		MaxPoolAge:       deps.cfg.MaxPoolAge,
 		Discovery:        discovery,
@@ -336,9 +367,10 @@ func (job dynamicProductionScanJob) RunOnce(ctx context.Context) error {
 		StrategyVersion:  deps.cfg.StrategyVersion,
 		VerdictStore:     postgresVerdictStore{repository: deps.verdicts},
 		Candidates:       deps.candidates,
-		FutureWatches:    deps.candidates,
+		FutureWatches:    futureWatches,
+		MarketRetries:    deps.candidates,
 		Reviewed:         deps.reviewed,
-		Activity:         deps.reviewed,
+		Activity:         activity,
 		Quotes:           deps.quotes,
 		Admissions:       admission,
 		Broker:           deps.paperBroker(),
@@ -346,7 +378,6 @@ func (job dynamicProductionScanJob) RunOnce(ctx context.Context) error {
 		EntryInputAmount: uint64(deps.cfg.PaperTradeUSD.Micros),
 		NotionalMicros:   deps.cfg.PaperTradeUSD.Micros,
 	})
-	return runScanAndReport(ctx, scan, deps.reporter, now)
 }
 
 type dynamicPositionMonitorJob struct {

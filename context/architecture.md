@@ -22,7 +22,7 @@ TwitterAPI.io receives only bounded exact-mint social-search windows. Birdeye re
 
 ## Storage and cache ownership
 
-Ent owns typed reads/writes; Atlas-generated SQL migrations under `supabase/migrations/` own schema history. JSON evidence is bounded. There is no cache, queue, or Redis. Runtime logs and reports are ignored local `var/` data.
+Ent owns typed reads/writes; Atlas-generated SQL migrations under `supabase/migrations/` own schema history. JSON evidence is bounded. A five-entry `bot_state` namespace durably leases transient market-evidence retries; there is no external cache, queue, or Redis. Runtime logs and reports are ignored local `var/` data.
 
 ## Runtime topology
 
@@ -32,7 +32,7 @@ Only one local Supabase project stack runs at a time. Its standard local ports r
 
 - Paper trade notional is $100.
 - At most 3 open virtual positions and 30 newly admitted positions per UTC day.
-- `bold-momentum-v2` exits are +50%, -20%, or 45 minutes.
+- `bold-momentum-v3` exits are +50%, -20%, or 45 minutes.
 - UTC controls all timestamps and quota dates.
 - Financial persistence excludes `float64`.
 - No signing, wallet, transaction-building, swap execution, or blockchain writes exist.

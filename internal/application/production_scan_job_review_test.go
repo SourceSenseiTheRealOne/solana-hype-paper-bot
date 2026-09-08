@@ -70,6 +70,68 @@ func TestProductionScanJobRecordsMarketEvidenceUnavailableAndContinues(t *testin
 	}
 }
 
+func TestProductionScanJobSchedulesTransientMarketFailureForThirtySeconds(t *testing.T) {
+	now := time.Date(2026, time.August, 31, 10, 30, 0, 0, time.UTC)
+	pool := productionPool(now.Add(-3 * time.Minute))
+	discovery := &productionDiscovery{result: application.DiscoveryResult{Pools: []domain.DiscoveredPool{pool}}}
+	retries := &marketRetryStoreFake{}
+	recorder := &productionReviewRecorder{}
+	options := validProductionScanOptions(now, discovery, &productionEvaluator{err: fmt.Errorf("fetch market evidence: %w", marketEvidenceUnavailableError{})})
+	options.MarketRetries = retries
+	options.Reviewed = recorder
+
+	if err := application.NewProductionScanJob(options).RunOnce(context.Background()); err != nil {
+		t.Fatalf("RunOnce() error = %v", err)
+	}
+	if retries.scheduleCalls != 1 || retries.scheduled.Identity() != pool.Identity() {
+		t.Fatalf("scheduled retry = calls=%d pool=%#v", retries.scheduleCalls, retries.scheduled)
+	}
+	if !retries.nextAttemptAt.Equal(now.Add(30*time.Second)) || !retries.expiresAt.Equal(now.Add(10*time.Minute)) {
+		t.Fatalf("retry bounds = next %s expiry %s", retries.nextAttemptAt, retries.expiresAt)
+	}
+	if recorder.candidate.Reason != domain.ReviewReasonMarketEvidenceUnavailable {
+		t.Fatalf("review reason = %q", recorder.candidate.Reason)
+	}
+}
+
+func TestProductionScanJobDoesNotExtendRetryBeyondPoolAge(t *testing.T) {
+	now := time.Date(2026, time.August, 31, 10, 30, 0, 0, time.UTC)
+	pool := productionPool(now.Add(-29 * time.Minute))
+	discovery := &productionDiscovery{result: application.DiscoveryResult{Pools: []domain.DiscoveredPool{pool}}}
+	retries := &marketRetryStoreFake{}
+	options := validProductionScanOptions(now, discovery, &productionEvaluator{err: fmt.Errorf("fetch market evidence: %w", marketEvidenceUnavailableError{})})
+	options.MarketRetries = retries
+
+	if err := application.NewProductionScanJob(options).RunOnce(context.Background()); err != nil {
+		t.Fatalf("RunOnce() error = %v", err)
+	}
+	if want := pool.CreatedAt.Add(options.MaxPoolAge); !retries.expiresAt.Equal(want) {
+		t.Fatalf("retry expiry = %s, want pool-age bound %s", retries.expiresAt, want)
+	}
+}
+
+func TestProductionScanJobCompletesRetryAfterUsableMarketEvaluation(t *testing.T) {
+	now := time.Date(2026, time.August, 31, 10, 30, 0, 0, time.UTC)
+	pool := productionPool(now.Add(-3 * time.Minute))
+	discovery := &productionDiscovery{result: application.DiscoveryResult{Pools: []domain.DiscoveredPool{pool}}}
+	retries := &marketRetryStoreFake{completeErr: fmt.Errorf("complete retry")}
+	social := &productionSocial{analysis: eligibleProductionSocialAnalysis(now)}
+	options := validProductionScanOptions(now, discovery, &productionEvaluator{evaluation: eligibleProductionEvaluation()})
+	options.MarketRetries = retries
+	options.Social = social
+
+	err := application.NewProductionScanJob(options).RunOnce(context.Background())
+	if err == nil {
+		t.Fatal("RunOnce() accepted retry completion failure")
+	}
+	if retries.completeCalls != 1 || retries.completed.Identity() != pool.Identity() {
+		t.Fatalf("completed retry = calls=%d pool=%#v", retries.completeCalls, retries.completed)
+	}
+	if social.calls != 0 {
+		t.Fatalf("social calls = %d, want zero before retry completion", social.calls)
+	}
+}
+
 func TestProductionScanJobRecordsSocialEvidenceUnavailableWithoutRequestingHermes(t *testing.T) {
 	now := time.Date(2026, time.August, 20, 12, 0, 0, 0, time.UTC)
 	discovery := &productionDiscovery{result: application.DiscoveryResult{Pools: []domain.DiscoveredPool{productionPool(now.Add(-5 * time.Minute))}}}
